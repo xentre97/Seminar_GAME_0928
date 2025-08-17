@@ -17,9 +17,9 @@ public:
 
 	void addComponent(class Component* component);
 
-	virtual const Rectangle& getRectangle() { return mRectangle; }
-	Vector2& const getPosition() { return mPosition; }
-	Sequence* const getSequence() { return mSequence; }
+	virtual const Rectangle& getRectangle() const { return mRectangle; }
+	const Vector2& getPosition() const { return mPosition; }
+	Sequence* getSequence() const { return mSequence; }
 
 protected:
 	Sequence* mSequence;

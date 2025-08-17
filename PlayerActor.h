@@ -14,7 +14,7 @@ public:
     void update() override;
     void draw() override;
 
-    Camera2D& const getCamera();
+    const Camera2D& getCamera() const ;
 
 private:
     class CameraComponent* mCameraComp;

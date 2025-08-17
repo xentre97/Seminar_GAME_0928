@@ -21,7 +21,7 @@ public:
     void addEnemy(class EnemyActor* enemy);
     std::vector<class EnemyActor*> const getEnemies() { return mEnemies; }
 
-    int& const getStageWidth() { return mStageWidth; }
+    const int& getStageWidth() const { return mStageWidth; }
 
 private:
     void destroyEnemy(class EnemyActor* enemy);
@@ -32,7 +32,7 @@ private:
     std::vector<class EnemyActor*> mEnemies;
     class PlayerActor* mPlayer;
     // ステージから読み込んだ四角形の配列(床や壁)
-    std::vector<class Rectangle> mStageRecs;
+    std::vector<struct Rectangle> mStageRecs;
     int mStageWidth;
     int mStageHeight;
     Camera2D mCamera;

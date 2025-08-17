@@ -69,7 +69,7 @@ void GamePlay::draw()
 	for (Actor* actor : mActors) {
 		actor->draw();
 	}
-	for (auto rec : mStageRecs)
+	for (auto& rec : mStageRecs)
 	{
 		DrawRectangleRec(rec, GRAY);
 	}

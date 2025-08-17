@@ -55,7 +55,7 @@ void PlayerActor::draw()
 	DrawTexturePro(mTexture, src, dst, origin, 0.0f, WHITE);
 }
 
-Camera2D& const PlayerActor::getCamera()
+const Camera2D& PlayerActor::getCamera() const
 {
 	return mCameraComp->getCamera();
 }

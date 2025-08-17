@@ -11,7 +11,7 @@ class CameraComponent :
 public:
     CameraComponent(class Actor* owner);
     void update() override;
-    Camera2D& const getCamera() { return mCamera; }
+    const Camera2D& getCamera() const { return mCamera; }
 private:
     Camera2D mCamera;
     float mStageWidth;
