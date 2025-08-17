@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Title.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlay.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClear.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence.cpp">
+      <Filter>Sequence\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Actor\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Component\Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Sequence">
+      <UniqueIdentifier>{df87d8ce-4f81-49fb-a0a2-44a648e18a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sequence\Base">
+      <UniqueIdentifier>{f55c6754-a195-414a-963f-0892b652d7ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{927e1375-dbd5-4881-9c68-a67c0db75d81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Base">
+      <UniqueIdentifier>{1325b5a7-d764-4e5f-a14f-a8b62b06d14f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{90d3eda6-aea8-440b-b649-86784932394c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Base">
+      <UniqueIdentifier>{6aa0c632-46d1-4420-aa85-898d128c0a00}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Title.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlay.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClear.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence.h">
+      <Filter>Sequence\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Actor\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Component\Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
