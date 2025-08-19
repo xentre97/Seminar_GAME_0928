@@ -141,7 +141,9 @@
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GamePlay.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MoveComponent.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
+    <ClCompile Include="PlayerMove.cpp" />
     <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
@@ -153,7 +155,9 @@
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GamePlay.h" />
+    <ClInclude Include="MoveComponent.h" />
     <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="PlayerMove.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="Title.h" />
   </ItemGroup>

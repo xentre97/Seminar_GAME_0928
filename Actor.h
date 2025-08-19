@@ -21,6 +21,8 @@ public:
 	const Vector2& getPosition() const { return mPosition; }
 	Sequence* getSequence() const { return mSequence; }
 
+	void setPosition(Vector2 pos) { mPosition = pos; }
+
 protected:
 	Sequence* mSequence;
 	Texture2D mTexture;	  //

@@ -15,8 +15,11 @@ public:
     void draw() override;
 
     const Camera2D& getCamera() const ;
+    class PlayerMove& getPlayerMove();
+    void computeRectangle();
 
 private:
     class CameraComponent* mCameraComp;
+    class PlayerMove* mPlayerMove;
 };
 

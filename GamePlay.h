@@ -31,7 +31,7 @@ private:
     // 敵の配列(主にCollision用に使う)
     std::vector<class EnemyActor*> mEnemies;
     class PlayerActor* mPlayer;
-    // ステージから読み込んだ四角形の配列(床や壁)
+    // ステージから読み込んだ四角形の配列(床や壁の描画,collisionに使用)
     std::vector<struct Rectangle> mStageRecs;
     int mStageWidth;
     int mStageHeight;

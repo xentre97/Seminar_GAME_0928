@@ -9,6 +9,8 @@
 #include <fstream>
 #include <string>
 
+#include "PlayerMove.h"
+
 GamePlay::GamePlay()
 {
 	// TODO: テキストファイルからマップ生成
@@ -51,6 +53,7 @@ void GamePlay::update()
 		actor->update();
 	}
 	// Collisionのupdate
+	// 全アクター(とそのComponent)のupdate後に呼ばれていることに注意
 	updateCollision();
 }
 
@@ -168,24 +171,62 @@ void GamePlay::destroyEnemy(EnemyActor* enemy)
 
 void GamePlay::updateCollision()
 {
+	Rectangle playerRec = mPlayer->getRectangle();
+
 	// TODO:WeaponとEnemyの衝突検知,処理
-	for (auto enemy : mEnemies)
-	{
+	for (auto enemy : mEnemies) {
 		// destroyEnemyをここで呼ぶ
 	}
 
 	// TODO:敵とPlayerの衝突検知,処理
-	for (auto enemy : mEnemies)
-	{
-		if (CheckCollisionRecs(mPlayer->getRectangle(), enemy->getRectangle()))
-		{
+	for (auto enemy : mEnemies) {
+		if (CheckCollisionRecs(playerRec, enemy->getRectangle())) {
 			//mNext = new GameOver();
+			// 当たったら敵が死ぬ(test)
 			destroyEnemy(enemy);
 		}
 	}
 	// PlayerだけでなくEnemyも持てるWeaponComponent等作れば良いと思う
 
+	// Playerがマップと衝突したときの処理
+	for (auto& stageRec : mStageRecs) {
+		// 衝突しているなら
+		if (CheckCollisionRecs(playerRec, stageRec)) {
+			// 衝突部分の四角形を得る
+			Rectangle colRec = GetCollisionRec(playerRec, stageRec);
+			Vector2 playerPos = mPlayer->getPosition();
+			// 縦方向の重なりの方が小さい場合は,縦の重なりだけ解消
+			if (colRec.width >= colRec.height) {
+				// player位置を上にずらす
+				if (playerRec.y < colRec.y) {
+					playerPos.y -= colRec.height;
+					mPlayer->getPlayerMove().setJumping(false); // ジャンプ状態を解消
+					mPlayer->getPlayerMove().setVelocityY(0.0f);
+				}
+				// player位置を下にずらす
+				else {
+					playerPos.y += colRec.height;
+				}
+			}
+			// 横方向の重なりの方が小さい場合は,横の重なりだけ解消
+			else {
+				// player位置を左にずらす
+				if (playerRec.x < colRec.x) {
+					playerPos.x -= colRec.width;
+				}
+				// player位置を右にずらす
+				else {
+					playerPos.x += colRec.width;
+				}
+			}
+			// 位置の変更を反映
+			mPlayer->setPosition(playerPos);
+			// Playerの四角形もずらす
+			mPlayer->computeRectangle();
+		}
+	}
 	// TODO:Enemy,Playerがマップと衝突したときの処理
-	
+	// 上の奴を使いまわせばいい
+
 	// ややこしそうならmoveComponent等作ってそこにまとめる事も視野
 }

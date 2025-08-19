@@ -32,6 +32,10 @@
     <ClCompile Include="Component.cpp">
       <Filter>Component\Base</Filter>
     </ClCompile>
+    <ClCompile Include="MoveComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sequence">
@@ -84,5 +88,9 @@
     <ClInclude Include="Component.h">
       <Filter>Component\Base</Filter>
     </ClInclude>
+    <ClInclude Include="MoveComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMove.h" />
   </ItemGroup>
 </Project>
