@@ -6,15 +6,9 @@ MoveComponent::MoveComponent(Actor* owner)
 	, mGravity(1.0f)
 	, mMoveSpeed(180.0f)
 	, mJumpSpeed(-10.0f)
+	, mVelocityX(0.0f)
 	, mVelocityY(0.0f)
 	, mIsJumping(false)
 {
 }
 
-void MoveComponent::update()
-{
-	// d—Í‚Í—^‚¦‚é(—^‚¦‚½‚­‚È‚¢ê‡‚Í‚±‚Ìupdate‚ğŒÄ‚Î‚È‚¢)
-	if (mVelocityY < 10) {
-		mVelocityY += mGravity;
-	}
-}

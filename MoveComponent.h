@@ -2,14 +2,14 @@
 #include "Component.h"
 
 /// <summary>
-/// PlayerMove,EnemyMove‚ÌŠî’ê
+/// PlayerControl,EnemyMove‚ÌŠî’ê
 /// </summary>
 class MoveComponent :
     public Component
 {
 public:
     MoveComponent(class Actor* owner);
-    void update() override;
+    void update() override {} ;
 
     // ˆÈ‰ºˆê‰ž—pˆÓ
     float getMoveSpeed() const { return mMoveSpeed; }

@@ -33,9 +33,11 @@
       <Filter>Component\Base</Filter>
     </ClCompile>
     <ClCompile Include="MoveComponent.cpp">
-      <Filter>Component</Filter>
+      <Filter>Component\move</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerMove.cpp" />
+    <ClCompile Include="PlayerControl.cpp">
+      <Filter>Component\move</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sequence">
@@ -55,6 +57,9 @@
     </Filter>
     <Filter Include="Component\Base">
       <UniqueIdentifier>{6aa0c632-46d1-4420-aa85-898d128c0a00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\move">
+      <UniqueIdentifier>{82d844e4-fd86-4e45-b7c6-32a36cada266}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,9 +93,11 @@
     <ClInclude Include="Component.h">
       <Filter>Component\Base</Filter>
     </ClInclude>
-    <ClInclude Include="MoveComponent.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="PlayerControl.h">
+      <Filter>Component\move</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerMove.h" />
+    <ClInclude Include="MoveComponent.h">
+      <Filter>Component\move</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@
 #include <fstream>
 #include <string>
 
-#include "PlayerMove.h"
+#include "PlayerControl.h"
 
 GamePlay::GamePlay()
 {
@@ -200,8 +200,8 @@ void GamePlay::updateCollision()
 				// player位置を上にずらす
 				if (playerRec.y < colRec.y) {
 					playerPos.y -= colRec.height;
-					mPlayer->getPlayerMove().setJumping(false); // ジャンプ状態を解消
-					mPlayer->getPlayerMove().setVelocityY(0.0f);
+					//mPlayer->getPlayerControl().setJumping(false); // ジャンプ状態を解消
+					mPlayer->getPlayerControl().fixFloorCol();
 				}
 				// player位置を下にずらす
 				else {

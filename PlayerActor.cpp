@@ -2,12 +2,12 @@
 //#include "GamePlay.h"
 //#include "EnemyActor.h"
 #include "CameraComponent.h"
-#include "PlayerMove.h"
+#include "PlayerControl.h"
 
 PlayerActor::PlayerActor(Sequence* sequence)
 	: Actor(sequence)
 {
-	mTexture = LoadTexture("testPlayer.png");
+	mTexture = LoadTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 0.0f, 0.0f };
 	mRectangle = {
 		mPosition.x - mTexture.width / 2.0f,
@@ -16,39 +16,24 @@ PlayerActor::PlayerActor(Sequence* sequence)
 		(float)mTexture.height
 	};
 
+	mMoveTextures[PlayerControl::ms_idle] = LoadTexture("testPlayerIdle.png");
+	mMoveTextures[PlayerControl::ms_jump] = LoadTexture("testPlayerJump.png");
+
 	mCameraComp = new CameraComponent(this);
-	mPlayerMove = new PlayerMove(this);
+	mPlayerControl = new PlayerControl(this);
 }
 
 void PlayerActor::input()
 {
 	// 基底のinput() : Componentのinput
 	Actor::input();
-	
-	//// AD : 横に移動
-	//if (IsKeyDown(KEY_A)) {
-	//	//mPosition.x -= 180 * GetFrameTime();
-	//	mPosition.x -= 3;
-	//}
-	//if (IsKeyDown(KEY_D)) {
-	//	//mPosition.x += 180 * GetFrameTime();
-	//	mPosition.x += 3;
-	//}
-	//// Space : ジャンプ
-	//if (IsKeyDown(KEY_SPACE) && !mJumping  )
-	//{
-	//	// ジャンプ
-	//}
-
-
-
 }
 
 void PlayerActor::update()
 {
 	// 基底のupdate() : Componentのupdate
 	Actor::update();
-	// 再計算
+	// 矩形再計算
 	computeRectangle();
 }
 
@@ -65,13 +50,18 @@ const Camera2D& PlayerActor::getCamera() const
 	return mCameraComp->getCamera();
 }
 
-PlayerMove& PlayerActor::getPlayerMove()
+PlayerControl& PlayerActor::getPlayerControl()
 {
-	return *mPlayerMove;
+	return *mPlayerControl;
 }
 
 void PlayerActor::computeRectangle()
 {
 	mRectangle.x = mPosition.x - mTexture.width / 2.0f;
 	mRectangle.y = mPosition.y - mTexture.height / 2.0f;
+}
+
+void PlayerActor::setMoveTexture(PlayerControl::MoveState s)
+{
+	mTexture = mMoveTextures[s];
 }
