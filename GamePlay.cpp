@@ -86,6 +86,7 @@ void GamePlay::draw()
 
 void GamePlay::unloadData()
 {
+	Sequence::unloadData();
 	while (!mActors.empty())
 	{
 		delete mActors.back();

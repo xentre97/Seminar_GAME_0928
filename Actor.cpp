@@ -4,7 +4,6 @@
 
 Actor::Actor(Sequence* sequence)
 	: mSequence(sequence)
-	, mTexture()
 	, mPosition(Vector2())
 	, mRectangle()
 	, mForward(1)
@@ -14,7 +13,6 @@ Actor::Actor(Sequence* sequence)
 
 Actor::~Actor()
 {
-	UnloadTexture(mTexture);
 	mSequence->removeActor(this);
 	while (!mComponents.empty())
 	{

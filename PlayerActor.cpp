@@ -4,27 +4,28 @@
 #include "CameraComponent.h"
 #include "PlayerControl.h"
 #include "AnimSpriteComponent.h"
+#include "GamePlay.h"
 
 PlayerActor::PlayerActor(Sequence* sequence)
 	: Actor(sequence)
 	, mMoveState(ms_idle)
 	, mActionState(as_idle)
 {
-	mTexture = LoadTexture("testPlayerIdle.png");
+	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 0.0f, 0.0f };
 	mRectangle = {
-		mPosition.x - mTexture.width / 2.0f,
-		mPosition.y - mTexture.height / 2.0f,
-		(float)mTexture.width,
-		(float)mTexture.height
+		mPosition.x - tex.width / 2.0f,
+		mPosition.y - tex.height / 2.0f,
+		(float)tex.width,
+		(float)tex.height
 	};
 
 	mAnimsc = new AnimSpriteComponent(this);
 	std::vector<Texture2D> texs = {
-		LoadTexture("testPlayerIdle.png"),
-		LoadTexture("testPlayerJump.png"),
-		LoadTexture("testPlayerWalk.png"),
-		LoadTexture("testPlayerDash.png")
+		tex,
+		mSequence->getTexture("testPlayerJump.png"),
+		mSequence->getTexture("testPlayerWalk.png"),
+		mSequence->getTexture("testPlayerDash.png"),
 	};
 	// SetTeture‚ÍAnimSpriteComponent‚ÌŠÖ”‚Åˆê‚Âˆê‚Âs‚¤
 	mAnimsc->setAnimTextures(texs);
@@ -82,6 +83,6 @@ PlayerControl& PlayerActor::getPlayerControl()
 
 void PlayerActor::computeRectangle()
 {
-	mRectangle.x = mPosition.x - mTexture.width / 2.0f;
-	mRectangle.y = mPosition.y - mTexture.height / 2.0f;
+	mRectangle.x = mPosition.x - mAnimsc->getTexWidth() / 2.0f;
+	mRectangle.y = mPosition.y - mAnimsc->getTexHeight() / 2.0f;
 }

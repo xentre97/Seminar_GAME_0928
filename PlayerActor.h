@@ -46,7 +46,6 @@ private:
     class CameraComponent* mCameraComp;
     class PlayerControl* mPlayerControl;
     class AnimSpriteComponent* mAnimsc;
-    bool mForward;
 };
 
 // ‹““®

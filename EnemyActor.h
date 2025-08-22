@@ -13,5 +13,7 @@ public:
     ~EnemyActor();
 
     void update() override;
+private:
+    class SpriteComponent* mSpriteComp;
 };
 

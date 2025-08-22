@@ -27,7 +27,6 @@ public:
 
 protected:
 	Sequence* mSequence;
-	Texture2D mTexture;	  //
 	Vector2 mPosition;	  // テクスチャの中心座標
 	int mForward;		  // +1 : 右向き, -1 : 左向き
 	// 当たり判定用の矩形,丸とか色々使うなら派生クラスに持っていく

@@ -5,18 +5,18 @@
 EnemyActor::EnemyActor(Sequence* sequence)
 	: Actor(sequence)
 {
-	mTexture = LoadTexture("test.png");
+	Texture2D tex = mSequence->getTexture("test.png");
 	mPosition = Vector2{ 500.0f, 300.0f };
 	mRectangle = {
-		mPosition.x - mTexture.width / 2.0f,
-		mPosition.y - mTexture.height / 2.0f,
-		(float)mTexture.width,
-		(float)mTexture.height
+		mPosition.x - tex.width / 2.0f,
+		mPosition.y - tex.height / 2.0f,
+		(float)tex.width,
+		(float)tex.height
 	};
 
 	static_cast<GamePlay*>(mSequence)->addEnemy(this);
-	SpriteComponent* sc = new SpriteComponent(this);
-	sc->setTexture(mTexture);
+	mSpriteComp = new SpriteComponent(this);
+	mSpriteComp->setTexture(tex);
 }
 
 EnemyActor::~EnemyActor()
@@ -28,6 +28,6 @@ void EnemyActor::update()
 	mPosition.x += GetRandomValue(-10, 10);
 	mPosition.y += GetRandomValue(-10, 10);
 	// 当たり判定用矩形の更新
-	mRectangle.x = mPosition.x - mTexture.width / 2.0f;
-	mRectangle.y = mPosition.y - mTexture.height / 2.0f;
+	mRectangle.x = mPosition.x - mSpriteComp->getTexWidth() / 2.0f;
+	mRectangle.y = mPosition.y - mSpriteComp->getTexHeight() / 2.0f;
 }
