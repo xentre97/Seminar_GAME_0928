@@ -9,7 +9,9 @@
 #include <fstream>
 #include <string>
 
+// Comopnent
 #include "PlayerControl.h"
+#include "SpriteComponent.h"
 
 GamePlay::GamePlay()
 {
@@ -69,16 +71,25 @@ void GamePlay::draw()
 
 	// カメラに移すものの描画(ui以外)
 	BeginMode2D(mPlayer->getCamera());
-	for (Actor* actor : mActors) {
-		actor->draw();
-	}
 	for (auto& rec : mStageRecs)
 	{
 		DrawRectangleRec(rec, GRAY);
 	}
+	for (auto sprite : mSprites)
+	{
+		sprite->draw();
+	}
 	EndMode2D();
 
 	EndDrawing();
+}
+
+void GamePlay::unloadData()
+{
+	while (!mActors.empty())
+	{
+		delete mActors.back();
+	}
 }
 
 Sequence* GamePlay::nextSequence()
@@ -164,9 +175,31 @@ void GamePlay::destroyEnemy(EnemyActor* enemy)
 	// mEnemiesから削除
 	auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
 	if (iter != mEnemies.end()) mEnemies.erase(iter);
-	// mActorsから削除
-	removeActor(enemy);
 	delete enemy; // 最後にdelete
+}
+
+void GamePlay::addSprite(SpriteComponent* sprite)
+{
+	// ソート済みの配列で挿入点を見つける
+	int myDrawOrder = sprite->getDrawOrder();
+	auto iter = mSprites.begin();
+	for (;
+		iter != mSprites.end();
+		++iter)
+	{
+		if (myDrawOrder < (*iter)->getDrawOrder())
+		{
+			break;
+		}
+	}
+	// イテレータの位置の前に要素を挿入する
+	mSprites.insert(iter, sprite);
+}
+
+void GamePlay::removeSprite(SpriteComponent* sprite)
+{
+	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
+	mSprites.erase(iter);
 }
 
 void GamePlay::updateCollision()
@@ -225,8 +258,6 @@ void GamePlay::updateCollision()
 			mPlayer->computeRectangle();
 		}
 	}
-	// TODO:Enemy,Playerがマップと衝突したときの処理
+	// TODO:Enemyがマップと衝突したときの処理
 	// 上の奴を使いまわせばいい
-
-	// ややこしそうならmoveComponent等作ってそこにまとめる事も視野
 }

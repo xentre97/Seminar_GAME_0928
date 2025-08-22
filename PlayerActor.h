@@ -10,22 +10,43 @@ class PlayerActor :
     public Actor
 {
 public:
-
+    // 行動の状態とアクションの状態に分けた
+    // それぞれの状態を表す変数がある(mMoveState,mActionState)
+    // mActionState = ms_idle は可能,気を付ける必要がある
+    // enumを分けてもいい
+    enum PlayerState
+    {
+        // moveState
+        ms_idle,
+        ms_walk,
+        ms_dash,
+        ms_jump,
+        // actionState
+        as_idle,
+        as_attack,
+        as_guard
+    };
     PlayerActor(class Sequence* sequence);
 
     void input() override;
     void update() override;
-    void draw() override;
 
     const Camera2D& getCamera() const ;
     class PlayerControl& getPlayerControl();
+    PlayerState getMoveState() { return mMoveState; }
+    PlayerState getActionState() { return mActionState; }
+    
     void computeRectangle();
-    void setMoveTexture(PlayerControl::MoveState s);
-
+    void setMoveState(PlayerState state) { mMoveState = state; }
+    void setActionState(PlayerState state) { mActionState = state; }
+    
 private:
+    PlayerState mMoveState;
+    PlayerState mActionState;
     class CameraComponent* mCameraComp;
     class PlayerControl* mPlayerControl;
-    std::map<PlayerControl::MoveState, Texture2D> mMoveTextures;
+    class AnimSpriteComponent* mAnimsc;
+    bool mForward;
 };
 
 // 挙動

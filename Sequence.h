@@ -17,6 +17,8 @@ public:
     virtual void update();
     virtual void draw();
 
+    virtual void unloadData() {};
+
     // シーン遷移が必要になったら次のシーケンスを返す
     virtual Sequence* nextSequence() { return nullptr; }
 

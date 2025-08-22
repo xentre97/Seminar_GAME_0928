@@ -6,8 +6,8 @@
 PlayerControl::PlayerControl(PlayerActor* actor)
 	: MoveComponent(actor)
 	, mPlayer(actor)
-	, mMoveState(ms_idle)
-	, mActionState(as_idle)
+	//, mMoveState(ms_idle)
+	//, mActionState(as_idle)
 	, mIsGuarding(false)
 	, mDashSpeed(mMoveSpeed * 1.5f)
 {
@@ -21,94 +21,97 @@ void PlayerControl::input()
 	mVelocityX = 0.0f;
 	
 	// 1.MoveState‚Ì•ªŠò
-	switch (mMoveState)
+	switch (mPlayer->getMoveState())
 	{
-	case ms_idle:
+	case PlayerActor::ms_idle:
 	{
 		if (IsKeyPressed(KEY_SPACE)) {
-			mMoveState = ms_jump;
+			mPlayer->setMoveState(PlayerActor::ms_jump);
 			mVelocityY = mJumpSpeed;
-			mPlayer->setMoveTexture(ms_jump);
 		}
 		else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
 			if (IsKeyDown(KEY_LEFT_SHIFT)) {
-				mMoveState = ms_dash;
+				mPlayer->setMoveState(PlayerActor::ms_dash);
 			}
 			else {
-				mMoveState = ms_walk;
+				mPlayer->setMoveState(PlayerActor::ms_walk);
 			}
 		}
 		break;
 	}
-	case ms_walk:
+	case PlayerActor::ms_walk:
 	{
 		if (IsKeyPressed(KEY_SPACE)) {
-			mMoveState = ms_jump;
+			mPlayer->setMoveState(PlayerActor::ms_jump);
 			mVelocityY = mJumpSpeed;
-			mPlayer->setMoveTexture(ms_jump);
 		}
 		else if (!(IsKeyDown(KEY_D) || IsKeyDown(KEY_A))) {
-			mMoveState = ms_idle;
+			mPlayer->setMoveState(PlayerActor::ms_idle);
 		}
 		else if (IsKeyDown(KEY_LEFT_SHIFT)) {
-			mMoveState = ms_dash;
+			mPlayer->setMoveState(PlayerActor::ms_dash);
 		}
 		break;
 	}
-	case ms_dash:
+	case PlayerActor::ms_dash:
 	{
 		if (IsKeyPressed(KEY_SPACE)) {
-			mMoveState = ms_jump;
+			mPlayer->setMoveState(PlayerActor::ms_jump);
 			mVelocityY = mJumpSpeed;
-			mPlayer->setMoveTexture(ms_jump);
 		}
 		else if (!IsKeyDown(KEY_LEFT_SHIFT)) {
 			if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
-				mMoveState = ms_walk;
+				mPlayer->setMoveState(PlayerActor::ms_walk);
 			}
 			else {
-				mMoveState = ms_idle;
+				mPlayer->setMoveState(PlayerActor::ms_idle);
 			}
 		}
 		break;
 	}
-	case ms_jump:
+	case PlayerActor::ms_jump:
 	{
 		break;
 	}
 	}
 	
 	// 2.ActionState‚Ì•ªŠò
-	switch (mActionState)
+	switch (mPlayer->getActionState())
 	{
-	case as_idle:
+	case PlayerActor::as_idle:
 	{
 		if (IsKeyPressed(KEY_W)) {
-			mActionState = as_attack;
+			mPlayer->setActionState(PlayerActor::as_attack);
 			actionTimer = 0.0f;
 		}
 		else if (IsKeyDown(KEY_S)) {
-			mActionState = as_guard;
+			mPlayer->setActionState(PlayerActor::as_guard);
 		}
 		break;
 	}
-	case as_attack:
+	case PlayerActor::as_attack:
 	{
 		break;
 	}
-	case as_guard:
+	case PlayerActor::as_guard:
 	{
 		if (!IsKeyDown(KEY_S)) {
-			mActionState = as_idle;
+			mPlayer->setActionState(PlayerActor::as_idle);
 		}
 		break;
 	}
 	}
 
 	// Ž©—R—Ž‰º
-	if (mVelocityY > 0.0f && mMoveState != ms_jump) {
-		mMoveState = ms_jump;
-		mPlayer->setMoveTexture(ms_jump);
+	if (mVelocityY > 0.0f && mPlayer->getMoveState() != PlayerActor::ms_jump) {
+		mPlayer->setMoveState(PlayerActor::ms_jump);
+	}
+
+	if (IsKeyDown(KEY_D)) {
+		mPlayer->setForward(1);
+	}
+	else if(IsKeyDown(KEY_A)) {
+		mPlayer->setForward(-1);
 	}
 }
 
@@ -122,13 +125,13 @@ void PlayerControl::update()
 	Vector2 pos = mOwner->getPosition();
 
 	// 1,MoveState‚Ìupdate
-	switch (mMoveState)
+	switch (mPlayer->getMoveState())
 	{
-	case ms_idle:
+	case PlayerActor::ms_idle:
 	{
 		break;
 	}
-	case ms_walk:
+	case PlayerActor::ms_walk:
 	{
 		if (IsKeyDown(KEY_D)) {
 			mVelocityX = mMoveSpeed * GetFrameTime();
@@ -138,7 +141,7 @@ void PlayerControl::update()
 		}
 		break;
 	}
-	case ms_dash:
+	case PlayerActor::ms_dash:
 	{
 		if (IsKeyDown(KEY_D)) {
 			mVelocityX = mDashSpeed * GetFrameTime();
@@ -148,7 +151,7 @@ void PlayerControl::update()
 		}
 		break;
 	}
-	case ms_jump:
+	case PlayerActor::ms_jump:
 	{
 		if (IsKeyDown(KEY_D)) {
 			mVelocityX = mMoveSpeed * GetFrameTime();
@@ -161,18 +164,18 @@ void PlayerControl::update()
 	}
 
 	// 1,ActionState‚Ìupdate
-	switch (mActionState)
+	switch (mPlayer->getActionState())
 	{
-	case as_idle:
+	case PlayerActor::as_idle:
 	{
 		break;
 	}
-	case as_attack:
+	case PlayerActor::as_attack:
 	{
 		actionTimer += 1.0f;
 		break;
 	}
-	case as_guard:
+	case PlayerActor::as_guard:
 	{
 		break;
 	}
@@ -184,10 +187,10 @@ void PlayerControl::update()
 	// updateCollisionŠÖ”‚Å0‚É–ß‚³‚ê‚é	
 	mOwner->setPosition(pos);
 
-	if (mActionState == as_attack) {
+	if (mPlayer->getActionState() == PlayerActor::as_attack) {
 		actionTimer += 1.0f;
 		if (actionTimer > 60.0f) {
-			mActionState = as_idle;
+			mPlayer->setActionState(PlayerActor::as_idle);
 		}
 	}
 
@@ -200,42 +203,41 @@ void PlayerControl::fixFloorCol()
 {
 	// Y•ûŒü‚Ì‘¬“x‚ð‰Šú‰»
 	mVelocityY = 0.0f;
-	mPlayer->setMoveTexture(ms_idle);
 	// ‹ó’†‚©‚ç‚Ì‰ðÁ‚Ìê‡‚ÍState‚ð•ÏX‚·‚é
-	if (mMoveState == ms_jump) {
-		mMoveState = ms_idle;
+	if (mPlayer->getMoveState()  == PlayerActor::ms_jump) {
+		mPlayer->setMoveState(PlayerActor::ms_idle);
 	}
 }
 
 void PlayerControl::StateDraw()
 {
 	// MoveState
-	switch (mMoveState)
+	switch (mPlayer->getMoveState())
 	{
-	case ms_idle: {
+	case PlayerActor::ms_idle: {
 		DrawText("Move : Idle", 700, 50, 30, BLACK); break;
 	}
-	case ms_walk: {
+	case PlayerActor::ms_walk: {
 
 		DrawText("Move : Walk", 700, 50, 30, BLACK); break;
 	}
-	case ms_dash: {
+	case PlayerActor::ms_dash: {
 		DrawText("Move : Dash", 700, 50, 30, BLACK); break;
 	}
-	case ms_jump: {
+	case PlayerActor::ms_jump: {
 		DrawText("Move : Jump", 700, 50, 30, BLACK); break;
 	}
 	// ActionState
 	}
-	switch (mActionState)
+	switch (mPlayer->getActionState())
 	{
-	case as_idle: {
+	case PlayerActor::as_idle: {
 		DrawText("Action : idle", 700, 100, 30, BLACK); break;
 	}
-	case as_attack: {
+	case PlayerActor::as_attack: {
 		DrawText("Action : attack", 700, 100, 30, BLACK); break;
 	}
-	case as_guard: {
+	case PlayerActor::as_guard: {
 		DrawText("Action : guard", 700, 100, 30, BLACK); break;
 	}
 	}

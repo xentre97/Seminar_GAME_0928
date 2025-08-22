@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AnimSpriteComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EnemyActor.cpp" />
@@ -145,10 +146,12 @@
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="PlayerControl.cpp" />
     <ClCompile Include="Sequence.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="AnimSpriteComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EnemyActor.h" />
@@ -159,6 +162,7 @@
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="PlayerControl.h" />
     <ClInclude Include="Sequence.h" />
+    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

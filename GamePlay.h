@@ -14,23 +14,30 @@ public:
     void input() override;
     void update() override;
     void draw() override;
+    void unloadData() override;
     Sequence* nextSequence() override;
 
     bool loadStage(const char* filename);
 
     void addEnemy(class EnemyActor* enemy);
+    // 敵が死んだときに呼び出される
+    void destroyEnemy(class EnemyActor* enemy);
     std::vector<class EnemyActor*> const getEnemies() { return mEnemies; }
+
+    void addSprite(class SpriteComponent* sprite);
+    void removeSprite(class SpriteComponent* sprite);
 
     const int& getStageWidth() const { return mStageWidth; }
 
 private:
-    void destroyEnemy(class EnemyActor* enemy);
     // collision関連の更新処理がまとまってる
     void updateCollision();
     Sequence* mNext = nullptr;
     // 敵の配列(主にCollision用に使う)
     std::vector<class EnemyActor*> mEnemies;
     class PlayerActor* mPlayer;
+    // Spriteの配列
+    std::vector<class SpriteComponent*> mSprites;
     // ステージから読み込んだ四角形の配列(床や壁の描画,collisionに使用)
     std::vector<struct Rectangle> mStageRecs;
     int mStageWidth;

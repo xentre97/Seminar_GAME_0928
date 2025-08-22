@@ -9,6 +9,7 @@ Component::Component(Actor* owner)
 
 Component::~Component()
 {
+	mOwner->removeComponent(this);
 }
 
 void Component::update()

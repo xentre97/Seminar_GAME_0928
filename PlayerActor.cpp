@@ -3,9 +3,12 @@
 //#include "EnemyActor.h"
 #include "CameraComponent.h"
 #include "PlayerControl.h"
+#include "AnimSpriteComponent.h"
 
 PlayerActor::PlayerActor(Sequence* sequence)
 	: Actor(sequence)
+	, mMoveState(ms_idle)
+	, mActionState(as_idle)
 {
 	mTexture = LoadTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 0.0f, 0.0f };
@@ -16,8 +19,15 @@ PlayerActor::PlayerActor(Sequence* sequence)
 		(float)mTexture.height
 	};
 
-	mMoveTextures[PlayerControl::ms_idle] = LoadTexture("testPlayerIdle.png");
-	mMoveTextures[PlayerControl::ms_jump] = LoadTexture("testPlayerJump.png");
+	mAnimsc = new AnimSpriteComponent(this);
+	std::vector<Texture2D> texs = {
+		LoadTexture("testPlayerIdle.png"),
+		LoadTexture("testPlayerJump.png"),
+		LoadTexture("testPlayerWalk.png"),
+		LoadTexture("testPlayerDash.png")
+	};
+	// SetTetureはAnimSpriteComponentの関数で一つ一つ行う
+	mAnimsc->setAnimTextures(texs);
 
 	mCameraComp = new CameraComponent(this);
 	mPlayerControl = new PlayerControl(this);
@@ -35,14 +45,29 @@ void PlayerActor::update()
 	Actor::update();
 	// 矩形再計算
 	computeRectangle();
-}
 
-void PlayerActor::draw()
-{
-	Rectangle src = { 0, 0, (float)mTexture.width, (float)mTexture.height };
-	Rectangle dst = { mPosition.x, mPosition.y, (float)mTexture.width, (float)mTexture.height };
-	Vector2 origin = { mTexture.width / 2.0f, mTexture.height / 2.0f };
-	DrawTexturePro(mTexture, src, dst, origin, 0.0f, WHITE);
+	// とりあえずの実装(updateする度にplayする必要はない)
+	// ステート変更時に呼び出す関数,onChangeStateみたいなのを作ればいい
+	// 複雑な処理が必要ならstateのonEnter,onExitのような関数を作る
+	switch (mMoveState)
+	{
+	case ms_idle:
+	{
+		mAnimsc->play(0, 0, true); break;
+	}
+	case ms_jump:
+	{
+		mAnimsc->play(1, 1, true); break;
+	}
+	case ms_walk:
+	{
+		mAnimsc->play(2, 2, true); break;
+	}
+	case ms_dash:
+	{
+		mAnimsc->play(3, 3, true); break;
+	}
+	}
 }
 
 const Camera2D& PlayerActor::getCamera() const
@@ -59,9 +84,4 @@ void PlayerActor::computeRectangle()
 {
 	mRectangle.x = mPosition.x - mTexture.width / 2.0f;
 	mRectangle.y = mPosition.y - mTexture.height / 2.0f;
-}
-
-void PlayerActor::setMoveTexture(PlayerControl::MoveState s)
-{
-	mTexture = mMoveTextures[s];
 }

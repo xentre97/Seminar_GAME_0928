@@ -32,11 +32,13 @@ int main()
 		// シーケンス切り替え
 		Sequence* next = currentSequence->nextSequence();
 		if (next != nullptr) {
+			currentSequence->unloadData();
 			delete currentSequence;
 			currentSequence = next;
 		}
 	}
-
+	
+	currentSequence->unloadData();
 	delete currentSequence;
 	currentSequence = 0;
 

@@ -13,6 +13,5 @@ public:
     ~EnemyActor();
 
     void update() override;
-    void draw() override;
 };
 
