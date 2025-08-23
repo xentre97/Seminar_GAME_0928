@@ -23,9 +23,6 @@
     <ClCompile Include="Actor.cpp">
       <Filter>Actor\Base</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyActor.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
     <ClCompile Include="CameraComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
@@ -43,6 +40,24 @@
     </ClCompile>
     <ClCompile Include="AnimSpriteComponent.cpp">
       <Filter>Component\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyActor.cpp">
+      <Filter>Actor\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponActor.cpp">
+      <Filter>Actor\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponComponent.cpp">
+      <Filter>Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordComponent.cpp">
+      <Filter>Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowComponent.cpp">
+      <Filter>Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordActor.cpp">
+      <Filter>Actor\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +85,15 @@
     <Filter Include="Component\sprite">
       <UniqueIdentifier>{8db777b4-28ee-49c8-9c95-810e96de4d77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Weapon">
+      <UniqueIdentifier>{78986e02-eddf-410f-99d6-40d1b9d6fdaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Weapon">
+      <UniqueIdentifier>{38d5c057-df66-4f71-a0f5-74ff0c24e297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Enemy">
+      <UniqueIdentifier>{bc6d3fa3-2bf0-4e72-8049-2310bd088b9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Title.h">
@@ -93,9 +117,6 @@
     <ClInclude Include="Actor.h">
       <Filter>Actor\Base</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyActor.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
@@ -113,6 +134,24 @@
     </ClInclude>
     <ClInclude Include="AnimSpriteComponent.h">
       <Filter>Component\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyActor.h">
+      <Filter>Actor\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponActor.h">
+      <Filter>Actor\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponComponent.h">
+      <Filter>Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordComponent.h">
+      <Filter>Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowComponent.h">
+      <Filter>Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordActor.h">
+      <Filter>Actor\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

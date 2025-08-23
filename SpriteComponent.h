@@ -4,6 +4,8 @@
 
 /// <summary>
 /// スプライト描画用のComponent
+/// 1枚のテクスチャを描画するならこっちでいい
+/// 複数テクスチャの描画、或いはアニメーション付きのスプライトはAnimSpriteComponent
 /// </summary>
 class SpriteComponent :
     public Component

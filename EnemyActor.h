@@ -9,9 +9,11 @@ class EnemyActor :
     public Actor
 {
 public:
-    EnemyActor(class Sequence* sequence);
+    EnemyActor(class Sequence* sequence, Type type);
     ~EnemyActor();
 
     void update() override;
+private:
+    class SpriteComponent* mSpriteComp;
 };
 

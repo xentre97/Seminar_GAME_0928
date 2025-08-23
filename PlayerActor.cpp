@@ -4,33 +4,40 @@
 #include "CameraComponent.h"
 #include "PlayerControl.h"
 #include "AnimSpriteComponent.h"
+#include "SwordComponent.h"
 
-PlayerActor::PlayerActor(Sequence* sequence)
-	: Actor(sequence)
+#include "GamePlay.h"
+
+PlayerActor::PlayerActor(Sequence* sequence, Type type)
+	: Actor(sequence, type)
 	, mMoveState(ms_idle)
 	, mActionState(as_idle)
+	, mSwordComp(nullptr)
+	, mAttackTime(0.0f)
+	, mAttackTimer(0.0f)
 {
-	mTexture = LoadTexture("testPlayerIdle.png");
+	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 0.0f, 0.0f };
 	mRectangle = {
-		mPosition.x - mTexture.width / 2.0f,
-		mPosition.y - mTexture.height / 2.0f,
-		(float)mTexture.width,
-		(float)mTexture.height
+		mPosition.x - tex.width / 2.0f,
+		mPosition.y - tex.height / 2.0f,
+		(float)tex.width,
+		(float)tex.height
 	};
 
 	mAnimsc = new AnimSpriteComponent(this);
 	std::vector<Texture2D> texs = {
-		LoadTexture("testPlayerIdle.png"),
-		LoadTexture("testPlayerJump.png"),
-		LoadTexture("testPlayerWalk.png"),
-		LoadTexture("testPlayerDash.png")
+		tex,
+		mSequence->getTexture("testPlayerJump.png"),
+		mSequence->getTexture("testPlayerWalk.png"),
+		mSequence->getTexture("testPlayerDash.png"),
 	};
 	// SetTeture‚ÍAnimSpriteComponent‚ÌŠÖ”‚Åˆê‚Âˆê‚Âs‚¤
 	mAnimsc->setAnimTextures(texs);
 
 	mCameraComp = new CameraComponent(this);
 	mPlayerControl = new PlayerControl(this);
+	mSwordComp = new SwordComponent(this);
 }
 
 void PlayerActor::input()
@@ -52,21 +59,27 @@ void PlayerActor::update()
 	switch (mMoveState)
 	{
 	case ms_idle:
-	{
 		mAnimsc->play(0, 0, true); break;
-	}
 	case ms_jump:
-	{
 		mAnimsc->play(1, 1, true); break;
-	}
 	case ms_walk:
-	{
 		mAnimsc->play(2, 2, true); break;
-	}
 	case ms_dash:
-	{
 		mAnimsc->play(3, 3, true); break;
 	}
+	switch (mActionState)
+	{
+	case as_idle:
+		break;
+	case as_attack:
+		mAttackTimer += GetFrameTime();
+		if (mAttackTimer >= mAttackTime) {
+			mAttackTimer = 0.0f;
+			changeState(as_idle);
+		}
+		break;
+	case as_guard:
+		break;
 	}
 }
 
@@ -82,6 +95,75 @@ PlayerControl& PlayerActor::getPlayerControl()
 
 void PlayerActor::computeRectangle()
 {
-	mRectangle.x = mPosition.x - mTexture.width / 2.0f;
-	mRectangle.y = mPosition.y - mTexture.height / 2.0f;
+	mRectangle.x = mPosition.x - mAnimsc->getTexWidth() / 2.0f;
+	mRectangle.y = mPosition.y - mAnimsc->getTexHeight() / 2.0f;
 }
+
+void PlayerActor::changeState(PlayerState state)
+{
+	onExitState(state);
+	onEnterState(state);
+}
+
+void PlayerActor::onExitState(PlayerState nextState)
+{
+	if (nextState <= ms_jump) {
+		switch (mMoveState)
+		{
+		case ms_idle:
+			break;
+		case ms_walk:
+			break;
+		case ms_dash:
+			break;
+		case ms_jump:
+			break;
+		}
+	}
+	else {
+		switch (mActionState)
+		{
+		case as_idle:
+			break;
+		case as_attack:
+ 			mSwordComp->endAttack();
+			break;
+		case as_guard:
+			break;
+		}
+	}
+}
+
+void PlayerActor::onEnterState(PlayerState nextState)
+{
+	if (nextState <= ms_jump) {
+		mMoveState = nextState;
+		switch (mMoveState)
+		{
+		case ms_idle:
+			break;
+		case ms_walk:
+			break;
+		case ms_dash:
+			break;
+		case ms_jump:
+			break;
+		}
+	}
+	else {
+		mActionState = nextState;
+		switch (mActionState)
+		{
+		case as_idle:
+			break;
+		case as_attack:
+			// •Ší‚ðnew‚·‚é
+			mAttackTime = 0.5f;
+			mSwordComp->startAttack(0, 9, mAttackTime);
+			break;
+		case as_guard:
+			break;
+		}
+	}
+}
+

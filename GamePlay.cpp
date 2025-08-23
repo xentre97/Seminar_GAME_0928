@@ -1,14 +1,17 @@
 #include "GamePlay.h"
 #include "GameClear.h"
 #include "GameOver.h"
-#include "PlayerActor.h"
-#include "EnemyActor.h"
 
 #include <raylib.h>
 #include <cmath>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
+// Actor
+#include "PlayerActor.h"
+#include "EnemyActor.h"
+#include "WeaponActor.h"
 // Comopnent
 #include "PlayerControl.h"
 #include "SpriteComponent.h"
@@ -20,8 +23,8 @@ GamePlay::GamePlay()
 		// ブレークポイント置く
 	}
 	// TODO:ここでマップの生成,Playerの生成等行う
-	mPlayer = new PlayerActor(this);
-	new EnemyActor(this);
+	mPlayer = new PlayerActor(this, Actor::Eplayer);
+	new EnemyActor(this, Actor::Eenemy);
 }
 
 GamePlay::~GamePlay()
@@ -43,20 +46,40 @@ void GamePlay::input()
 		mNext = new GameOver();
 	}
 	// 全Actorのinputを呼ぶ
+	mUpdatingActors = true;
 	for (Actor* actor : mActors) {
 		actor->input();
 	}
+	mUpdatingActors = false;
 }
 
 void GamePlay::update()
 {
 	// Actorのupdate
+	mUpdatingActors = true;
 	for (Actor* actor : mActors) {
 		actor->update();
 	}
+	mUpdatingActors = false;
+	// 保留中のActorをmActorsへ移動
+	for (auto pending : mPendingActors)
+	{
+		mActors.emplace_back(pending);
+	}
+	mPendingActors.clear();
+
 	// Collisionのupdate
 	// 全アクター(とそのComponent)のupdate後に呼ばれていることに注意
 	updateCollision();
+
+	// Dead状態のActorをdelete
+	for (auto actor : mActors)
+	{
+		if (actor->getState() == Actor::Edead)
+		{
+			delete actor;
+		}
+	}
 }
 
 void GamePlay::draw()
@@ -64,7 +87,7 @@ void GamePlay::draw()
 	BeginDrawing();
 	ClearBackground(WHITE);
 
-	// text
+	// uiの描画
 	DrawText("GamePlay", 100, 100, 40, BLACK);
 	DrawText("Press ENTER -> GameClear", 100, 200, 20, GRAY);
 	DrawText("Press RightShift -> GameOver", 100, 300, 20, GRAY);
@@ -86,6 +109,7 @@ void GamePlay::draw()
 
 void GamePlay::unloadData()
 {
+	Sequence::unloadData();
 	while (!mActors.empty())
 	{
 		delete mActors.back();
@@ -170,12 +194,40 @@ void GamePlay::addEnemy(EnemyActor* enemy)
 	mEnemies.emplace_back(enemy);
 }
 
-void GamePlay::destroyEnemy(EnemyActor* enemy)
+void GamePlay::removeEnemy(EnemyActor* enemy)
 {
 	// mEnemiesから削除
 	auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
-	if (iter != mEnemies.end()) mEnemies.erase(iter);
-	delete enemy; // 最後にdelete
+	if (iter != mEnemies.end()) {
+		std::iter_swap(iter, mEnemies.end() - 1);
+		mEnemies.pop_back();
+	}
+}
+
+void GamePlay::addWeapon(WeaponActor* weapon, Actor::Type type)
+{
+	if (type == Actor::Eplayer) {
+		mPlayerWeapons.emplace_back(weapon);
+	}
+	else if (type == Actor::Eplayer) {
+		mEnemyWeapons.emplace_back(weapon);
+	}
+}
+
+void GamePlay::removeWeapon(WeaponActor* weapon)
+{
+	auto iter = std::find(mPlayerWeapons.begin(), mPlayerWeapons.end(), weapon);
+	if (iter != mPlayerWeapons.end()) {
+		std::iter_swap(iter, mPlayerWeapons.end() - 1);
+		mPlayerWeapons.pop_back();
+	}
+	else {
+		iter = std::find(mEnemyWeapons.begin(), mEnemyWeapons.end(), weapon);
+		if (iter != mEnemyWeapons.end()) {
+			std::iter_swap(iter, mEnemyWeapons.end() - 1);
+			mEnemyWeapons.pop_back();
+		}
+	}
 }
 
 void GamePlay::addSprite(SpriteComponent* sprite)
@@ -208,15 +260,22 @@ void GamePlay::updateCollision()
 
 	// TODO:WeaponとEnemyの衝突検知,処理
 	for (auto enemy : mEnemies) {
-		// destroyEnemyをここで呼ぶ
+		for (auto weapon : mPlayerWeapons)
+		{
+			Rectangle enemyRec = enemy->getRectangle();
+			Rectangle weaponRec = weapon->getRectangle();
+			if (CheckCollisionRecs(enemyRec, weaponRec)) {
+				// 敵即死
+				enemy->setState(Actor::Edead);
+			}
+		}
 	}
 
 	// TODO:敵とPlayerの衝突検知,処理
 	for (auto enemy : mEnemies) {
 		if (CheckCollisionRecs(playerRec, enemy->getRectangle())) {
-			//mNext = new GameOver();
-			// 当たったら敵が死ぬ(test)
-			destroyEnemy(enemy);
+			// 即死
+			mNext = new GameOver();
 		}
 	}
 	// PlayerだけでなくEnemyも持てるWeaponComponent等作れば良いと思う

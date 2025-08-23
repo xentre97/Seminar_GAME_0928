@@ -18,6 +18,8 @@ public:
     // アニメーションを再生する
     void play(int begin, int end, bool loop, float fps = 60.0f);
 
+    bool isAnimating() const { return mIsAnimating; }
+
 private:
     // アニメーションでのすべてのテクスチャ
     std::vector<Texture2D> mAnimTextures;

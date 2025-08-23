@@ -1,13 +1,12 @@
 #include "PlayerControl.h"
 #include <raylib.h>
-#include "PlayerActor.h"
 #include <string>
+
+#include "PlayerActor.h"
 
 PlayerControl::PlayerControl(PlayerActor* actor)
 	: MoveComponent(actor)
 	, mPlayer(actor)
-	//, mMoveState(ms_idle)
-	//, mActionState(as_idle)
 	, mIsGuarding(false)
 	, mDashSpeed(mMoveSpeed * 1.5f)
 {
@@ -20,21 +19,22 @@ void PlayerControl::input()
 	// ‰Šú‰»
 	mVelocityX = 0.0f;
 	
-	// 1.MoveState‚Ì•ªŠò
+	// 1.Œ»Ý‚ÌMoveState‚É‰ž‚¶‚½“ü—Íˆ—
 	switch (mPlayer->getMoveState())
 	{
 	case PlayerActor::ms_idle:
 	{
 		if (IsKeyPressed(KEY_SPACE)) {
-			mPlayer->setMoveState(PlayerActor::ms_jump);
+			mPlayer->changeState(PlayerActor::ms_jump);
+			// ˆÈ‰º‚ÍchangeState“à‚©‚ç‚â‚Á‚Ä‚à‚¢‚¢
 			mVelocityY = mJumpSpeed;
 		}
 		else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
 			if (IsKeyDown(KEY_LEFT_SHIFT)) {
-				mPlayer->setMoveState(PlayerActor::ms_dash);
+				mPlayer->changeState(PlayerActor::ms_dash);
 			}
 			else {
-				mPlayer->setMoveState(PlayerActor::ms_walk);
+				mPlayer->changeState(PlayerActor::ms_walk);
 			}
 		}
 		break;
@@ -42,29 +42,29 @@ void PlayerControl::input()
 	case PlayerActor::ms_walk:
 	{
 		if (IsKeyPressed(KEY_SPACE)) {
-			mPlayer->setMoveState(PlayerActor::ms_jump);
+			mPlayer->changeState(PlayerActor::ms_jump);
 			mVelocityY = mJumpSpeed;
 		}
 		else if (!(IsKeyDown(KEY_D) || IsKeyDown(KEY_A))) {
-			mPlayer->setMoveState(PlayerActor::ms_idle);
+			mPlayer->changeState(PlayerActor::ms_idle);
 		}
 		else if (IsKeyDown(KEY_LEFT_SHIFT)) {
-			mPlayer->setMoveState(PlayerActor::ms_dash);
+			mPlayer->changeState(PlayerActor::ms_dash);
 		}
 		break;
 	}
 	case PlayerActor::ms_dash:
 	{
 		if (IsKeyPressed(KEY_SPACE)) {
-			mPlayer->setMoveState(PlayerActor::ms_jump);
+			mPlayer->changeState(PlayerActor::ms_jump);
 			mVelocityY = mJumpSpeed;
 		}
 		else if (!IsKeyDown(KEY_LEFT_SHIFT)) {
 			if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
-				mPlayer->setMoveState(PlayerActor::ms_walk);
+				mPlayer->changeState(PlayerActor::ms_walk);
 			}
 			else {
-				mPlayer->setMoveState(PlayerActor::ms_idle);
+				mPlayer->changeState(PlayerActor::ms_idle);
 			}
 		}
 		break;
@@ -75,17 +75,17 @@ void PlayerControl::input()
 	}
 	}
 	
-	// 2.ActionState‚Ì•ªŠò
+	// 2.Œ»Ý‚ÌActionState‚É‰ž‚¶‚½“ü—Íˆ—
 	switch (mPlayer->getActionState())
 	{
 	case PlayerActor::as_idle:
 	{
 		if (IsKeyPressed(KEY_W)) {
-			mPlayer->setActionState(PlayerActor::as_attack);
+			mPlayer->changeState(PlayerActor::as_attack);
 			actionTimer = 0.0f;
 		}
 		else if (IsKeyDown(KEY_S)) {
-			mPlayer->setActionState(PlayerActor::as_guard);
+			mPlayer->changeState(PlayerActor::as_guard);
 		}
 		break;
 	}
@@ -96,7 +96,7 @@ void PlayerControl::input()
 	case PlayerActor::as_guard:
 	{
 		if (!IsKeyDown(KEY_S)) {
-			mPlayer->setActionState(PlayerActor::as_idle);
+			mPlayer->changeState(PlayerActor::as_idle);
 		}
 		break;
 	}
@@ -104,7 +104,7 @@ void PlayerControl::input()
 
 	// Ž©—R—Ž‰º
 	if (mVelocityY > 0.0f && mPlayer->getMoveState() != PlayerActor::ms_jump) {
-		mPlayer->setMoveState(PlayerActor::ms_jump);
+		mPlayer->changeState(PlayerActor::ms_jump);
 	}
 
 	if (IsKeyDown(KEY_D)) {
@@ -172,7 +172,6 @@ void PlayerControl::update()
 	}
 	case PlayerActor::as_attack:
 	{
-		actionTimer += 1.0f;
 		break;
 	}
 	case PlayerActor::as_guard:
@@ -186,13 +185,6 @@ void PlayerControl::update()
 	// ‚à‚µ°‚É‚Ô‚Â‚©‚é‚Æ‚«,velocityY‚ÍGamePlayƒNƒ‰ƒX‚Ì
 	// updateCollisionŠÖ”‚Å0‚É–ß‚³‚ê‚é	
 	mOwner->setPosition(pos);
-
-	if (mPlayer->getActionState() == PlayerActor::as_attack) {
-		actionTimer += 1.0f;
-		if (actionTimer > 60.0f) {
-			mPlayer->setActionState(PlayerActor::as_idle);
-		}
-	}
 
 	StateDraw();
 }
