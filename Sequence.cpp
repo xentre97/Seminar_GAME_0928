@@ -1,6 +1,7 @@
 #include "Sequence.h"
 #include "Title.h"
 #include <vector>
+#include <algorithm>
 
 Sequence::~Sequence()
 {
@@ -32,13 +33,26 @@ void Sequence::unloadData()
 
 void Sequence::addActor(Actor* actor)
 {
-	mActors.emplace_back(actor);
+	if (mUpdatingActors) {
+		mPendingActors.emplace_back(actor);
+	}
+	else {
+		mActors.emplace_back(actor);
+	}
 }
 
 void Sequence::removeActor(Actor* actor)
 {
-	auto iter = std::find(mActors.begin(), mActors.end(), actor);
-	mActors.erase(iter);
+	auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
+	if (iter != mPendingActors.end()) {
+		std::iter_swap(iter, mActors.end() - 1);
+		mActors.pop_back();
+	}
+	iter = std::find(mActors.begin(), mActors.end(), actor);
+	if (iter != mActors.end()) {
+		std::iter_swap(iter, mActors.end() - 1);
+		mActors.pop_back();
+	}
 }
 
 Texture2D Sequence::getTexture(const std::string& fileName)
@@ -51,8 +65,7 @@ Texture2D Sequence::getTexture(const std::string& fileName)
 		tex = iter->second;
 	}
 	// ñ¢ÉçÅ[Éh
-	else
-	{
+	else {
 		tex = LoadTexture(fileName.c_str());
 		mTextures.emplace(fileName.c_str(), tex);
 	}

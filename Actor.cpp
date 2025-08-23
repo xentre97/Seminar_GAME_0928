@@ -2,8 +2,10 @@
 #include "Sequence.h"
 #include "Component.h"
 
-Actor::Actor(Sequence* sequence)
+Actor::Actor(Sequence* sequence, Type type)
 	: mSequence(sequence)
+	, mType(type)
+	, mState(Ealive)
 	, mPosition(Vector2())
 	, mRectangle()
 	, mForward(1)

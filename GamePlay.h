@@ -20,9 +20,11 @@ public:
     bool loadStage(const char* filename);
 
     void addEnemy(class EnemyActor* enemy);
-    // 敵が死んだときに呼び出される
-    void destroyEnemy(class EnemyActor* enemy);
+    void removeEnemy(class EnemyActor* enemy);
     std::vector<class EnemyActor*> const getEnemies() { return mEnemies; }
+
+    void addWeapon(class WeaponActor* weapon, Actor::Type type);
+    void removeWeapon(class WeaponActor* weapon);
 
     void addSprite(class SpriteComponent* sprite);
     void removeSprite(class SpriteComponent* sprite);
@@ -35,6 +37,9 @@ private:
     Sequence* mNext = nullptr;
     // 敵の配列(主にCollision用に使う)
     std::vector<class EnemyActor*> mEnemies;
+    // 武器の配列(Collisionで使う)
+    std::vector<class WeaponActor*> mPlayerWeapons;
+    std::vector<class WeaponActor*> mEnemyWeapons;
     class PlayerActor* mPlayer;
     // Spriteの配列
     std::vector<class SpriteComponent*> mSprites;

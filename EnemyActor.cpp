@@ -2,8 +2,8 @@
 #include "GamePlay.h"
 #include "SpriteComponent.h"
 
-EnemyActor::EnemyActor(Sequence* sequence)
-	: Actor(sequence)
+EnemyActor::EnemyActor(Sequence* sequence, Type type)
+	: Actor(sequence, type)
 {
 	Texture2D tex = mSequence->getTexture("test.png");
 	mPosition = Vector2{ 500.0f, 300.0f };
@@ -21,7 +21,9 @@ EnemyActor::EnemyActor(Sequence* sequence)
 
 EnemyActor::~EnemyActor()
 {
+	static_cast<GamePlay*>(mSequence)->removeEnemy(this);
 }
+
 void EnemyActor::update()
 {
 	// à íuçXêV

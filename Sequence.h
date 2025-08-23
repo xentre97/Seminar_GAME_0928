@@ -32,8 +32,10 @@ public:
 protected:
     // そのシーケンスに存在するアクターの配列
     std::vector<class Actor*> mActors;
+    std::vector<class Actor*> mPendingActors; // mActorsへの追加待ちのActor
     // そのシーケンスでロードしたテクスチャ達
     std::unordered_map<std::string, Texture2D> mTextures;
+    bool mUpdatingActors = false;
     // コンストラクタをprotectedにして直接 new Sequenceできないように
     Sequence() {};
 };
