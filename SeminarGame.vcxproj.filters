@@ -59,6 +59,9 @@
     <ClCompile Include="SwordActor.cpp">
       <Filter>Actor\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyMove.cpp">
+      <Filter>Component\move</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sequence">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="SwordActor.h">
       <Filter>Actor\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyMove.h">
+      <Filter>Component\move</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

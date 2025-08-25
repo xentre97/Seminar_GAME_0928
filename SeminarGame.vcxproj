@@ -139,6 +139,7 @@
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EnemyActor.cpp" />
+    <ClCompile Include="EnemyMove.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GamePlay.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EnemyActor.h" />
+    <ClInclude Include="EnemyMove.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GamePlay.h" />

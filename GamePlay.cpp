@@ -14,6 +14,7 @@
 #include "WeaponActor.h"
 // Comopnent
 #include "PlayerControl.h"
+#include "EnemyMove.h"
 #include "SpriteComponent.h"
 
 GamePlay::GamePlay()
@@ -317,6 +318,58 @@ void GamePlay::updateCollision()
 			mPlayer->computeRectangle();
 		}
 	}
-	// TODO:Enemyがマップと衝突したときの処理
-	// 上の奴を使いまわせばいい
+
+	// Enemyがマップと衝突したときの処理
+	for (auto enemy : mEnemies) {
+		Rectangle enemyRec = enemy->getRectangle();
+		Vector2 enemyPos = enemy->getPosition();
+
+		for (auto& stageRec : mStageRecs) {
+			if (CheckCollisionRecs(enemyRec, stageRec)) {
+				Rectangle colRec = GetCollisionRec(enemyRec, stageRec);
+				//横のジャンプ系統処理
+				if (colRec.width < colRec.height) {
+					const int tileSize = 32;
+					//進行方向の壁が1マス段差かチェック
+					bool isStep = (stageRec.height <= tileSize * 1.5f);
+					//１マス先、１マス上が存在するかの確認の四角形定義
+					Rectangle checkOneAbove = {
+						colRec.x,
+						stageRec.y - tileSize,
+						colRec.width,
+						1.0f
+					};
+
+					bool isSpaceAboveClear = true;
+					for (const auto& otherStageRec : mStageRecs) {
+						if (CheckCollisionRecs(checkOneAbove, otherStageRec)) {
+							isSpaceAboveClear = false;
+							break;
+						}
+					}
+
+					if (isStep && isSpaceAboveClear) {
+						enemy->jump();
+					}
+					if (enemyRec.x < colRec.x) enemyPos.x -= colRec.width;
+					else enemyPos.x += colRec.width;
+				}
+				//縦方向の重なりが小さい場合、縦の重なり解消
+				else if (colRec.width >= colRec.height) {
+					//上にずらす
+					if (enemyRec.y < colRec.y) {
+						enemyPos.y -= colRec.height;
+						enemy->getEnemyMove().fixFloorCol();
+					}
+					//下にずらす
+					else {
+						enemyPos.y += colRec.height;
+					}
+				}
+				//enemyの四角形を再計算
+				enemy->setPosition(enemyPos);
+				enemy->computeRectangle();
+			}
+		}
+	}
 }

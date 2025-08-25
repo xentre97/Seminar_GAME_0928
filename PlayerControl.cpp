@@ -4,9 +4,9 @@
 
 #include "PlayerActor.h"
 
-PlayerControl::PlayerControl(PlayerActor* actor)
-	: MoveComponent(actor)
-	, mPlayer(actor)
+PlayerControl::PlayerControl(PlayerActor* owner)
+	: MoveComponent(owner)
+	, mPlayer(owner)
 	, mIsGuarding(false)
 	, mDashSpeed(mMoveSpeed * 1.5f)
 {
@@ -118,10 +118,10 @@ void PlayerControl::input()
 void PlayerControl::update()
 {
 	// 重力
-	if (mVelocityY < 10) {
+	if (mVelocityY < 600.0f) { // 600.0fは加速の上限
 		mVelocityY += mGravity;
 	}
-	// 速度を設定
+	// 位置をキャッシュ
 	Vector2 pos = mOwner->getPosition();
 
 	// 1,MoveStateのupdate
@@ -134,30 +134,30 @@ void PlayerControl::update()
 	case PlayerActor::ms_walk:
 	{
 		if (IsKeyDown(KEY_D)) {
-			mVelocityX = mMoveSpeed * GetFrameTime();
+			mVelocityX = mMoveSpeed;
 		}
 		else if (IsKeyDown(KEY_A)) {
-			mVelocityX = -mMoveSpeed * GetFrameTime();
+			mVelocityX = -mMoveSpeed;
 		}
 		break;
 	}
 	case PlayerActor::ms_dash:
 	{
 		if (IsKeyDown(KEY_D)) {
-			mVelocityX = mDashSpeed * GetFrameTime();
+			mVelocityX = mDashSpeed;
 		}
 		else if (IsKeyDown(KEY_A)) {
-			mVelocityX = -mDashSpeed * GetFrameTime();
+			mVelocityX = -mDashSpeed;
 		}
 		break;
 	}
 	case PlayerActor::ms_jump:
 	{
 		if (IsKeyDown(KEY_D)) {
-			mVelocityX = mMoveSpeed * GetFrameTime();
+			mVelocityX = mMoveSpeed;
 		}
 		else if (IsKeyDown(KEY_A)) {
-			mVelocityX = -mMoveSpeed * GetFrameTime();
+			mVelocityX = -mMoveSpeed;
 		}
 		break;
 	}
@@ -180,11 +180,13 @@ void PlayerControl::update()
 	}
 	}
 
-	pos.x += mVelocityX;
-	pos.y += mVelocityY;
+	// 速度を設定
+	pos.x += mVelocityX / GetFPS();
+	pos.y += mVelocityY / GetFPS();
 	// もし床にぶつかるとき,velocityYはGamePlayクラスの
-	// updateCollision関数で0に戻される	
+	// updateCollision関数で0に戻される
 	mOwner->setPosition(pos);
+	mOwner->computeRectangle();
 
 	StateDraw();
 }

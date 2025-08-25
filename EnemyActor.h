@@ -13,7 +13,14 @@ public:
     ~EnemyActor();
 
     void update() override;
+    void computeRectangle() override;
+
+    void jump();
+
+    class EnemyMove& getEnemyMove();
+
 private:
     class SpriteComponent* mSpriteComp;
+    class EnemyMove* mEnemyMove;
 };
 

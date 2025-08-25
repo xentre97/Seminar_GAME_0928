@@ -23,7 +23,7 @@ void SpriteComponent::draw()
 	{
 		Vector2 pos = mOwner->getPosition();
 		// •`‰æ
-		Rectangle src = { 0, 0, mOwner->Forward() * (float)mTexWidth, (float)mTexHeight };
+		Rectangle src = { 0, 0, mOwner->getForward() * (float)mTexWidth, (float)mTexHeight };
 		Rectangle dst = { pos.x, pos.y, (float)mTexWidth, (float)mTexHeight };
 		Vector2 origin = { mTexWidth / 2.0f, mTexHeight / 2.0f };
 		DrawTexturePro(mTexture, src, dst, origin, 0.0f, WHITE);
