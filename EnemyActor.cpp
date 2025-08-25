@@ -1,12 +1,14 @@
 #include "EnemyActor.h"
 #include "GamePlay.h"
+// Component
 #include "SpriteComponent.h"
+#include "EnemyMove.h"
 
 EnemyActor::EnemyActor(Sequence* sequence, Type type)
 	: Actor(sequence, type)
 {
-	Texture2D tex = mSequence->getTexture("test.png");
-	mPosition = Vector2{ 500.0f, 300.0f };
+	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
+	mPosition = Vector2{ 500.0f, 100.0f };
 	mRectangle = {
 		mPosition.x - tex.width / 2.0f,
 		mPosition.y - tex.height / 2.0f,
@@ -15,8 +17,13 @@ EnemyActor::EnemyActor(Sequence* sequence, Type type)
 	};
 
 	static_cast<GamePlay*>(mSequence)->addEnemy(this);
+	
+	// SpriteComponent
 	mSpriteComp = new SpriteComponent(this);
 	mSpriteComp->setTexture(tex);
+	// EnemyMove
+	mEnemyMove = new EnemyMove(this);
+	mEnemyMove->setMoveSpped(100.0f);
 }
 
 EnemyActor::~EnemyActor()
@@ -26,10 +33,25 @@ EnemyActor::~EnemyActor()
 
 void EnemyActor::update()
 {
-	// 位置更新
-	mPosition.x += GetRandomValue(-10, 10);
-	mPosition.y += GetRandomValue(-10, 10);
-	// 当たり判定用矩形の更新
+	Actor::update();
+}
+
+void EnemyActor::computeRectangle()
+{
 	mRectangle.x = mPosition.x - mSpriteComp->getTexWidth() / 2.0f;
 	mRectangle.y = mPosition.y - mSpriteComp->getTexHeight() / 2.0f;
+}
+
+void EnemyActor::jump()
+{
+	if (mEnemyMove) {
+		mEnemyMove->setVelocityY(mEnemyMove->getJumpSpeed());
+	}
+}
+
+EnemyMove& EnemyActor::getEnemyMove()
+{
+	if (mEnemyMove) {
+		return *mEnemyMove;
+	}
 }

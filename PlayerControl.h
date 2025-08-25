@@ -9,7 +9,7 @@ class PlayerControl :
     public MoveComponent
 {
 public:
-    PlayerControl(class PlayerActor* actor);
+    PlayerControl(class PlayerActor* owner);
     void input()override;
     void update()override;
     void fixFloorCol();

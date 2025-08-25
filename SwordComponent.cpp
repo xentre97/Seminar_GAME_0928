@@ -25,8 +25,8 @@ void SwordComponent::updateWeaponPosition()
 {
 	// •ŠíŠ—LŽÒ‚Ì‘O•û‚É•Ší‚ÌˆÊ’u‚ðÝ’è
 	Vector2 pos = mOwner->getPosition();
-	mWeapon->setForward(mOwner->Forward());
+	mWeapon->setForward(mOwner->getForward());
 	pos.x += (mOwner->getRectangle().width + mWeapon->getRectangle().width)
-		* mWeapon->Forward() / 2.0f;
+		* mWeapon->getForward() / 2.0f;
 	mWeapon->setPosition(pos);
 }

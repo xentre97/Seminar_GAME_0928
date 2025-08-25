@@ -3,12 +3,11 @@
 
 MoveComponent::MoveComponent(Actor* owner)
 	: Component(owner)
-	, mGravity(1.0f)
+	, mGravity(60.0f)
 	, mMoveSpeed(180.0f)
-	, mJumpSpeed(-20.0f)
+	, mJumpSpeed(-1200.0f)
 	, mVelocityX(0.0f)
 	, mVelocityY(0.0f)
-	, mIsJumping(false)
 {
 }
 

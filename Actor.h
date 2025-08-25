@@ -33,12 +33,13 @@ public:
 	const Vector2& getPosition() const { return mPosition; }
 	virtual const Rectangle& getRectangle() const { return mRectangle; }
 	Sequence* getSequence() const { return mSequence; }
-	int Forward() { return mForward; }
+	int getForward() const { return mForward; }
 
 	void setState(State state) { mState = state; }
+	// ‚±‚ÌŠÖ”‚ğ“Ç‚ñ‚¾Œã‚ÍcomputeRectangle()‚ğŒÄ‚Ô‚æ‚¤‚É‚·‚é
 	void setPosition(Vector2 pos) { mPosition = pos; }
 	void setForward(int forward) { mForward = forward; }
-
+	// setPosition‚Æ“¯‚ÉŒÄ‚Ño‚·
 	virtual void computeRectangle() {} ;
 
 protected:

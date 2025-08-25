@@ -22,6 +22,8 @@ public:
     void addEnemy(class EnemyActor* enemy);
     void removeEnemy(class EnemyActor* enemy);
     std::vector<class EnemyActor*> const getEnemies() { return mEnemies; }
+    // 敵やその他がプレイヤー情報を取得するために定義
+    class PlayerActor* getPlayer() const { return mPlayer; }
 
     void addWeapon(class WeaponActor* weapon, Actor::Type type);
     void removeWeapon(class WeaponActor* weapon);

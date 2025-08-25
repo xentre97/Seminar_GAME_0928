@@ -17,7 +17,7 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	, mAttackTimer(0.0f)
 {
 	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
-	mPosition = Vector2{ 0.0f, 0.0f };
+	mPosition = Vector2{ 100.0f, 200.0f };
 	mRectangle = {
 		mPosition.x - tex.width / 2.0f,
 		mPosition.y - tex.height / 2.0f,
@@ -50,8 +50,6 @@ void PlayerActor::update()
 {
 	// 基底のupdate() : Componentのupdate
 	Actor::update();
-	// 矩形再計算
-	computeRectangle();
 
 	// とりあえずの実装(updateする度にplayする必要はない)
 	// ステート変更時に呼び出す関数,onChangeStateみたいなのを作ればいい
