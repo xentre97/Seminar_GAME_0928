@@ -13,8 +13,6 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	, mMoveState(ms_idle)
 	, mActionState(as_idle)
 	, mSwordComp(nullptr)
-	, mAttackTime(0.0f)
-	, mAttackTimer(0.0f)
 {
 	Texture2D tex  = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 100.0f, 200.0f };
@@ -96,7 +94,7 @@ void PlayerActor::onExitState(PlayerState nextState)
 		case as_idle:
 			break;
 		case as_attack:
- 			mSwordComp->endAttack();
+			mSwordComp->endAttack();
 			break;
 		case as_guard:
 			break;
@@ -106,6 +104,10 @@ void PlayerActor::onExitState(PlayerState nextState)
 
 void PlayerActor::onEnterState(PlayerState nextState)
 {
+	// Žg‚¤‚©‚à
+	PlayerState lastMoveState = mMoveState;
+	PlayerState lastActionState = mActionState;
+
 	if (nextState <= ms_jump) {
 		mMoveState = nextState;
 		switch (mMoveState)
@@ -128,8 +130,18 @@ void PlayerActor::onEnterState(PlayerState nextState)
 		case as_idle:
 			break;
 		case as_attack:
-			// •Ší‚ðnew‚·‚é
-			mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
+			// chargeUŒ‚
+			if (lastActionState == as_charge) {
+				mSwordComp->startAttack(10, 13, mPlayerControl->getAttackTime());
+			}
+			// ƒ_ƒbƒVƒ…UŒ‚
+			else if (mMoveState == ms_dash) {
+				mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
+			}
+			// ’ÊíUŒ‚
+			else {
+				mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
+			}
 			break;
 		case as_guard:
 			break;

@@ -62,7 +62,9 @@
     <ClCompile Include="EnemyMove.cpp">
       <Filter>Component\move</Filter>
     </ClCompile>
-    <ClCompile Include="HpComponent.cpp" />
+    <ClCompile Include="HpComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sequence">
@@ -160,6 +162,8 @@
     <ClInclude Include="EnemyMove.h">
       <Filter>Component\move</Filter>
     </ClInclude>
-    <ClInclude Include="HpComponent.h" />
+    <ClInclude Include="HpComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
