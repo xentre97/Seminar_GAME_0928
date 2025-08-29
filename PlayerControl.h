@@ -14,10 +14,12 @@ public:
     void update()override;
     void fixFloorCol();
 
+    float getAttackTime() const { return mAttackTime; }
+
 private:
     void StateDraw(); // デバッグ用の関数
     class PlayerActor* mPlayer; // mOwnerと同じ(型が違う)
-    bool mIsGuarding;
     float mDashSpeed;
-    float actionTimer;
+    float mAttackTimer;
+    float mAttackTime;  // 通常攻撃の時間
 };

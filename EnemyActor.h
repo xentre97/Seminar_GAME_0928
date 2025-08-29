@@ -9,6 +9,13 @@ class EnemyActor :
     public Actor
 {
 public:
+    // Playerと違って移動しながら攻撃などは考えないので,一つのステートにまとめた
+    enum EnemyState
+    {
+        E_walk,
+        E_jump,
+        E_attack,
+    };
     EnemyActor(class Sequence* sequence, Type type);
     ~EnemyActor();
 
@@ -16,10 +23,16 @@ public:
     void computeRectangle() override;
 
     void jump();
+    void changeState(EnemyState nextState);
 
     class EnemyMove& getEnemyMove();
+    EnemyState getEnemyState() { return mEnemyState; }
+
 
 private:
+    void onEnterState(EnemyState nextState);
+    void onExitState(EnemyState nextState);
+    EnemyState mEnemyState;
     class SpriteComponent* mSpriteComp;
     class EnemyMove* mEnemyMove;
 };

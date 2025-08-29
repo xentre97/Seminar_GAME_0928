@@ -16,6 +16,6 @@ public:
 private:
     class EnemyActor* mEnemy;   // mOwner‚Æ“¯‚¶(castÈ—ª—p)
     class Actor* mTarget;
-    int mAttackRange;
+    float mAttackRange;
 };
 

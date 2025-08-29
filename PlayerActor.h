@@ -26,7 +26,9 @@ public:
         // actionState
         as_idle,
         as_attack,
-        as_guard
+        as_guard,
+        as_charge,
+        //as_evasion, // ‰ñ”ð
     };
     PlayerActor(class Sequence* sequence, Type type);
 
@@ -39,22 +41,18 @@ public:
     PlayerState getActionState() { return mActionState; }
     
     void computeRectangle() override;
-    void setMoveState(PlayerState state) { mMoveState = state; }
-    void setActionState(PlayerState state) { mActionState = state; }
     void changeState(PlayerState nextState);
 
 private:
     void onEnterState(PlayerState nextState);
     void onExitState(PlayerState nextState);
+    
     PlayerState mMoveState;
     PlayerState mActionState;
     class CameraComponent* mCameraComp;
     class PlayerControl* mPlayerControl;
     class AnimSpriteComponent* mAnimsc;
     class SwordComponent* mSwordComp;
-
-    float mAttackTime;
-    float mAttackTimer;
 };
 
 // ‹““®
