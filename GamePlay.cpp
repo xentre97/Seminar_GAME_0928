@@ -329,30 +329,41 @@ void GamePlay::updateCollision()
 				Rectangle colRec = GetCollisionRec(enemyRec, stageRec);
 				//横のジャンプ系統処理
 				if (colRec.width < colRec.height) {
-					const int tileSize = 32;
-					//進行方向の壁が1マス段差かチェック
-					bool isStep = (stageRec.height <= tileSize * 1.5f);
-					//１マス先、１マス上が存在するかの確認の四角形定義
-					Rectangle checkOneAbove = {
-						colRec.x,
-						stageRec.y - tileSize,
-						colRec.width,
-						1.0f
-					};
+					// 横の重なり解消
+					if (enemyRec.x < colRec.x) enemyPos.x -= colRec.width;
+					else enemyPos.x += colRec.width;
+					// ジャンプ中なら以降の処理は不要
+					if (enemy->getEnemyState() != EnemyActor::E_jump)
+					{
+						const int tileSize = 32;	
+						int forward = enemy->getForward();
+						bool isStep = false;
+						if (enemyPos.x < stageRec.x && forward > 0 ||
+							enemyPos.x > stageRec.x && forward < 0) {
+							//進行方向の壁が1マス段差かチェック
+							isStep = (stageRec.height <= tileSize * 1.5f);
+						}
+						//１マス先、１マス上が存在するかの確認の四角形定義
+						Rectangle checkOneAbove = {
+							colRec.x,
+							stageRec.y - tileSize,
+							colRec.width,
+							1.0f
+						};
 
-					bool isSpaceAboveClear = true;
-					for (const auto& otherStageRec : mStageRecs) {
-						if (CheckCollisionRecs(checkOneAbove, otherStageRec)) {
-							isSpaceAboveClear = false;
+						bool isSpaceAboveClear = true;
+						for (const auto& otherStageRec : mStageRecs) {
+							if (CheckCollisionRecs(checkOneAbove, otherStageRec)) {
+								isSpaceAboveClear = false;
+								break;
+							}
+						}
+
+						if (isStep && isSpaceAboveClear) {
+							enemy->jump();
 							break;
 						}
 					}
-
-					if (isStep && isSpaceAboveClear) {
-						enemy->jump();
-					}
-					if (enemyRec.x < colRec.x) enemyPos.x -= colRec.width;
-					else enemyPos.x += colRec.width;
 				}
 				//縦方向の重なりが小さい場合、縦の重なり解消
 				else if (colRec.width >= colRec.height) {

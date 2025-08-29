@@ -7,8 +7,9 @@
 PlayerControl::PlayerControl(PlayerActor* owner)
 	: MoveComponent(owner)
 	, mPlayer(owner)
-	, mIsGuarding(false)
 	, mDashSpeed(mMoveSpeed * 1.5f)
+	, mAttackTimer(0.0f)
+	, mAttackTime(0.5f)
 {
 }
 
@@ -80,11 +81,11 @@ void PlayerControl::input()
 	{
 	case PlayerActor::as_idle:
 	{
-		if (IsKeyPressed(KEY_W)) {
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			mPlayer->changeState(PlayerActor::as_attack);
-			actionTimer = 0.0f;
+			mAttackTimer = 0.0f;
 		}
-		else if (IsKeyDown(KEY_S)) {
+		else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			mPlayer->changeState(PlayerActor::as_guard);
 		}
 		break;
@@ -95,7 +96,7 @@ void PlayerControl::input()
 	}
 	case PlayerActor::as_guard:
 	{
-		if (!IsKeyDown(KEY_S)) {
+		if (!IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			mPlayer->changeState(PlayerActor::as_idle);
 		}
 		break;
@@ -163,7 +164,7 @@ void PlayerControl::update()
 	}
 	}
 
-	// 1,ActionState‚Ìupdate
+	// 2.ActionState‚Ìupdate
 	switch (mPlayer->getActionState())
 	{
 	case PlayerActor::as_idle:
@@ -172,6 +173,11 @@ void PlayerControl::update()
 	}
 	case PlayerActor::as_attack:
 	{
+		mAttackTimer += GetFrameTime();
+		if (mAttackTimer >= mAttackTime) {
+			mAttackTimer = 0.0f;
+			mPlayer->changeState(PlayerActor::as_idle);
+		}
 		break;
 	}
 	case PlayerActor::as_guard:
@@ -199,7 +205,7 @@ void PlayerControl::fixFloorCol()
 	mVelocityY = 0.0f;
 	// ‹ó’†‚©‚ç‚Ì‰ðÁ‚Ìê‡‚ÍState‚ð•ÏX‚·‚é
 	if (mPlayer->getMoveState()  == PlayerActor::ms_jump) {
-		mPlayer->setMoveState(PlayerActor::ms_idle);
+		mPlayer->changeState(PlayerActor::ms_idle);
 	}
 }
 

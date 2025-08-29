@@ -26,9 +26,9 @@ int main()
 		currentSequence->update();
 
 		/* 描画 */
-		DrawFPS(10, 20); // FPSを表示 消してもいい
 		currentSequence->draw();
-
+		DrawFPS(10, 20); // FPSを表示 消してもいい
+	
 		// シーケンス切り替え
 		Sequence* next = currentSequence->nextSequence();
 		if (next != nullptr) {

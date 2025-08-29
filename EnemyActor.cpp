@@ -6,6 +6,7 @@
 
 EnemyActor::EnemyActor(Sequence* sequence, Type type)
 	: Actor(sequence, type)
+	, mEnemyState(E_walk)
 {
 	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 500.0f, 100.0f };
@@ -44,14 +45,49 @@ void EnemyActor::computeRectangle()
 
 void EnemyActor::jump()
 {
-	if (mEnemyMove) {
+	if (mEnemyState == E_walk) {
+		changeState(E_jump);
 		mEnemyMove->setVelocityY(mEnemyMove->getJumpSpeed());
 	}
+}
+
+void EnemyActor::changeState(EnemyState nextState)
+{
+	onExitState(nextState);
+	onEnterState(nextState);
 }
 
 EnemyMove& EnemyActor::getEnemyMove()
 {
 	if (mEnemyMove) {
 		return *mEnemyMove;
+	}
+}
+
+void EnemyActor::onEnterState(EnemyState nextState)
+{
+	// ステート変更
+	mEnemyState = nextState;
+	switch (mEnemyState)
+	{
+	case E_walk:
+		break;
+	case E_jump:
+		break;
+	case E_attack:
+		break;
+	}
+}
+
+void EnemyActor::onExitState(EnemyState nextState)
+{
+	switch (mEnemyState)
+	{
+	case E_walk:
+		break;
+	case E_jump:
+		break;
+	case E_attack:
+		break;
 	}
 }

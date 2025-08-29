@@ -16,7 +16,7 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	, mAttackTime(0.0f)
 	, mAttackTimer(0.0f)
 {
-	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
+	Texture2D tex  = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 100.0f, 200.0f };
 	mRectangle = {
 		mPosition.x - tex.width / 2.0f,
@@ -34,6 +34,7 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	};
 	// SetTetureはAnimSpriteComponentの関数で一つ一つ行う
 	mAnimsc->setAnimTextures(texs);
+	mAnimsc->play(0, 0, true);	// Idle状態の絵
 
 	mCameraComp = new CameraComponent(this);
 	mPlayerControl = new PlayerControl(this);
@@ -50,35 +51,6 @@ void PlayerActor::update()
 {
 	// 基底のupdate() : Componentのupdate
 	Actor::update();
-
-	// とりあえずの実装(updateする度にplayする必要はない)
-	// ステート変更時に呼び出す関数,onChangeStateみたいなのを作ればいい
-	// 複雑な処理が必要ならstateのonEnter,onExitのような関数を作る
-	switch (mMoveState)
-	{
-	case ms_idle:
-		mAnimsc->play(0, 0, true); break;
-	case ms_jump:
-		mAnimsc->play(1, 1, true); break;
-	case ms_walk:
-		mAnimsc->play(2, 2, true); break;
-	case ms_dash:
-		mAnimsc->play(3, 3, true); break;
-	}
-	switch (mActionState)
-	{
-	case as_idle:
-		break;
-	case as_attack:
-		mAttackTimer += GetFrameTime();
-		if (mAttackTimer >= mAttackTime) {
-			mAttackTimer = 0.0f;
-			changeState(as_idle);
-		}
-		break;
-	case as_guard:
-		break;
-	}
 }
 
 const Camera2D& PlayerActor::getCamera() const
@@ -139,14 +111,15 @@ void PlayerActor::onEnterState(PlayerState nextState)
 		switch (mMoveState)
 		{
 		case ms_idle:
-			break;
-		case ms_walk:
-			break;
-		case ms_dash:
-			break;
+			mAnimsc->play(0, 0, true); break;
 		case ms_jump:
-			break;
+			mAnimsc->play(1, 1, true); break;
+		case ms_walk:
+			mAnimsc->play(2, 2, true); break;
+		case ms_dash:
+			mAnimsc->play(3, 3, true); break;
 		}
+
 	}
 	else {
 		mActionState = nextState;
@@ -156,8 +129,7 @@ void PlayerActor::onEnterState(PlayerState nextState)
 			break;
 		case as_attack:
 			// 武器をnewする
-			mAttackTime = 0.5f;
-			mSwordComp->startAttack(0, 9, mAttackTime);
+			mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
 			break;
 		case as_guard:
 			break;
