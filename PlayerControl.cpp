@@ -10,6 +10,8 @@ PlayerControl::PlayerControl(PlayerActor* owner)
 	, mDashSpeed(mMoveSpeed * 1.5f)
 	, mAttackTimer(0.0f)
 	, mAttackTime(0.5f)
+	, mChargeTimer(0.0f)
+	, mChargeTime(1.0f)
 {
 }
 
@@ -92,12 +94,32 @@ void PlayerControl::input()
 	}
 	case PlayerActor::as_attack:
 	{
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+			mChargeTimer += GetFrameTime();
+		}
+		else {
+			mChargeTimer = 0.0f;
+		}
 		break;
 	}
 	case PlayerActor::as_guard:
 	{
 		if (!IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			mPlayer->changeState(PlayerActor::as_idle);
+		}
+		break;
+	}
+	case PlayerActor::as_charge:
+	{
+		mChargeTimer += GetFrameTime();
+		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+			if (mChargeTimer > mChargeTime) {
+				mPlayer->changeState(PlayerActor::as_attack);
+			}
+			else {
+				mPlayer->changeState(PlayerActor::as_idle);
+			}
+			mChargeTimer = 0.0f;
 		}
 		break;
 	}
@@ -176,12 +198,23 @@ void PlayerControl::update()
 		mAttackTimer += GetFrameTime();
 		if (mAttackTimer >= mAttackTime) {
 			mAttackTimer = 0.0f;
-			mPlayer->changeState(PlayerActor::as_idle);
+			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+				mPlayer->changeState(PlayerActor::as_charge);
+			}
+			else {
+				mPlayer->changeState(PlayerActor::as_idle);
+			}
 		}
 		break;
 	}
 	case PlayerActor::as_guard:
 	{
+		break;
+	}
+	case PlayerActor::as_charge:
+	{
+		// charge’†‚Í‘¬“x‚ð’x‚­‚·‚é
+		mVelocityX /= 2.0f;
 		break;
 	}
 	}
@@ -239,6 +272,9 @@ void PlayerControl::StateDraw()
 	}
 	case PlayerActor::as_guard: {
 		DrawText("Action : guard", 700, 100, 30, BLACK); break;
+	}
+	case PlayerActor::as_charge: {
+		DrawText("Action : charge", 700, 100, 30, BLACK); break;
 	}
 	}
 }

@@ -22,4 +22,6 @@ private:
     float mDashSpeed;
     float mAttackTimer;
     float mAttackTime;  // ’ÊíUŒ‚‚ÌŠÔ
+    float mChargeTimer;
+    float mChargeTime;
 };
