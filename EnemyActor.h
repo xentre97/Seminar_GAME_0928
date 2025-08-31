@@ -25,8 +25,9 @@ public:
     void jump();
     void changeState(EnemyState nextState);
 
-    class EnemyMove& getEnemyMove();
-    EnemyState getEnemyState() { return mEnemyState; }
+    class EnemyMove* getEnemyMove() { return mEnemyMove; }
+    class HpComponent* getHpComp() { return mHpComp; }
+    EnemyState getEnemyState() const { return mEnemyState; }
 
 
 private:
@@ -35,6 +36,7 @@ private:
     EnemyState mEnemyState;
     class SpriteComponent* mSpriteComp;
     class EnemyMove* mEnemyMove;
+    class HpComponent* mHpComp;
     class WeaponComponent* mWeaponComp;
 };
 

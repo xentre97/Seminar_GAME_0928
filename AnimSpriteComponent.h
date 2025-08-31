@@ -26,11 +26,6 @@ public:
     AnimSpriteComponent(class Actor* owner, int drawOrder = 100);
     // 一定のフレームごとにアニメーションを更新 componentからoverride
     void update() override;
-    // アニメーションに使うテクスチャの設定
-    void setAnimTextures(std::vector<Texture2D*> textures);
-    void setTexturesMap(std::string name, std::vector<Texture2D*> textures);
-    // アニメーションを再生する
-    void play(int begin, int end, bool loop, float fps = 60.0f);
 
     // アニメーションを追加
     void addAnimation(const std::string& name,
@@ -43,18 +38,10 @@ public:
     bool isAnimating() const { return mIsAnimating; }
 
 private:
+    // アニメーションのマップ
     std::unordered_map<std::string, Animation> mAnimations;
     Animation* mCurrentAnim;  // 現在のアニメーション
-    // アニメーションでのすべてのテクスチャ
-    std::vector<Texture2D*> mAnimTextures;
-    std::unordered_map<std::string, std::vector<Texture2D*>> mTexturesMap;
     // 現在表示しているフレーム
     float mCurrFrame;
-    // アニメーションのFPS 動的に変更可能
-    float mAnimFPS;
-    bool mLoopFlag;
-    int mAnimBegin;
-    int mAnimEnd;
-    int mFrameCount;
     bool mIsAnimating;
 };

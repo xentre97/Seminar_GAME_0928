@@ -3,6 +3,7 @@
 // Component
 #include "SpriteComponent.h"
 #include "EnemyMove.h"
+#include "HpComponent.h"
 #include "ArrowComponent.h"
 
 EnemyActor::EnemyActor(Sequence* sequence, Type type)
@@ -26,6 +27,9 @@ EnemyActor::EnemyActor(Sequence* sequence, Type type)
 	// EnemyMove
 	mEnemyMove = new EnemyMove(this);
 	mEnemyMove->setMoveSpped(100.0f);
+	// HpComponent
+	mHpComp = new HpComponent(this, 200.0f); //‰¼‚ÉÅ‘åHp‚ğ’è”‚ÅŒˆ‚ß‚éB
+	// WeaponComponent(Arrow‚É‚µ‚Ä‚İ‚½)
 	mWeaponComp = new ArrowComponent(this);
 }
 
@@ -57,13 +61,6 @@ void EnemyActor::changeState(EnemyState nextState)
 {
 	onExitState(nextState);
 	onEnterState(nextState);
-}
-
-EnemyMove& EnemyActor::getEnemyMove()
-{
-	if (mEnemyMove) {
-		return *mEnemyMove;
-	}
 }
 
 void EnemyActor::onEnterState(EnemyState nextState)

@@ -1,5 +1,10 @@
 #include "WeaponComponent.h"
+
 #include "WeaponActor.h"
+#include "EnemyActor.h"
+#include "PlayerActor.h"
+
+#include "HpComponent.h"
 
 WeaponComponent::WeaponComponent(Actor* owner)
 	: Component(owner)

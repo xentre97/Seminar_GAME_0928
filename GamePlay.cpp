@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <iostream>
 
 // Actor
 #include "PlayerActor.h"
@@ -16,6 +17,7 @@
 #include "PlayerControl.h"
 #include "EnemyMove.h"
 #include "SpriteComponent.h"
+#include "WeaponComponent.h"
 
 GamePlay::GamePlay()
 {
@@ -134,7 +136,7 @@ bool GamePlay::loadStage(const char* filename)
 	std::string line;
 	std::vector<std::vector<int>> tiles;
 	
-	// 弐次元配列tilesにデータを移す
+	// 2次元配列tilesにデータを移す
 	while (std::getline(file, line))
 	{
 		std::vector<int> row;
@@ -266,8 +268,7 @@ void GamePlay::updateCollision()
 			Rectangle enemyRec = enemy->getRectangle();
 			Rectangle weaponRec = weapon->getRectangle();
 			if (CheckCollisionRecs(enemyRec, weaponRec)) {
-				// 敵即死
-				enemy->setState(Actor::Edead);
+				weapon->onHit(enemy);
 			}
 		}
 	}
@@ -383,7 +384,7 @@ void GamePlay::updateCollision()
 					//上にずらす
 					if (enemyRec.y < colRec.y) {
 						enemyPos.y -= colRec.height;
-						enemy->getEnemyMove().fixFloorCol();
+						enemy->getEnemyMove()->fixFloorCol();
 					}
 					//下にずらす
 					else {
