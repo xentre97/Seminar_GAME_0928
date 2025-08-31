@@ -195,6 +195,9 @@ void PlayerControl::update()
 	}
 	case PlayerActor::as_attack:
 	{
+		/*if (mPlayer->getWeapon()->attackEnded()) {
+
+		}*/
 		mAttackTimer += GetFrameTime();
 		if (mAttackTimer >= mAttackTime) {
 			mAttackTimer = 0.0f;

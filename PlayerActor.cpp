@@ -15,21 +15,21 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	, mActionState(as_idle)
 	, mSwordComp(nullptr)
 {
-	Texture2D tex  = mSequence->getTexture("testPlayerIdle.png");
+	Texture2D* tex  = mSequence->getTexture("test.png");
 	mPosition = Vector2{ 100.0f, 200.0f };
 	mRectangle = {
-		mPosition.x - tex.width / 2.0f,
-		mPosition.y - tex.height / 2.0f,
-		(float)tex.width,
-		(float)tex.height
+		mPosition.x - tex->width / 2.0f,
+		mPosition.y - tex->height / 2.0f,
+		(float)tex->width,
+		(float)tex->height
 	};
 
 	mAnimsc = new AnimSpriteComponent(this);
-	std::vector<Texture2D> texs = {
+	std::vector<Texture2D*> texs = {
 		tex,
-		mSequence->getTexture("testPlayerJump.png"),
-		mSequence->getTexture("testPlayerWalk.png"),
-		mSequence->getTexture("testPlayerDash.png"),
+		mSequence->getTexture("test.png"),
+		mSequence->getTexture("test.png"),
+		mSequence->getTexture("test.png"),
 	};
 	// SetTeture‚ÍAnimSpriteComponent‚ÌŠÖ”‚Åˆê‚Âˆê‚Âs‚¤
 	mAnimsc->setAnimTextures(texs);

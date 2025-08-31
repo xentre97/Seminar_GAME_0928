@@ -55,19 +55,17 @@ void Sequence::removeActor(Actor* actor)
 	}
 }
 
-Texture2D Sequence::getTexture(const std::string& fileName)
+Texture2D* Sequence::getTexture(const std::string& fileName)
 {
-	Texture2D tex;
 	// テクスチャが既に連想配列に入っているかチェック
 	auto iter = mTextures.find(fileName);
 	// ロード済み
 	if (iter != mTextures.end()) {
-		tex = iter->second;
+		return &iter->second;
 	}
 	// 未ロード
 	else {
-		tex = LoadTexture(fileName.c_str());
-		mTextures.emplace(fileName.c_str(), tex);
+		auto result = mTextures.emplace(fileName.c_str(), LoadTexture(fileName.c_str()));
+		return &result.first->second;
 	}
-	return tex;
 }

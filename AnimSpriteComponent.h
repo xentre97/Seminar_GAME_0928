@@ -14,7 +14,7 @@ public:
     // 一定のフレームごとにアニメーションを更新 componentからoverride
     void update() override;
     // アニメーションに使うテクスチャの設定
-    void setAnimTextures(const std::vector<Texture2D>& textures);
+    void setAnimTextures(std::vector<Texture2D*> textures);
     // アニメーションを再生する
     void play(int begin, int end, bool loop, float fps = 60.0f);
 
@@ -22,7 +22,7 @@ public:
 
 private:
     // アニメーションでのすべてのテクスチャ
-    std::vector<Texture2D> mAnimTextures;
+    std::vector<Texture2D*> mAnimTextures;
     // 現在表示しているフレーム
     float mCurrFrame;
     // アニメーションのFPS 動的に変更可能
@@ -30,5 +30,6 @@ private:
     bool mLoopFlag;
     int mAnimBegin;
     int mAnimEnd;
+    int mFrameCount;
     bool mIsAnimating;
 };

@@ -7,17 +7,17 @@
 SwordActor::SwordActor(Sequence* sequence, Type type, Type owner)
 	: WeaponActor(sequence, type, owner)
 {
-	Texture2D tex = mSequence->getTexture("testSword01.png");
+	Texture2D* tex = mSequence->getTexture("testSword01.png");
 	mPosition = Vector2{ 500.0f, 300.0f };
 	mRectangle = {
-		mPosition.x - tex.width / 2.0f,
-		mPosition.y - tex.height / 2.0f,
-		(float)tex.width,
-		(float)tex.height
+		mPosition.x - tex->width / 2.0f,
+		mPosition.y - tex->height / 2.0f,
+		(float)tex->width,
+		(float)tex->height
 	};
 
 	mAnimsc = new AnimSpriteComponent(this);
-	std::vector<Texture2D> texs = {
+	std::vector<Texture2D*> texs = {
 		// ƒ‚[ƒVƒ‡ƒ“1
 		tex,
 		mSequence->getTexture("testSword02.png"),

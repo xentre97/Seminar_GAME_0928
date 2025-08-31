@@ -210,7 +210,7 @@ void GamePlay::addWeapon(WeaponActor* weapon, Actor::Type type)
 	if (type == Actor::Eplayer) {
 		mPlayerWeapons.emplace_back(weapon);
 	}
-	else if (type == Actor::Eplayer) {
+	else if (type == Actor::Eenemy) {
 		mEnemyWeapons.emplace_back(weapon);
 	}
 }
@@ -259,7 +259,7 @@ void GamePlay::updateCollision()
 {
 	Rectangle playerRec = mPlayer->getRectangle();
 
-	// TODO:WeaponとEnemyの衝突検知,処理
+	// PlayerWeaponとEnemyの衝突検知,処理
 	for (auto enemy : mEnemies) {
 		for (auto weapon : mPlayerWeapons)
 		{
@@ -269,6 +269,17 @@ void GamePlay::updateCollision()
 				// 敵即死
 				enemy->setState(Actor::Edead);
 			}
+		}
+	}
+
+	// TODO:EnemyWeaponとPlayerの衝突検知,処理
+	for (auto weapon : mEnemyWeapons)
+	{
+		Rectangle playerRec = mPlayer->getRectangle();
+		Rectangle weaponRec = weapon->getRectangle();
+		if (CheckCollisionRecs(playerRec, weaponRec)) {
+			// 即死
+			mNext = new GameOver();
 		}
 	}
 
@@ -316,6 +327,8 @@ void GamePlay::updateCollision()
 			mPlayer->setPosition(playerPos);
 			// Playerの四角形もずらす
 			mPlayer->computeRectangle();
+			// playerRecの更新が必要
+			playerRec = mPlayer->getRectangle();
 		}
 	}
 

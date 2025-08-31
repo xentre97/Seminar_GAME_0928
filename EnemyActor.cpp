@@ -3,28 +3,30 @@
 // Component
 #include "SpriteComponent.h"
 #include "EnemyMove.h"
+#include "ArrowComponent.h"
 
 EnemyActor::EnemyActor(Sequence* sequence, Type type)
 	: Actor(sequence, type)
 	, mEnemyState(E_walk)
 {
-	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
+	Texture2D* tex = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 500.0f, 100.0f };
 	mRectangle = {
-		mPosition.x - tex.width / 2.0f,
-		mPosition.y - tex.height / 2.0f,
-		(float)tex.width,
-		(float)tex.height
+		mPosition.x - tex->width / 2.0f,
+		mPosition.y - tex->height / 2.0f,
+		(float)tex->width,
+		(float)tex->height
 	};
 
 	static_cast<GamePlay*>(mSequence)->addEnemy(this);
 	
 	// SpriteComponent
 	mSpriteComp = new SpriteComponent(this);
-	mSpriteComp->setTexture(tex);
+	mSpriteComp->setTexture(*tex);
 	// EnemyMove
 	mEnemyMove = new EnemyMove(this);
 	mEnemyMove->setMoveSpped(100.0f);
+	mWeaponComp = new ArrowComponent(this);
 }
 
 EnemyActor::~EnemyActor()
@@ -75,6 +77,7 @@ void EnemyActor::onEnterState(EnemyState nextState)
 	case E_jump:
 		break;
 	case E_attack:
+		mWeaponComp->startAttack(0, 2, 0.5f);
 		break;
 	}
 }
@@ -88,6 +91,7 @@ void EnemyActor::onExitState(EnemyState nextState)
 	case E_jump:
 		break;
 	case E_attack:
+		mWeaponComp->endAttack();
 		break;
 	}
 }

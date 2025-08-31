@@ -35,5 +35,6 @@ private:
     EnemyState mEnemyState;
     class SpriteComponent* mSpriteComp;
     class EnemyMove* mEnemyMove;
+    class WeaponComponent* mWeaponComp;
 };
 

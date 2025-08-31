@@ -27,7 +27,7 @@ public:
     void addActor(Actor* actor);
     void removeActor(Actor* actor);
 
-    Texture2D getTexture(const std::string& fileName);
+    Texture2D* getTexture(const std::string& fileName);
 
 protected:
     // そのシーケンスに存在するアクターの配列
