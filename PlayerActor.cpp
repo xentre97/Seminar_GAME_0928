@@ -5,6 +5,7 @@
 #include "PlayerControl.h"
 #include "AnimSpriteComponent.h"
 #include "SwordComponent.h"
+#include "ArrowComponent.h"
 
 #include "GamePlay.h"
 
@@ -37,6 +38,7 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	mCameraComp = new CameraComponent(this);
 	mPlayerControl = new PlayerControl(this);
 	mSwordComp = new SwordComponent(this);
+	mArrowComp = new ArrowComponent(this);
 }
 
 void PlayerActor::input()
@@ -95,6 +97,7 @@ void PlayerActor::onExitState(PlayerState nextState)
 			break;
 		case as_attack:
 			mSwordComp->endAttack();
+			mArrowComp->endAttack();
 			break;
 		case as_guard:
 			break;
@@ -140,7 +143,8 @@ void PlayerActor::onEnterState(PlayerState nextState)
 			}
 			// ’ÊíUŒ‚
 			else {
-				mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
+				//mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
+				mArrowComp->startAttack(0, 1, mPlayerControl->getAttackTime());
 			}
 			break;
 		case as_guard:
