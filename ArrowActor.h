@@ -2,7 +2,7 @@
 #include "WeaponActor.h"
 
 /// <summary>
-/// �ߐڕ���F��
+/// 遠距離武器：弓
 /// </summary>
 class ArrowActor :
     public WeaponActor
@@ -16,9 +16,9 @@ public:
     void onStartAttack(int begin, int end, float attackTime);
     void computeRectangle() override;
 
-    void setVelocity(Vector2 v) {mVecocity = v;}
+    void setVelocity(Vector2 v) { mVelocity = v; }
     void setLifeTime(float t) {mLifeTime = t;}
-    void isDead() const {return mDead;}
+    bool isDead() const {return mDead;}
 
 private:
     class AnimSpriteComponent* mAnimsc;

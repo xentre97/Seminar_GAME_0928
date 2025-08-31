@@ -53,6 +53,7 @@ private:
     class PlayerControl* mPlayerControl;
     class AnimSpriteComponent* mAnimsc;
     class SwordComponent* mSwordComp;
+    class ArrowComponent* mArrowComp;
 };
 
 // ‹““®

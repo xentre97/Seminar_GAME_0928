@@ -1,4 +1,5 @@
 #include "ArrowActor.h"
+#include "Sequence.h"
 
 #include "AnimSpriteComponent.h"
 
@@ -6,7 +7,8 @@ ArrowActor::ArrowActor(Sequence* sequence, Type type, Type owner)
     : WeaponActor(sequence, type, owner)
 {
     // 初期テクスチャと当たり
-    Texture2D tex0 = mSequence->getTexture("arrow01.png");
+    //Texture2D tex0 = mSequence->getTexture("arrow01.png");
+    Texture2D tex0 = mSequence->getTexture("testSword01.png");
     mPosition = Vector2{ 500.0f, 300.0f };
     mRectangle = {
         mPosition.x - tex0.width / 2.0f,
@@ -19,8 +21,10 @@ ArrowActor::ArrowActor(Sequence* sequence, Type type, Type owner)
     mAnimsc = new AnimSpriteComponent(this);
     std::vector<Texture2D> frames = {
         tex0,
-        mSequence->getTexture("arrow02.png"),
+        /*mSequence->getTexture("arrow02.png"),
         mSequence->getTexture("arrow03.png"),
+        */mSequence->getTexture("testSword01.png"),
+        mSequence->getTexture("testSword01.png"),
     };
     mAnimsc->setAnimTextures(frames);
 }
