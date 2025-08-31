@@ -9,7 +9,7 @@ class WeaponActor :
 {
 public:
     ~WeaponActor();
-    virtual void onStartAttack(int begin, int end, float attackTime) {};
+    virtual void onStartAttack() {};
 
 protected:
     WeaponActor(class Sequence* sequence, Type type, Type owner);

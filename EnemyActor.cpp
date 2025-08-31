@@ -77,7 +77,7 @@ void EnemyActor::onEnterState(EnemyState nextState)
 	case E_jump:
 		break;
 	case E_attack:
-		mWeaponComp->startAttack(0, 2, 0.5f);
+		mWeaponComp->startAttack();
 		break;
 	}
 }

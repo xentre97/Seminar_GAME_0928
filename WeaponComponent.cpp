@@ -10,10 +10,6 @@ void WeaponComponent::update()
 {
 }
 
-void WeaponComponent::startAttack(int begin, int end, float attackTime)
-{
-}
-
 void WeaponComponent::endAttack()
 {
 	if (mWeapon) {

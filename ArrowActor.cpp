@@ -23,10 +23,9 @@ ArrowActor::ArrowActor(Sequence* sequence, Type type, Type owner)
         tex0,
         /*mSequence->getTexture("arrow02.png"),
         mSequence->getTexture("arrow03.png"),
-        */mSequence->getTexture("testSword01.png"),
-        mSequence->getTexture("testSword01.png"),
+        */
     };
-    mAnimsc->setAnimTextures(frames);
+    mAnimsc->addAnimation("Normal", frames, 24.0f, false);
 }
 
 void ArrowActor::input()
@@ -66,10 +65,9 @@ void ArrowActor::update()
     }
 }
 
-void ArrowActor::onStartAttack(int begin, int end, float attackTime)
+void ArrowActor::onStartAttack()
 {
-    float fps = (attackTime > 0.0f) ? (end - begin) / attackTime : 24.0f;
-    mAnimsc->play(begin, end, true, fps); // 矢は回転/ヒラヒラ想定でループ
+    mAnimsc->play("Normal"); // 矢は回転/ヒラヒラ想定でループ
 }
 
 void ArrowActor::computeRectangle()

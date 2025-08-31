@@ -11,7 +11,7 @@ class WeaponComponent :
 {
 public:
     virtual void update() override;
-    virtual void startAttack(int begin, int end, float attackTime);
+    virtual void startAttack() {};
     virtual void endAttack();
 
 protected:

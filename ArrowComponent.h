@@ -9,7 +9,7 @@ public:
     ArrowComponent(class Actor* owner);
 
     void update() override;
-    void startAttack(int begin, int end, float attackTime) override;
+    void startAttack() override;
 
     // 調整用
     void setBaseSpeed(float v)   { mBaseSpeed = v; }
@@ -17,7 +17,7 @@ public:
     void setMuzzleOffset(float p){ mMuzzleOffset = p; }
 
 private:
-    void spawnArrow(int begin, int end, float attackTime);
+    void spawnArrow();
     void cullArrows();
 
     float mBaseSpeed   = 700.0f; // px/s
