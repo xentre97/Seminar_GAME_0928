@@ -1,5 +1,10 @@
 #include "WeaponComponent.h"
+
 #include "WeaponActor.h"
+#include "EnemyActor.h"
+#include "PlayerActor.h"
+
+#include "HpComponent.h"
 
 WeaponComponent::WeaponComponent(Actor* owner)
 	: Component(owner)
@@ -7,10 +12,6 @@ WeaponComponent::WeaponComponent(Actor* owner)
 }
 
 void WeaponComponent::update()
-{
-}
-
-void WeaponComponent::startAttack(int begin, int end, float attackTime)
 {
 }
 

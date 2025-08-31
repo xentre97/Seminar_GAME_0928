@@ -13,10 +13,10 @@ void SwordComponent::update()
 	}
 }
 
-void SwordComponent::startAttack(int begin, int end, float attackTime)
+void SwordComponent::startAttack()
 {
 	mWeapon = new SwordActor(mOwner->getSequence(), Actor::Eweapon, mOwner->getType());
-	mWeapon->onStartAttack(begin, end, attackTime);
+	mWeapon->onStartAttack();
 	updateWeaponPosition();
 	mWeapon->computeRectangle();
 }

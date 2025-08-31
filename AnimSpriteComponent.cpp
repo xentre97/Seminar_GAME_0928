@@ -4,11 +4,8 @@
 AnimSpriteComponent::AnimSpriteComponent(Actor* owner, int drawOrder)
 	: SpriteComponent(owner, drawOrder)
 	, mCurrFrame(0.0f)
-	, mAnimFPS(30.0f)
-	, mLoopFlag(true)
-	, mAnimBegin(0)
-	, mAnimEnd(1)
 	, mIsAnimating(false)
+	, mCurrentAnim(nullptr)
 {
 }
 
@@ -16,64 +13,50 @@ void AnimSpriteComponent::update()
 {
 	SpriteComponent::update();
 
-	if (mAnimTextures.size() > 0)
+	if (mCurrentAnim && mIsAnimating)
 	{
-		// ループアニメーション
-		if (mLoopFlag)
+		// フレームを進めていく
+		mCurrFrame += mCurrentAnim->fps / GetFPS();
+		// フレーム数を超えたら
+		if (mCurrFrame >= (int)mCurrentAnim->frames.size())
 		{
-			mCurrFrame += mAnimFPS / (float)GetFPS();
-			int frameCount = mAnimEnd - mAnimBegin + 1;
-		/*if (mCurrFrame >= mAnimEnd + 1)
-		{
-			mCurrFrame = mCurrFrame - (mAnimEnd + 1);
-		}*/
-
-			// ループ補正
-			if (mCurrFrame >= frameCount)
-			{
-				mCurrFrame = fmod(mCurrFrame, (float)frameCount);
+			// ループアニメーションの場合
+			if (mCurrentAnim->loop) {
+				// 最初のフレームに補正付きで戻る
+				mCurrFrame = fmod(mCurrFrame, (float)mCurrentAnim->frames.size());
 			}
-			setTexture(mAnimTextures[static_cast<int>(mCurrFrame + mAnimBegin)]);
-		}
-		// ループじゃない場合
-		else if (!mLoopFlag && mIsAnimating)
-		{
-			mCurrFrame += mAnimFPS / (float)GetFPS();
-			if (mCurrFrame > mAnimEnd - mAnimBegin)
-			{
-				mCurrFrame = 0.0f;
+			// ループしない場合
+			else {
+				// 最終フレームに設定
+				mCurrFrame = (float)(mCurrentAnim->frames.size() - 1);
+				// アニメーション終了
 				mIsAnimating = false;
 			}
-			setTexture(mAnimTextures[static_cast<int>(mCurrFrame + mAnimBegin)]);
 		}
-		// ループでないアニメーションの終了時、先頭のテクスチャに設定する
-		else if (!mLoopFlag && !mIsAnimating)
-		{
-			setTexture(mAnimTextures[0]);
-		}
+		// 表示テクスチャ更新
+		setTexture(*mCurrentAnim->frames[(int)mCurrFrame]);
 	}
 }
 
-void AnimSpriteComponent::setAnimTextures(const std::vector<Texture2D>& textures)
+void AnimSpriteComponent::addAnimation(const std::string& name, const std::vector<Texture2D*>& frames, float fps, bool loop)
 {
-	mAnimTextures = textures;
-	if (mAnimTextures.size() > 0)
-	{
-		// 先頭のテクスチャを設定
+	// アニメーションを作成し、内容を設定
+	Animation anim;
+	anim.name = name;
+	anim.frames = frames;
+	anim.fps = fps;
+	anim.loop = loop;
+	// マップに追加
+	mAnimations[name] = anim;
+}
+
+void AnimSpriteComponent::play(std::string animName)
+{
+	auto it = mAnimations.find(animName);
+	if (it != mAnimations.end()) {
+		mCurrentAnim = &it->second;
 		mCurrFrame = 0.0f;
-		setTexture(mAnimTextures[0]);
+		mIsAnimating = true;
+		setTexture(*mCurrentAnim->frames[0]);
 	}
-}
-
-void AnimSpriteComponent::play(int begin, int end, bool loop, float fps)
-{
-	mAnimBegin = begin;
-	mAnimEnd = end;
-	mAnimFPS = fps;
-	mLoopFlag = loop;
-	mCurrFrame = 0.0f;
-	mIsAnimating = true;
-
-	// 開始時のフレームを設定
-	setTexture(mAnimTextures[mAnimBegin]);
 }

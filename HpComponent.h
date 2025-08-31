@@ -11,7 +11,8 @@ class HpComponent :
 public:
     HpComponent(class Actor* owner, float maxHp = 1.0f);
 
-    void TakeDamage(float damage);
+    // bool型でtrueなら生存、falseなら死亡を判定。ダメージも内部で計算している
+    bool TakeDamage(float damage);
     void Recover(float recover);
 
     // 0以下で

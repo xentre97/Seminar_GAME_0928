@@ -9,9 +9,11 @@ class WeaponActor :
 {
 public:
     ~WeaponActor();
-    virtual void onStartAttack(int begin, int end, float attackTime) {};
+    virtual void onStartAttack() {};
+    virtual void onHit(class Actor* target);
 
 protected:
     WeaponActor(class Sequence* sequence, Type type, Type owner);
+    float mDamageAmt;
 };
 

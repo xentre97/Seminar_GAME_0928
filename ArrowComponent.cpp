@@ -14,12 +14,12 @@ void ArrowComponent::update()
     cullArrows();
 }
 
-void ArrowComponent::startAttack(int begin, int end, float attackTime)
+void ArrowComponent::startAttack()
 {
-    spawnArrow(begin, end, attackTime);
+    spawnArrow();
 }
 
-void ArrowComponent::spawnArrow(int begin, int end, float attackTime)
+void ArrowComponent::spawnArrow()
 {
     auto* seq = mOwner->getSequence();
     auto* arrow = new ArrowActor(seq, Actor::Eweapon, mOwner->getType());
@@ -45,7 +45,7 @@ void ArrowComponent::spawnArrow(int begin, int end, float attackTime)
     arrow->setLifeTime(mLifeTime);
 
     // アニメ開始
-    arrow->onStartAttack(begin, end, attackTime);
+    arrow->onStartAttack();
 
     // 当たり再計算
     arrow->computeRectangle();

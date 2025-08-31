@@ -13,7 +13,7 @@ public:
     void input() override;
     void update() override;
 
-    void onStartAttack(int begin, int end, float attackTime);
+    void onStartAttack();
     void computeRectangle() override;
 
     void setVelocity(Vector2 v) { mVelocity = v; }

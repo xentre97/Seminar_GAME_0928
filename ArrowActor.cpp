@@ -8,25 +8,24 @@ ArrowActor::ArrowActor(Sequence* sequence, Type type, Type owner)
 {
     // 初期テクスチャと当たり
     //Texture2D tex0 = mSequence->getTexture("arrow01.png");
-    Texture2D tex0 = mSequence->getTexture("testSword01.png");
+    Texture2D* tex0 = mSequence->getTexture("testSword01.png");
     mPosition = Vector2{ 500.0f, 300.0f };
     mRectangle = {
-        mPosition.x - tex0.width / 2.0f,
-        mPosition.y - tex0.height / 2.0f,
-        (float)tex0.width,
-        (float)tex0.height
+        mPosition.x - tex0->width / 2.0f,
+        mPosition.y - tex0->height / 2.0f,
+        (float)tex0->width,
+        (float)tex0->height
     };
 
     // 簡易アニメ（お好みでフレーム追加）
     mAnimsc = new AnimSpriteComponent(this);
-    std::vector<Texture2D> frames = {
+    std::vector<Texture2D*> frames = {
         tex0,
         /*mSequence->getTexture("arrow02.png"),
         mSequence->getTexture("arrow03.png"),
-        */mSequence->getTexture("testSword01.png"),
-        mSequence->getTexture("testSword01.png"),
+        */
     };
-    mAnimsc->setAnimTextures(frames);
+    mAnimsc->addAnimation("Normal", frames, 24.0f, false);
 }
 
 void ArrowActor::input()
@@ -66,10 +65,9 @@ void ArrowActor::update()
     }
 }
 
-void ArrowActor::onStartAttack(int begin, int end, float attackTime)
+void ArrowActor::onStartAttack()
 {
-    float fps = (attackTime > 0.0f) ? (end - begin) / attackTime : 24.0f;
-    mAnimsc->play(begin, end, true, fps); // 矢は回転/ヒラヒラ想定でループ
+    mAnimsc->play("Normal"); // 矢は回転/ヒラヒラ想定でループ
 }
 
 void ArrowActor::computeRectangle()

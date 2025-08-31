@@ -13,7 +13,7 @@ public:
     void input() override;
     void update() override;
 
-    void onStartAttack(int begin, int end, float attackTime);
+    void onStartAttack() override;
     void computeRectangle() override;
 
 private:

@@ -3,28 +3,34 @@
 // Component
 #include "SpriteComponent.h"
 #include "EnemyMove.h"
+#include "HpComponent.h"
+#include "ArrowComponent.h"
 
 EnemyActor::EnemyActor(Sequence* sequence, Type type)
 	: Actor(sequence, type)
 	, mEnemyState(E_walk)
 {
-	Texture2D tex = mSequence->getTexture("testPlayerIdle.png");
+	Texture2D* tex = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 500.0f, 100.0f };
 	mRectangle = {
-		mPosition.x - tex.width / 2.0f,
-		mPosition.y - tex.height / 2.0f,
-		(float)tex.width,
-		(float)tex.height
+		mPosition.x - tex->width / 2.0f,
+		mPosition.y - tex->height / 2.0f,
+		(float)tex->width,
+		(float)tex->height
 	};
 
 	static_cast<GamePlay*>(mSequence)->addEnemy(this);
 	
 	// SpriteComponent
 	mSpriteComp = new SpriteComponent(this);
-	mSpriteComp->setTexture(tex);
+	mSpriteComp->setTexture(*tex);
 	// EnemyMove
 	mEnemyMove = new EnemyMove(this);
 	mEnemyMove->setMoveSpped(100.0f);
+	// HpComponent
+	mHpComp = new HpComponent(this, 200.0f); //仮に最大Hpを定数で決める。
+	// WeaponComponent(Arrowにしてみた)
+	mWeaponComp = new ArrowComponent(this);
 }
 
 EnemyActor::~EnemyActor()
@@ -57,13 +63,6 @@ void EnemyActor::changeState(EnemyState nextState)
 	onEnterState(nextState);
 }
 
-EnemyMove& EnemyActor::getEnemyMove()
-{
-	if (mEnemyMove) {
-		return *mEnemyMove;
-	}
-}
-
 void EnemyActor::onEnterState(EnemyState nextState)
 {
 	// ステート変更
@@ -75,6 +74,7 @@ void EnemyActor::onEnterState(EnemyState nextState)
 	case E_jump:
 		break;
 	case E_attack:
+		mWeaponComp->startAttack();
 		break;
 	}
 }
@@ -88,6 +88,7 @@ void EnemyActor::onExitState(EnemyState nextState)
 	case E_jump:
 		break;
 	case E_attack:
+		mWeaponComp->endAttack();
 		break;
 	}
 }

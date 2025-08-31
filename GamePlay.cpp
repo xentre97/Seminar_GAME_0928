@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <iostream>
 
 // Actor
 #include "PlayerActor.h"
@@ -16,6 +17,7 @@
 #include "PlayerControl.h"
 #include "EnemyMove.h"
 #include "SpriteComponent.h"
+#include "WeaponComponent.h"
 
 GamePlay::GamePlay()
 {
@@ -134,7 +136,7 @@ bool GamePlay::loadStage(const char* filename)
 	std::string line;
 	std::vector<std::vector<int>> tiles;
 	
-	// 弐次元配列tilesにデータを移す
+	// 2次元配列tilesにデータを移す
 	while (std::getline(file, line))
 	{
 		std::vector<int> row;
@@ -210,7 +212,7 @@ void GamePlay::addWeapon(WeaponActor* weapon, Actor::Type type)
 	if (type == Actor::Eplayer) {
 		mPlayerWeapons.emplace_back(weapon);
 	}
-	else if (type == Actor::Eplayer) {
+	else if (type == Actor::Eenemy) {
 		mEnemyWeapons.emplace_back(weapon);
 	}
 }
@@ -259,16 +261,26 @@ void GamePlay::updateCollision()
 {
 	Rectangle playerRec = mPlayer->getRectangle();
 
-	// TODO:WeaponとEnemyの衝突検知,処理
+	// PlayerWeaponとEnemyの衝突検知,処理
 	for (auto enemy : mEnemies) {
 		for (auto weapon : mPlayerWeapons)
 		{
 			Rectangle enemyRec = enemy->getRectangle();
 			Rectangle weaponRec = weapon->getRectangle();
 			if (CheckCollisionRecs(enemyRec, weaponRec)) {
-				// 敵即死
-				enemy->setState(Actor::Edead);
+				weapon->onHit(enemy);
 			}
+		}
+	}
+
+	// TODO:EnemyWeaponとPlayerの衝突検知,処理
+	for (auto weapon : mEnemyWeapons)
+	{
+		Rectangle playerRec = mPlayer->getRectangle();
+		Rectangle weaponRec = weapon->getRectangle();
+		if (CheckCollisionRecs(playerRec, weaponRec)) {
+			// 即死
+			mNext = new GameOver();
 		}
 	}
 
@@ -316,6 +328,8 @@ void GamePlay::updateCollision()
 			mPlayer->setPosition(playerPos);
 			// Playerの四角形もずらす
 			mPlayer->computeRectangle();
+			// playerRecの更新が必要
+			playerRec = mPlayer->getRectangle();
 		}
 	}
 
@@ -370,7 +384,7 @@ void GamePlay::updateCollision()
 					//上にずらす
 					if (enemyRec.y < colRec.y) {
 						enemyPos.y -= colRec.height;
-						enemy->getEnemyMove().fixFloorCol();
+						enemy->getEnemyMove()->fixFloorCol();
 					}
 					//下にずらす
 					else {

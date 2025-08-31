@@ -37,6 +37,7 @@ public:
 
     const Camera2D& getCamera() const ;
     class PlayerControl& getPlayerControl();
+    class SwordComponent* getWeapon() const { return mSwordComp; }
     PlayerState getMoveState() { return mMoveState; }
     PlayerState getActionState() { return mActionState; }
     
@@ -47,6 +48,7 @@ private:
     void onEnterState(PlayerState nextState);
     void onExitState(PlayerState nextState);
     
+    //std::vector<Texture2D*>
     PlayerState mMoveState;
     PlayerState mActionState;
     class CameraComponent* mCameraComp;

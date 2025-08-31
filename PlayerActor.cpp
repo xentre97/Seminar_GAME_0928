@@ -15,25 +15,27 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	, mActionState(as_idle)
 	, mSwordComp(nullptr)
 {
-	Texture2D tex  = mSequence->getTexture("testPlayerIdle.png");
+	Texture2D* tex  = mSequence->getTexture("testPlayerIdle.png");
 	mPosition = Vector2{ 100.0f, 200.0f };
 	mRectangle = {
-		mPosition.x - tex.width / 2.0f,
-		mPosition.y - tex.height / 2.0f,
-		(float)tex.width,
-		(float)tex.height
+		mPosition.x - tex->width / 2.0f,
+		mPosition.y - tex->height / 2.0f,
+		(float)tex->width,
+		(float)tex->height
 	};
 
 	mAnimsc = new AnimSpriteComponent(this);
-	std::vector<Texture2D> texs = {
-		tex,
-		mSequence->getTexture("testPlayerJump.png"),
-		mSequence->getTexture("testPlayerWalk.png"),
-		mSequence->getTexture("testPlayerDash.png"),
-	};
-	// SetTetureはAnimSpriteComponentの関数で一つ一つ行う
-	mAnimsc->setAnimTextures(texs);
-	mAnimsc->play(0, 0, true);	// Idle状態の絵
+
+	// アニメーションを追加
+	std::vector<Texture2D*> idleTexs = { mSequence->getTexture("testPlayerIdle.png") };
+	std::vector<Texture2D*> walkTexs = { mSequence->getTexture("testPlayerWalk.png") };
+	std::vector<Texture2D*> dashTexs = { mSequence->getTexture("testPlayerDash.png") };
+	std::vector<Texture2D*> jumpTexs = { mSequence->getTexture("testPlayerJump.png") };
+	// 第一引数は、playを呼ぶときに使う
+	mAnimsc->addAnimation("Idle", idleTexs);
+	mAnimsc->addAnimation("Walk", walkTexs);
+	mAnimsc->addAnimation("Dash", dashTexs);
+	mAnimsc->addAnimation("Jump", jumpTexs);
 
 	mCameraComp = new CameraComponent(this);
 	mPlayerControl = new PlayerControl(this);
@@ -116,13 +118,13 @@ void PlayerActor::onEnterState(PlayerState nextState)
 		switch (mMoveState)
 		{
 		case ms_idle:
-			mAnimsc->play(0, 0, true); break;
+			mAnimsc->play("Idle"); break;
 		case ms_jump:
-			mAnimsc->play(1, 1, true); break;
+			mAnimsc->play("Jump"); break;
 		case ms_walk:
-			mAnimsc->play(2, 2, true); break;
+			mAnimsc->play("Walk"); break;
 		case ms_dash:
-			mAnimsc->play(3, 3, true); break;
+			mAnimsc->play("Dash"); break;
 		}
 
 	}
@@ -135,16 +137,16 @@ void PlayerActor::onEnterState(PlayerState nextState)
 		case as_attack:
 			// charge攻撃
 			if (lastActionState == as_charge) {
-				mSwordComp->startAttack(10, 13, mPlayerControl->getAttackTime());
+				mSwordComp->startAttack();
 			}
 			// ダッシュ攻撃
 			else if (mMoveState == ms_dash) {
-				mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
+				mSwordComp->startAttack();
 			}
 			// 通常攻撃
 			else {
 				//mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
-				mArrowComp->startAttack(0, 1, mPlayerControl->getAttackTime());
+				mArrowComp->startAttack();
 			}
 			break;
 		case as_guard:

@@ -11,7 +11,7 @@ class SwordComponent :
 public:
     SwordComponent(class Actor* owner);
     void update() override;
-    void startAttack(int begin, int end, float attackTime) override;
+    void startAttack() override;
 
 private:
     void updateWeaponPosition();
