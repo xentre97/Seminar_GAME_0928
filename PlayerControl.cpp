@@ -7,11 +7,15 @@
 PlayerControl::PlayerControl(PlayerActor* owner)
 	: MoveComponent(owner)
 	, mPlayer(owner)
-	, mDashSpeed(mMoveSpeed * 1.5f)
 	, mAttackTimer(0.0f)
 	, mAttackTime(0.5f)
 	, mChargeTimer(0.0f)
 	, mChargeTime(1.0f)
+	, mLastPressTimeD(-1.0f)
+	, mLastPressTimeA(-1.0f)
+	, mDodgeTime(0.3f)
+	, mDodgeTimer(0.0f)
+	, mDodgeSpeed(500.0f)
 {
 }
 
@@ -19,8 +23,10 @@ void PlayerControl::input()
 {
 	Vector2 pos = mOwner->getPosition();
 	
-	// 初期化
-	mVelocityX = 0.0f;
+	// 横方向速度を初期化,回避中なら変更しない
+	if (mPlayer->getActionState() != PlayerActor::as_dodge) {
+		mVelocityX = 0.0f;
+	}
 	
 	// 1.現在のMoveStateに応じた入力処理
 	switch (mPlayer->getMoveState())
@@ -33,12 +39,7 @@ void PlayerControl::input()
 			mVelocityY = mJumpSpeed;
 		}
 		else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
-			if (IsKeyDown(KEY_LEFT_SHIFT)) {
-				mPlayer->changeState(PlayerActor::ms_dash);
-			}
-			else {
-				mPlayer->changeState(PlayerActor::ms_walk);
-			}
+			mPlayer->changeState(PlayerActor::ms_walk);
 		}
 		break;
 	}
@@ -50,25 +51,6 @@ void PlayerControl::input()
 		}
 		else if (!(IsKeyDown(KEY_D) || IsKeyDown(KEY_A))) {
 			mPlayer->changeState(PlayerActor::ms_idle);
-		}
-		else if (IsKeyDown(KEY_LEFT_SHIFT)) {
-			mPlayer->changeState(PlayerActor::ms_dash);
-		}
-		break;
-	}
-	case PlayerActor::ms_dash:
-	{
-		if (IsKeyPressed(KEY_SPACE)) {
-			mPlayer->changeState(PlayerActor::ms_jump);
-			mVelocityY = mJumpSpeed;
-		}
-		else if (!IsKeyDown(KEY_LEFT_SHIFT)) {
-			if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
-				mPlayer->changeState(PlayerActor::ms_walk);
-			}
-			else {
-				mPlayer->changeState(PlayerActor::ms_idle);
-			}
 		}
 		break;
 	}
@@ -83,13 +65,34 @@ void PlayerControl::input()
 	{
 	case PlayerActor::as_idle:
 	{
+		// 攻撃
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			mPlayer->changeState(PlayerActor::as_attack);
 			mAttackTimer = 0.0f;
 		}
+		// ガード
 		else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			mPlayer->changeState(PlayerActor::as_guard);
 		}
+		// 回避
+		float now = GetTime(); // 現在時刻
+		if (IsKeyPressed(KEY_D)) {
+			if (now - mLastPressTimeD < 0.25f) {
+				mPlayer->changeState(PlayerActor::as_dodge);
+				mDodgeTimer = 0.0f;
+				mVelocityX = mDodgeSpeed;
+			}
+			mLastPressTimeD = now;
+		}
+		if (IsKeyPressed(KEY_A)) {
+			if (now - mLastPressTimeA < 0.25f) {
+				mPlayer->changeState(PlayerActor::as_dodge);
+				mDodgeTimer = 0.0f;
+				mVelocityX = -mDodgeSpeed;
+			}
+			mLastPressTimeA = now;
+		}
+
 		break;
 	}
 	case PlayerActor::as_attack:
@@ -164,16 +167,6 @@ void PlayerControl::update()
 		}
 		break;
 	}
-	case PlayerActor::ms_dash:
-	{
-		if (IsKeyDown(KEY_D)) {
-			mVelocityX = mDashSpeed;
-		}
-		else if (IsKeyDown(KEY_A)) {
-			mVelocityX = -mDashSpeed;
-		}
-		break;
-	}
 	case PlayerActor::ms_jump:
 	{
 		if (IsKeyDown(KEY_D)) {
@@ -220,6 +213,17 @@ void PlayerControl::update()
 		mVelocityX /= 2.0f;
 		break;
 	}
+	case PlayerActor::as_dodge:
+	{
+		mDodgeTimer += GetFrameTime();
+		mVelocityX /= 1.1f;
+		// 回避中は移動入力を受け付けない
+		if (mDodgeTimer >= mDodgeTime) {
+			mPlayer->changeState(PlayerActor::as_idle);
+			mDodgeTimer = 0.0f;
+		}
+		break;
+	}
 	}
 
 	// 速度を設定
@@ -257,9 +261,6 @@ void PlayerControl::StateDraw()
 
 		DrawText("Move : Walk", 700, 50, 30, BLACK); break;
 	}
-	case PlayerActor::ms_dash: {
-		DrawText("Move : Dash", 700, 50, 30, BLACK); break;
-	}
 	case PlayerActor::ms_jump: {
 		DrawText("Move : Jump", 700, 50, 30, BLACK); break;
 	}
@@ -278,6 +279,9 @@ void PlayerControl::StateDraw()
 	}
 	case PlayerActor::as_charge: {
 		DrawText("Action : charge", 700, 100, 30, BLACK); break;
+	}
+	case PlayerActor::as_dodge: {
+		DrawText("Action : dodge", 700, 100, 30, BLACK); break;
 	}
 	}
 }

@@ -23,18 +23,16 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 		(float)tex->width,
 		(float)tex->height
 	};
-
+	
 	mAnimsc = new AnimSpriteComponent(this);
 
 	// アニメーションを追加
 	std::vector<Texture2D*> idleTexs = { mSequence->getTexture("testPlayerIdle.png") };
 	std::vector<Texture2D*> walkTexs = { mSequence->getTexture("testPlayerWalk.png") };
-	std::vector<Texture2D*> dashTexs = { mSequence->getTexture("testPlayerDash.png") };
 	std::vector<Texture2D*> jumpTexs = { mSequence->getTexture("testPlayerJump.png") };
 	// 第一引数は、playを呼ぶときに使う
 	mAnimsc->addAnimation("Idle", idleTexs);
 	mAnimsc->addAnimation("Walk", walkTexs);
-	mAnimsc->addAnimation("Dash", dashTexs);
 	mAnimsc->addAnimation("Jump", jumpTexs);
 
 	mCameraComp = new CameraComponent(this);
@@ -86,8 +84,6 @@ void PlayerActor::onExitState(PlayerState nextState)
 			break;
 		case ms_walk:
 			break;
-		case ms_dash:
-			break;
 		case ms_jump:
 			break;
 		}
@@ -123,8 +119,6 @@ void PlayerActor::onEnterState(PlayerState nextState)
 			mAnimsc->play("Jump"); break;
 		case ms_walk:
 			mAnimsc->play("Walk"); break;
-		case ms_dash:
-			mAnimsc->play("Dash"); break;
 		}
 
 	}
@@ -139,14 +133,10 @@ void PlayerActor::onEnterState(PlayerState nextState)
 			if (lastActionState == as_charge) {
 				mSwordComp->startAttack();
 			}
-			// ダッシュ攻撃
-			else if (mMoveState == ms_dash) {
-				mSwordComp->startAttack();
-			}
 			// 通常攻撃
 			else {
-				//mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
-				mArrowComp->startAttack();
+				mSwordComp->startAttack();
+				//mArrowComp->startAttack();
 			}
 			break;
 		case as_guard:

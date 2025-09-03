@@ -21,14 +21,13 @@ public:
         // moveState
         ms_idle,
         ms_walk,
-        ms_dash,
         ms_jump,    // ジャンプというよりも空中にいるステートという感じ
         // actionState
         as_idle,
         as_attack,
         as_guard,
         as_charge,
-        //as_evasion, // 回避
+        as_dodge, // 回避
     };
     PlayerActor(class Sequence* sequence, Type type);
 
