@@ -41,6 +41,8 @@ GamePlay::~GamePlay()
 		delete mEnemies.back();
 	}
 	delete mPlayer;*/
+	delete mSpawner;
+    mSpawner = nullptr;
 }
 
 void GamePlay::input()
