@@ -19,6 +19,8 @@
 #include "SpriteComponent.h"
 #include "WeaponComponent.h"
 
+#include "EnemySpawner.h"
+
 GamePlay::GamePlay()
 {
 	// TODO: テキストファイルからマップ生成
