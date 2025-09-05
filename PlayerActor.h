@@ -1,7 +1,11 @@
 #pragma once
 #include "Actor.h"
-#include <map>
-#include "PlayerControl.h"
+#include <unordered_map>
+#include "PlayerMove.h"
+#include "PlayerState.h"
+
+class PlayerState;
+enum class Type;
 
 /// <summary>
 /// PlayerActorクラス
@@ -10,52 +14,30 @@ class PlayerActor :
     public Actor
 {
 public:
-    // 行動の状態とアクションの状態に分けた
-    // それぞれの状態を表す変数がある(mMoveState,mActionState)
-    // enumを分けていない為,mActionState = ms_idle は可能,気を付ける
-    // ステート毎の処理が多い為,enumではなくclassにした方がいいと思う
-    // クラスにすればそっちにテクスチャを持たせたり,AttackTimeのような,ある状態でしか
-    // 使わない変数をある状態のみに押し込めることができる
-    enum PlayerState
-    {
-        // moveState
-        ms_idle,
-        ms_walk,
-        ms_dash,
-        ms_jump,    // ジャンプというよりも空中にいるステートという感じ
-        // actionState
-        as_idle,
-        as_attack,
-        as_guard,
-        as_charge,
-        //as_evasion, // 回避
-    };
     PlayerActor(class Sequence* sequence, Type type);
+    ~PlayerActor();
 
     void input() override;
     void update() override;
 
     const Camera2D& getCamera() const ;
-    class PlayerControl& getPlayerControl();
-    class SwordComponent* getWeapon() const { return mSwordComp; }
-    PlayerState getMoveState() { return mMoveState; }
-    PlayerState getActionState() { return mActionState; }
+    class PlayerMove* getPlayerMove() const { return mPlayerMove; }
+    class WeaponComponent* getWeapon() const { return mWeaponComp; }
+    PlayerState* getPlayerState() const { return mPlayerState; }
+    class AnimSpriteComponent* getAnimSpriteComp() const { return mAnimsc; }
     
     void computeRectangle() override;
-    void changeState(PlayerState nextState);
+    void changeState(PlayerState::Type type);
 
 private:
-    void onEnterState(PlayerState nextState);
-    void onExitState(PlayerState nextState);
-    
-    //std::vector<Texture2D*>
-    PlayerState mMoveState;
-    PlayerState mActionState;
+    PlayerState* mPlayerState;
+    std::unordered_map<PlayerState::Type, PlayerState*> mPlayerStates;
     class CameraComponent* mCameraComp;
-    class PlayerControl* mPlayerControl;
+    class PlayerMove* mPlayerMove;
     class AnimSpriteComponent* mAnimsc;
     class SwordComponent* mSwordComp;
     class ArrowComponent* mArrowComp;
+    class WeaponComponent* mWeaponComp;
 };
 
 // 挙動

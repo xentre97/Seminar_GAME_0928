@@ -2,7 +2,7 @@
 #include "Component.h"
 
 /// <summary>
-/// PlayerControl,EnemyMove‚ÌŠî’ê
+/// PlayerMove,EnemyMove‚ÌŠî’ê
 /// </summary>
 class MoveComponent :
     public Component
@@ -14,9 +14,11 @@ public:
     // ˆÈ‰ºˆê‰ž—pˆÓ
     float getMoveSpeed() const { return mMoveSpeed; }
     float getJumpSpeed() const { return mJumpSpeed; }
+    float getVelocityX() const { return mVelocityX; }
     float getVelocityY() const { return mVelocityY; }
     void setMoveSpped(float speed) { mMoveSpeed = speed; }
     void setJumpSpped(float speed) { mJumpSpeed = speed; }
+    void setVelocityX(float velocity) { mVelocityX = velocity; }
     void setVelocityY(float velocity) { mVelocityY = velocity; }
 
 protected:

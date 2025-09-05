@@ -32,7 +32,7 @@
     <ClCompile Include="MoveComponent.cpp">
       <Filter>Component\move</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerControl.cpp">
+    <ClCompile Include="PlayerMove.cpp">
       <Filter>Component\move</Filter>
     </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
@@ -65,6 +65,10 @@
     <ClCompile Include="HpComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="ArrowActor.cpp">
+      <Filter>Actor\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sequence">
@@ -129,7 +133,7 @@
     <ClInclude Include="Component.h">
       <Filter>Component\Base</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerControl.h">
+    <ClInclude Include="PlayerMove.h">
       <Filter>Component\move</Filter>
     </ClInclude>
     <ClInclude Include="MoveComponent.h">
@@ -165,5 +169,9 @@
     <ClInclude Include="HpComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="ArrowActor.h">
+      <Filter>Actor\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h" />
   </ItemGroup>
 </Project>

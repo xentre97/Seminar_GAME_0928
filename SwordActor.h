@@ -18,5 +18,7 @@ public:
 
 private:
     class AnimSpriteComponent* mAnimsc;
+    float mColWidth;
+    float mColHeight;
 };
 

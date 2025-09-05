@@ -14,7 +14,7 @@
 #include "EnemyActor.h"
 #include "WeaponActor.h"
 // Comopnent
-#include "PlayerControl.h"
+#include "PlayerMove.h"
 #include "EnemyMove.h"
 #include "SpriteComponent.h"
 #include "WeaponComponent.h"
@@ -23,11 +23,11 @@
 
 GamePlay::GamePlay()
 {
-	// TODO: テキストファイルからマップ生成
+	// TODO: 繝�く繧ｹ繝医ヵ繧｡繧､繝ｫ縺九ｉ繝槭ャ繝礼函謌
 	if (!loadStage("stage0.txt")) {
-		// ブレークポイント置く
+		// 繝悶Ξ繝ｼ繧ｯ繝昴う繝ｳ繝育ｽｮ縺
 	}
-	// TODO:ここでマップの生成,Playerの生成等行う
+	// TODO:縺薙％縺ｧ繝槭ャ繝励�逕滓�,Player縺ｮ逕滓�遲芽｡後≧
 	mPlayer = new PlayerActor(this, Actor::Eplayer);
 	mSpawner = new EnemySpawner(this);
 
@@ -36,7 +36,7 @@ GamePlay::GamePlay()
 
 GamePlay::~GamePlay()
 {
-	// 以下のdeleteはSequenceデストラクタやdestroyEnemyでやってるので不必要
+	// 莉･荳九�delete縺ｯSequence繝�せ繝医Λ繧ｯ繧ｿ繧�estroyEnemy縺ｧ繧�▲縺ｦ繧九�縺ｧ荳榊ｿ�ｦ
 	/*while (!mEnemies.empty()) {
 		delete mEnemies.back();
 	}
@@ -47,14 +47,14 @@ GamePlay::~GamePlay()
 
 void GamePlay::input()
 {
-	// test用
+	// test逕ｨ
 	if (IsKeyPressed(KEY_ENTER)) {
 		mNext = new GameClear();
 	}
 	else if (IsKeyPressed(KEY_RIGHT_SHIFT)) {
 		mNext = new GameOver();
 	}
-	// 全Actorのinputを呼ぶ
+	// 蜈ｨActor縺ｮinput繧貞他縺ｶ
 	mUpdatingActors = true;
 	for (Actor* actor : mActors) {
 		actor->input();
@@ -64,24 +64,24 @@ void GamePlay::input()
 
 void GamePlay::update()
 {
-	// Actorのupdate
+	// Actor縺ｮupdate
 	mUpdatingActors = true;
 	for (Actor* actor : mActors) {
 		actor->update();
 	}
 	mUpdatingActors = false;
-	// 保留中のActorをmActorsへ移動
+	// 菫晉蕗荳ｭ縺ｮActor繧知Actors縺ｸ遘ｻ蜍
 	for (auto pending : mPendingActors)
 	{
 		mActors.emplace_back(pending);
 	}
 	mPendingActors.clear();
 
-	// Collisionのupdate
-	// 全アクター(とそのComponent)のupdate後に呼ばれていることに注意
+	// Collision縺ｮupdate
+	// 蜈ｨ繧｢繧ｯ繧ｿ繝ｼ(縺ｨ縺昴�Component)縺ｮupdate蠕後↓蜻ｼ縺ｰ繧後※縺�ｋ縺薙→縺ｫ豕ｨ諢
 	updateCollision();
 
-	// Dead状態のActorをdelete
+	// Dead迥ｶ諷九�Actor繧壇elete
 	for (auto actor : mActors)
 	{
 		if (actor->getState() == Actor::Edead)
@@ -96,12 +96,12 @@ void GamePlay::draw()
 	BeginDrawing();
 	ClearBackground(WHITE);
 
-	// uiの描画
+	// ui縺ｮ謠冗判
 	DrawText("GamePlay", 100, 100, 40, BLACK);
 	DrawText("Press ENTER -> GameClear", 100, 200, 20, GRAY);
 	DrawText("Press RightShift -> GameOver", 100, 300, 20, GRAY);
 
-	// カメラに移すものの描画(ui以外)
+	// 繧ｫ繝｡繝ｩ縺ｫ遘ｻ縺吶ｂ縺ｮ縺ｮ謠冗判(ui莉･螟)
 	BeginMode2D(mPlayer->getCamera());
 	for (auto& rec : mStageRecs)
 	{
@@ -132,17 +132,17 @@ Sequence* GamePlay::nextSequence()
 
 bool GamePlay::loadStage(const char* filename)
 {
-	// テキストファイルからステージを読み込む
-	// 0 : 何もない場所
-	// 1 : 床と壁
-	// 簡易的なものです
-	// 1の横方向の連続を一つのrectangleとして認識させている
+	// 繝�く繧ｹ繝医ヵ繧｡繧､繝ｫ縺九ｉ繧ｹ繝��繧ｸ繧定ｪｭ縺ｿ霎ｼ繧
+	// 0 : 菴輔ｂ縺ｪ縺�ｴ謇
+	// 1 : 蠎翫→螢
+	// 邁｡譏鍋噪縺ｪ繧ゅ�縺ｧ縺
+	// 1縺ｮ讓ｪ譁ｹ蜷代�騾｣邯壹ｒ荳縺､縺ｮrectangle縺ｨ縺励※隱崎ｭ倥＆縺帙※縺�ｋ
 
 	std::ifstream file(filename);
 	std::string line;
 	std::vector<std::vector<int>> tiles;
 	
-	// 2次元配列tilesにデータを移す
+	// 2谺｡蜈��蛻葉iles縺ｫ繝��繧ｿ繧堤ｧｻ縺
 	while (std::getline(file, line))
 	{
 		std::vector<int> row;
@@ -153,7 +153,7 @@ bool GamePlay::loadStage(const char* filename)
 		}
 		tiles.push_back(row);
 	}
-	// 一つのタイルの縦横の長さ
+	// 荳縺､縺ｮ繧ｿ繧､繝ｫ縺ｮ邵ｦ讓ｪ縺ｮ髟ｷ縺
 	const int tileSize = 32;
 	mStageRecs.clear();
 	mStageWidth = (int)tiles[0].size() * tileSize;
@@ -166,14 +166,14 @@ bool GamePlay::loadStage(const char* filename)
 		{
 			if (tiles[y][x] == 1)
 			{
-				// 1の連続の左端を記録する
+				// 1縺ｮ騾｣邯壹�蟾ｦ遶ｯ繧定ｨ倬鹸縺吶ｋ
 				if (startX == -1) startX = x;
 			}
 			else
 			{
 				if (startX != -1)
 				{
-					// 横方向の1の連続をまとめてRectangleに
+					// 讓ｪ譁ｹ蜷代�1縺ｮ騾｣邯壹ｒ縺ｾ縺ｨ繧√※Rectangle縺ｫ
 					Rectangle r;
 					r.x = startX * tileSize;
 					r.y = y * tileSize;
@@ -184,7 +184,7 @@ bool GamePlay::loadStage(const char* filename)
 				}
 			}
 		}
-		// 行の最後で連続していた場合
+		// 陦後�譛蠕後〒騾｣邯壹＠縺ｦ縺�◆蝣ｴ蜷
 		if (startX != -1)
 		{
 			Rectangle r;
@@ -205,7 +205,7 @@ void GamePlay::addEnemy(EnemyActor* enemy)
 
 void GamePlay::removeEnemy(EnemyActor* enemy)
 {
-	// mEnemiesから削除
+	// mEnemies縺九ｉ蜑企勁
 	auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
 	if (iter != mEnemies.end()) {
 		std::iter_swap(iter, mEnemies.end() - 1);
@@ -241,7 +241,7 @@ void GamePlay::removeWeapon(WeaponActor* weapon)
 
 void GamePlay::addSprite(SpriteComponent* sprite)
 {
-	// ソート済みの配列で挿入点を見つける
+	// 繧ｽ繝ｼ繝域ｸ医∩縺ｮ驟榊�縺ｧ謖ｿ蜈･轤ｹ繧定ｦ九▽縺代ｋ
 	int myDrawOrder = sprite->getDrawOrder();
 	auto iter = mSprites.begin();
 	for (;
@@ -253,7 +253,7 @@ void GamePlay::addSprite(SpriteComponent* sprite)
 			break;
 		}
 	}
-	// イテレータの位置の前に要素を挿入する
+	// 繧､繝�Ξ繝ｼ繧ｿ縺ｮ菴咲ｽｮ縺ｮ蜑阪↓隕∫ｴ繧呈諺蜈･縺吶ｋ
 	mSprites.insert(iter, sprite);
 }
 
@@ -267,7 +267,7 @@ void GamePlay::updateCollision()
 {
 	Rectangle playerRec = mPlayer->getRectangle();
 
-	// PlayerWeaponとEnemyの衝突検知,処理
+	// PlayerWeapon縺ｨEnemy縺ｮ陦晉ｪ∵､懃衍,蜃ｦ逅
 	for (auto enemy : mEnemies) {
 		for (auto weapon : mPlayerWeapons)
 		{
@@ -279,67 +279,68 @@ void GamePlay::updateCollision()
 		}
 	}
 
-	// TODO:EnemyWeaponとPlayerの衝突検知,処理
+	// TODO:EnemyWeapon縺ｨPlayer縺ｮ陦晉ｪ∵､懃衍,蜃ｦ逅
 	for (auto weapon : mEnemyWeapons)
 	{
 		Rectangle playerRec = mPlayer->getRectangle();
 		Rectangle weaponRec = weapon->getRectangle();
 		if (CheckCollisionRecs(playerRec, weaponRec)) {
-			// 即死
+			// 蜊ｳ豁ｻ
 			mNext = new GameOver();
 		}
 	}
 
-	// TODO:敵とPlayerの衝突検知,処理
+	// TODO:謨ｵ縺ｨPlayer縺ｮ陦晉ｪ∵､懃衍,蜃ｦ逅
 	for (auto enemy : mEnemies) {
 		if (CheckCollisionRecs(playerRec, enemy->getRectangle())) {
-			// 即死
+			// 蜊ｳ豁ｻ
 			mNext = new GameOver();
 		}
 	}
-	// PlayerだけでなくEnemyも持てるWeaponComponent等作れば良いと思う
+	// Player縺縺代〒縺ｪ縺拾nemy繧よ戟縺ｦ繧妓eaponComponent遲我ｽ懊ｌ縺ｰ濶ｯ縺�→諤昴≧
 
-	// Playerがマップと衝突したときの処理
+	// Player縺後�繝��縺ｨ陦晉ｪ√＠縺溘→縺阪�蜃ｦ逅
 	for (auto& stageRec : mStageRecs) {
-		// 衝突しているなら
+		// 陦晉ｪ√＠縺ｦ縺�ｋ縺ｪ繧
 		if (CheckCollisionRecs(playerRec, stageRec)) {
-			// 衝突部分の四角形を得る
+			// 陦晉ｪ�Κ蛻��蝗幄ｧ貞ｽ｢繧貞ｾ励ｋ
 			Rectangle colRec = GetCollisionRec(playerRec, stageRec);
 			Vector2 playerPos = mPlayer->getPosition();
-			// 縦方向の重なりの方が小さい場合は,縦の重なりだけ解消
+			// 邵ｦ譁ｹ蜷代�驥阪↑繧翫�譁ｹ縺悟ｰ上＆縺�ｴ蜷医�,邵ｦ縺ｮ驥阪↑繧翫□縺題ｧ｣豸
 			if (colRec.width >= colRec.height) {
-				// player位置を上にずらす
+				// player菴咲ｽｮ繧剃ｸ翫↓縺壹ｉ縺
 				if (playerRec.y < colRec.y) {
 					playerPos.y -= colRec.height;
-					//mPlayer->getPlayerControl().setJumping(false); // ジャンプ状態を解消
-					mPlayer->getPlayerControl().fixFloorCol();
+					//mPlayer->getPlayerMove().setJumping(false); // ジャンプ状態を解消
+					mPlayer->getPlayerMove()->fixFloorCol();
+
 				}
-				// player位置を下にずらす
+				// player菴咲ｽｮ繧剃ｸ九↓縺壹ｉ縺
 				else {
 					playerPos.y += colRec.height;
 				}
 			}
-			// 横方向の重なりの方が小さい場合は,横の重なりだけ解消
+			// 讓ｪ譁ｹ蜷代�驥阪↑繧翫�譁ｹ縺悟ｰ上＆縺�ｴ蜷医�,讓ｪ縺ｮ驥阪↑繧翫□縺題ｧ｣豸
 			else {
-				// player位置を左にずらす
+				// player菴咲ｽｮ繧貞ｷｦ縺ｫ縺壹ｉ縺
 				if (playerRec.x < colRec.x) {
 					playerPos.x -= colRec.width;
 				}
-				// player位置を右にずらす
+				// player菴咲ｽｮ繧貞承縺ｫ縺壹ｉ縺
 				else {
 					playerPos.x += colRec.width;
 				}
 			}
-			// 位置の変更を反映
+			// 菴咲ｽｮ縺ｮ螟画峩繧貞渚譏
 			mPlayer->setPosition(playerPos);
-			// Playerの四角形もずらす
+			// Player縺ｮ蝗幄ｧ貞ｽ｢繧ゅ★繧峨☆
 			mPlayer->computeRectangle();
-			// playerRecの更新が必要
+			// playerRec縺ｮ譖ｴ譁ｰ縺悟ｿ�ｦ
 			playerRec = mPlayer->getRectangle();
 		}
 	}
 
-	// Enemyがマップと衝突したときの処理
+	// Enemy縺後�繝��縺ｨ陦晉ｪ√＠縺溘→縺阪�蜃ｦ逅
 	for (auto enemy : mEnemies) {
 		Rectangle enemyRec = enemy->getRectangle();
 		Vector2 enemyPos = enemy->getPosition();
@@ -347,12 +348,12 @@ void GamePlay::updateCollision()
 		for (auto& stageRec : mStageRecs) {
 			if (CheckCollisionRecs(enemyRec, stageRec)) {
 				Rectangle colRec = GetCollisionRec(enemyRec, stageRec);
-				//横のジャンプ系統処理
+				//讓ｪ縺ｮ繧ｸ繝｣繝ｳ繝礼ｳｻ邨ｱ蜃ｦ逅
 				if (colRec.width < colRec.height) {
-					// 横の重なり解消
+					// 讓ｪ縺ｮ驥阪↑繧願ｧ｣豸
 					if (enemyRec.x < colRec.x) enemyPos.x -= colRec.width;
 					else enemyPos.x += colRec.width;
-					// ジャンプ中なら以降の処理は不要
+					// 繧ｸ繝｣繝ｳ繝嶺ｸｭ縺ｪ繧我ｻ･髯阪�蜃ｦ逅��荳崎ｦ
 					if (enemy->getEnemyState() != EnemyActor::E_jump)
 					{
 						const int tileSize = 32;	
@@ -360,10 +361,10 @@ void GamePlay::updateCollision()
 						bool isStep = false;
 						if (enemyPos.x < stageRec.x && forward > 0 ||
 							enemyPos.x > stageRec.x && forward < 0) {
-							//進行方向の壁が1マス段差かチェック
+							//騾ｲ陦梧婿蜷代�螢√′1繝槭せ谿ｵ蟾ｮ縺九メ繧ｧ繝�け
 							isStep = (stageRec.height <= tileSize * 1.5f);
 						}
-						//１マス先、１マス上が存在するかの確認の四角形定義
+						//�代�繧ｹ蜈医�ｼ代�繧ｹ荳翫′蟄伜惠縺吶ｋ縺九�遒ｺ隱阪�蝗幄ｧ貞ｽ｢螳夂ｾｩ
 						Rectangle checkOneAbove = {
 							colRec.x,
 							stageRec.y - tileSize,
@@ -385,19 +386,19 @@ void GamePlay::updateCollision()
 						}
 					}
 				}
-				//縦方向の重なりが小さい場合、縦の重なり解消
+				//邵ｦ譁ｹ蜷代�驥阪↑繧翫′蟆上＆縺�ｴ蜷医∫ｸｦ縺ｮ驥阪↑繧願ｧ｣豸
 				else if (colRec.width >= colRec.height) {
-					//上にずらす
+					//荳翫↓縺壹ｉ縺
 					if (enemyRec.y < colRec.y) {
 						enemyPos.y -= colRec.height;
 						enemy->getEnemyMove()->fixFloorCol();
 					}
-					//下にずらす
+					//荳九↓縺壹ｉ縺
 					else {
 						enemyPos.y += colRec.height;
 					}
 				}
-				//enemyの四角形を再計算
+				//enemy縺ｮ蝗幄ｧ貞ｽ｢繧貞�險育ｮ
 				enemy->setPosition(enemyPos);
 				enemy->computeRectangle();
 			}
