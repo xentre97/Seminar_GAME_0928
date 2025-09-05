@@ -14,7 +14,7 @@
 #include "EnemyActor.h"
 #include "WeaponActor.h"
 // Comopnent
-#include "PlayerControl.h"
+#include "PlayerMove.h"
 #include "EnemyMove.h"
 #include "SpriteComponent.h"
 #include "WeaponComponent.h"
@@ -305,8 +305,8 @@ void GamePlay::updateCollision()
 				// player位置を上にずらす
 				if (playerRec.y < colRec.y) {
 					playerPos.y -= colRec.height;
-					//mPlayer->getPlayerControl().setJumping(false); // ジャンプ状態を解消
-					mPlayer->getPlayerControl().fixFloorCol();
+					//mPlayer->getPlayerMove().setJumping(false); // ジャンプ状態を解消
+					mPlayer->getPlayerMove()->fixFloorCol();
 				}
 				// player位置を下にずらす
 				else {

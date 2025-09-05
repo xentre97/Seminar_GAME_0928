@@ -2,7 +2,7 @@
 #include "WeaponComponent.h"
 #include <vector>
 
-/// 遠距離武器：矢のコンポーネント（多段発射に対応）
+/// 遠距離武器：矢のコンポーネント(多段発射に対応)
 class ArrowComponent : public WeaponComponent
 {
 public:
@@ -24,7 +24,7 @@ private:
     float mLifeTime    = 3.0f;   // 秒
     float mMuzzleOffset= 8.0f;   // 発射口の見た目オフセット
 
-    // 同時に複数本撃てるように保持（破棄方針はプロジェクトに合わせる）
+    // 同時に複数本撃てるように保持(破棄方針はプロジェクトに合わせる)
     std::vector<class ArrowActor*> mArrows;
 };
 

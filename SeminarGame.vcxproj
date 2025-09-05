@@ -148,7 +148,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MoveComponent.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
-    <ClCompile Include="PlayerControl.cpp" />
+    <ClCompile Include="PlayerMove.cpp" />
+    <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SwordActor.cpp" />
@@ -172,7 +173,8 @@
     <ClInclude Include="HpComponent.h" />
     <ClInclude Include="MoveComponent.h" />
     <ClInclude Include="PlayerActor.h" />
-    <ClInclude Include="PlayerControl.h" />
+    <ClInclude Include="PlayerMove.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SwordActor.h" />

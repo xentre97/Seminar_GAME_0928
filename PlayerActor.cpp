@@ -2,7 +2,7 @@
 //#include "GamePlay.h"
 //#include "EnemyActor.h"
 #include "CameraComponent.h"
-#include "PlayerControl.h"
+#include "PlayerMove.h"
 #include "AnimSpriteComponent.h"
 #include "SwordComponent.h"
 #include "ArrowComponent.h"
@@ -11,8 +11,6 @@
 
 PlayerActor::PlayerActor(Sequence* sequence, Type type)
 	: Actor(sequence, type)
-	, mMoveState(ms_idle)
-	, mActionState(as_idle)
 	, mSwordComp(nullptr)
 {
 	Texture2D* tex  = mSequence->getTexture("testPlayerIdle.png");
@@ -23,46 +21,74 @@ PlayerActor::PlayerActor(Sequence* sequence, Type type)
 		(float)tex->width,
 		(float)tex->height
 	};
-
+	
 	mAnimsc = new AnimSpriteComponent(this);
 
 	// アニメーションを追加
 	std::vector<Texture2D*> idleTexs = { mSequence->getTexture("testPlayerIdle.png") };
 	std::vector<Texture2D*> walkTexs = { mSequence->getTexture("testPlayerWalk.png") };
-	std::vector<Texture2D*> dashTexs = { mSequence->getTexture("testPlayerDash.png") };
 	std::vector<Texture2D*> jumpTexs = { mSequence->getTexture("testPlayerJump.png") };
+	std::vector<Texture2D*> dodgeTexs = { mSequence->getTexture("testPlayerDodge.png") };
+	std::vector<Texture2D*> chargeTexs = { mSequence->getTexture("testPlayerCharge.png") };
+	std::vector<Texture2D*> nAttackTexs = { mSequence->getTexture("testPlayerNormalAttack.png") };
+	std::vector<Texture2D*> dAttackTexs = { mSequence->getTexture("testPlayerDodgeAttack.png") };
+	std::vector<Texture2D*> cAttackTexs = { mSequence->getTexture("testPlayerChargeAttack.png") };
 	// 第一引数は、playを呼ぶときに使う
 	mAnimsc->addAnimation("Idle", idleTexs);
 	mAnimsc->addAnimation("Walk", walkTexs);
-	mAnimsc->addAnimation("Dash", dashTexs);
 	mAnimsc->addAnimation("Jump", jumpTexs);
+	mAnimsc->addAnimation("Dodge", dodgeTexs);
+	mAnimsc->addAnimation("Charge", chargeTexs);
+	mAnimsc->addAnimation("NormalAttack", nAttackTexs);
+	mAnimsc->addAnimation("DodgeAttack", dAttackTexs);
+	mAnimsc->addAnimation("ChargeAttack", cAttackTexs);
+	mAnimsc->play("Idle");
 
 	mCameraComp = new CameraComponent(this);
-	mPlayerControl = new PlayerControl(this);
+	mPlayerMove = new PlayerMove(this);
 	mSwordComp = new SwordComponent(this);
 	mArrowComp = new ArrowComponent(this);
+	mWeaponComp = mSwordComp;
+
+	// 状態をマップに登録 状態は一気にnew,deleteする
+	// 理由:状態切り替えの度にnew,deleteはフラグメンテーションが気になるからW
+	mPlayerStates[PlayerState::Type::Idle] = new Idle(this);
+	mPlayerStates[PlayerState::Type::Walk] = new Walk(this);
+	mPlayerStates[PlayerState::Type::Jump] = new Jump(this);
+	mPlayerStates[PlayerState::Type::Dodge] = new Dodge(this);
+	mPlayerStates[PlayerState::Type::Guard] = new Guard(this);
+	mPlayerStates[PlayerState::Type::Charge] = new Charge(this);
+	mPlayerStates[PlayerState::Type::NormalAttack] = new NormalAttack(this);
+	mPlayerStates[PlayerState::Type::DodgeAttack] = new DodgeAttack(this);
+	mPlayerStates[PlayerState::Type::ChargeAttack] = new ChargeAttack(this);
+	// 現在の状態を設定
+	mPlayerState = mPlayerStates[PlayerState::Type::Idle];
+}
+
+PlayerActor::~PlayerActor()
+{
+	for (auto state : mPlayerStates) {
+		delete state.second;
+	}
 }
 
 void PlayerActor::input()
 {
 	// 基底のinput() : Componentのinput
 	Actor::input();
+	mPlayerState->input();
 }
 
 void PlayerActor::update()
 {
 	// 基底のupdate() : Componentのupdate
 	Actor::update();
+	mPlayerState->update();
 }
 
 const Camera2D& PlayerActor::getCamera() const
 {
 	return mCameraComp->getCamera();
-}
-
-PlayerControl& PlayerActor::getPlayerControl()
-{
-	return *mPlayerControl;
 }
 
 void PlayerActor::computeRectangle()
@@ -71,87 +97,52 @@ void PlayerActor::computeRectangle()
 	mRectangle.y = mPosition.y - mAnimsc->getTexHeight() / 2.0f;
 }
 
-void PlayerActor::changeState(PlayerState state)
+void PlayerActor::changeState(PlayerState::Type type)
 {
-	onExitState(state);
-	onEnterState(state);
+	mPlayerState->exit();
+	mPlayerState = mPlayerStates[type];
+	mPlayerState->enter();
 }
 
-void PlayerActor::onExitState(PlayerState nextState)
-{
-	if (nextState <= ms_jump) {
-		switch (mMoveState)
-		{
-		case ms_idle:
-			break;
-		case ms_walk:
-			break;
-		case ms_dash:
-			break;
-		case ms_jump:
-			break;
-		}
-	}
-	else {
-		switch (mActionState)
-		{
-		case as_idle:
-			break;
-		case as_attack:
-			mSwordComp->endAttack();
-			mArrowComp->endAttack();
-			break;
-		case as_guard:
-			break;
-		}
-	}
-}
+//void PlayerActor::onEnterState(PlayerState nextState)
+//{
+	//// 使うかも
+	//PlayerState lastMoveState = mMoveState;
+	//PlayerState lastActionState = mActionState;
 
-void PlayerActor::onEnterState(PlayerState nextState)
-{
-	// 使うかも
-	PlayerState lastMoveState = mMoveState;
-	PlayerState lastActionState = mActionState;
+	//if (nextState <= ms_jump) {
+	//	mMoveState = nextState;
+	//	switch (mMoveState)
+	//	{
+	//	case ms_idle:
+	//		mAnimsc->play("Idle"); break;
+	//	case ms_jump:
+	//		mAnimsc->play("Jump"); break;
+	//	case ms_walk:
+	//		mAnimsc->play("Walk"); break;
+	//	}
 
-	if (nextState <= ms_jump) {
-		mMoveState = nextState;
-		switch (mMoveState)
-		{
-		case ms_idle:
-			mAnimsc->play("Idle"); break;
-		case ms_jump:
-			mAnimsc->play("Jump"); break;
-		case ms_walk:
-			mAnimsc->play("Walk"); break;
-		case ms_dash:
-			mAnimsc->play("Dash"); break;
-		}
-
-	}
-	else {
-		mActionState = nextState;
-		switch (mActionState)
-		{
-		case as_idle:
-			break;
-		case as_attack:
-			// charge攻撃
-			if (lastActionState == as_charge) {
-				mSwordComp->startAttack();
-			}
-			// ダッシュ攻撃
-			else if (mMoveState == ms_dash) {
-				mSwordComp->startAttack();
-			}
-			// 通常攻撃
-			else {
-				//mSwordComp->startAttack(0, 9, mPlayerControl->getAttackTime());
-				mArrowComp->startAttack();
-			}
-			break;
-		case as_guard:
-			break;
-		}
-	}
-}
+	//}
+	//else {
+	//	mActionState = nextState;
+	//	switch (mActionState)
+	//	{
+	//	case as_idle:
+	//		break;
+	//	case as_attack:
+	//		// charge攻撃
+	//		if (lastActionState == as_charge) {
+	//			mSwordComp->startAttack();
+	//		}
+	//		// 通常攻撃
+	//		else {
+	//			mSwordComp->startAttack();
+	//			//mArrowComp->startAttack();
+	//		}
+	//		break;
+	//	case as_guard:
+	//		break;
+	//	}
+	//}
+//}
 

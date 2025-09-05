@@ -5,23 +5,19 @@
 /// Playerの移動を司る
 /// PlayerのStateを変更したりもする
 /// </summary>
-class PlayerControl :
+class PlayerMove :
     public MoveComponent
 {
 public:
-    PlayerControl(class PlayerActor* owner);
+    PlayerMove(class PlayerActor* owner);
     void input()override;
     void update()override;
     void fixFloorCol();
 
-    float getAttackTime() const { return mAttackTime; }
+    // ジャンプする瞬間に呼ぶ
+    void jump();
 
 private:
     void StateDraw(); // デバッグ用の関数
     class PlayerActor* mPlayer; // mOwnerと同じ(型が違う)
-    float mDashSpeed;
-    float mAttackTimer;
-    float mAttackTime;  // 通常攻撃の時間
-    float mChargeTimer;
-    float mChargeTime;
 };
