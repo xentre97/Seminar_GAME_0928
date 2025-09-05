@@ -9,7 +9,7 @@ public:
     ArrowComponent(class Actor* owner);
 
     void update() override;
-    void startAttack() override;
+    void startAttack(AttackType type = AttackType::Normal) override;
 
     // 調整用
     void setBaseSpeed(float v)   { mBaseSpeed = v; }

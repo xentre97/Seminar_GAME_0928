@@ -4,8 +4,8 @@
 #include "AnimSpriteComponent.h"
 
 
-SwordActor::SwordActor(Sequence* sequence, Type type, Type owner)
-	: WeaponActor(sequence, type, owner)
+SwordActor::SwordActor(Sequence* sequence, Type owner)
+	: WeaponActor(sequence, owner)
 	, mColWidth(64.0f)
 	, mColHeight(32.0f)
 {

@@ -2,6 +2,13 @@
 #include "Component.h"
 #include <raylib.h>
 
+enum class AttackType
+{
+    Normal,
+    Charge,
+    Dodge
+};
+
 /// <summary>
 /// 武器Component基底クラス
 /// 武器自身にアタッチするわけではない。ややこしいので名前変えてもいいかも
@@ -11,7 +18,7 @@ class WeaponComponent :
 {
 public:
     virtual void update() override;
-    virtual void startAttack() {};
+    virtual void startAttack(AttackType type = AttackType::Normal) {};
     virtual void endAttack();
 
 protected:

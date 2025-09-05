@@ -1,7 +1,10 @@
 #include "HpComponent.h"
 #include <iostream>
 #include <raylib.h>
+#include <string>
+#include "GamePlay.h"
 #include "Actor.h"
+#include "DamageUI.h"
 
 HpComponent::HpComponent(Actor* owner, float maxHp, float invincibleDuration)
 	: Component(owner)
@@ -37,6 +40,11 @@ bool HpComponent::TakeDamage(float damage)
 	}
 	//デバッグ用
 	std::cout << "mCurHp=" << mCurHp << std::endl;
+
+	// UIへ通知(お茶濁し実装)
+	GamePlay* seq = static_cast<GamePlay*>(mOwner->getSequence());
+	seq->getDamageUI()->addDamage((int)damage, mOwner->getPosition());
+
 	return false;
 }
 

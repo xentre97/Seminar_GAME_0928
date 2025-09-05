@@ -31,6 +31,7 @@ void AnimSpriteComponent::update()
 				mCurrFrame = (float)(mCurrentAnim->frames.size() - 1);
 				// アニメーション終了
 				mIsAnimating = false;
+				return;
 			}
 		}
 		// 表示テクスチャ更新
@@ -38,25 +39,13 @@ void AnimSpriteComponent::update()
 	}
 }
 
-void AnimSpriteComponent::addAnimation(const std::string& name, const std::vector<Texture2D*>& frames, float fps, bool loop)
+void AnimSpriteComponent::play(const Animation* anim)
 {
-	// アニメーションを作成し、内容を設定
-	Animation anim;
-	anim.name = name;
-	anim.frames = frames;
-	anim.fps = fps;
-	anim.loop = loop;
-	// マップに追加
-	mAnimations[name] = anim;
-}
-
-void AnimSpriteComponent::play(std::string animName)
-{
-	auto it = mAnimations.find(animName);
-	if (it != mAnimations.end()) {
-		mCurrentAnim = &it->second;
+	if (!anim) return;
+	if (!anim->frames.empty()) {
+		mCurrentAnim = anim;
 		mCurrFrame = 0.0f;
 		mIsAnimating = true;
-		setTexture(*mCurrentAnim->frames[0]);
+		setTexture(*anim->frames[0]);
 	}
 }

@@ -23,8 +23,8 @@ EnemyActor* EnemySpawner::spawn()
 
 EnemyActor* EnemySpawner::spawnAt(const Vector2& pos)
 {
-    // 通常の敵を生成（既存実装に合わせて type は Eenemy）
-    auto* enemy = new EnemyActor(mSeq, Actor::Eenemy);
+    // 通常の敵を生成
+    auto* enemy = new EnemyActor(mSeq);
 
     // 位置設定と当たり判定更新（既存のAPI前提）
     enemy->setPosition(pos);

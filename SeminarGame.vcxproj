@@ -137,8 +137,9 @@
     <ClCompile Include="AnimSpriteComponent.cpp" />
     <ClCompile Include="ArrowActor.cpp" />
     <ClCompile Include="ArrowComponent.cpp" />
-    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="DamageUI.cpp" />
     <ClCompile Include="EnemyActor.cpp" />
     <ClCompile Include="EnemyMove.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GamePlay.cpp" />
     <ClCompile Include="HpComponent.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MoveComponent.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
@@ -156,16 +158,19 @@
     <ClCompile Include="SwordActor.cpp" />
     <ClCompile Include="SwordComponent.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="UIScreen.cpp" />
     <ClCompile Include="WeaponActor.cpp" />
     <ClCompile Include="WeaponComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimSpriteComponent.h" />
     <ClInclude Include="ArrowActor.h" />
     <ClInclude Include="ArrowComponent.h" />
-    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="DamageUI.h" />
     <ClInclude Include="EnemyActor.h" />
     <ClInclude Include="EnemyMove.h" />
     <ClInclude Include="EnemySpawner.h" />
@@ -173,6 +178,7 @@
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GamePlay.h" />
     <ClInclude Include="HpComponent.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="MoveComponent.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="PlayerMove.h" />
@@ -182,6 +188,7 @@
     <ClInclude Include="SwordActor.h" />
     <ClInclude Include="SwordComponent.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="UIScreen.h" />
     <ClInclude Include="WeaponActor.h" />
     <ClInclude Include="WeaponComponent.h" />
   </ItemGroup>

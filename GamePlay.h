@@ -24,14 +24,14 @@ public:
     std::vector<class EnemyActor*> const getEnemies() { return mEnemies; }
     // 敵やその他がプレイヤー情報を取得するために定義
     class PlayerActor* getPlayer() const { return mPlayer; }
+    struct Camera2D getCamera() const;
+    class DamageUI* getDamageUI() const { return mDamageUI; }
 
     void addWeapon(class WeaponActor* weapon, Actor::Type type);
     void removeWeapon(class WeaponActor* weapon);
 
     void addSprite(class SpriteComponent* sprite);
     void removeSprite(class SpriteComponent* sprite);
-
-    const int& getStageWidth() const { return mStageWidth; }
 
 private:
     // collision関連の更新処理がまとまってる
@@ -49,9 +49,10 @@ private:
     std::vector<struct Rectangle> mStageRecs;
     int mStageWidth;
     int mStageHeight;
-    Camera2D mCamera;
     class EnemySpawner* mSpawner;
-
+    class CameraSystem* mCameraSystem;
+    class HUD* mHUD;
+    class DamageUI* mDamageUI;
 };
 
 // collisionの処理はcollisionManagerみたいなの作って
