@@ -2,7 +2,7 @@
 #include "Sequence.h"
 
 /// <summary>
-/// GamePlayƒV[ƒPƒ“ƒX
+/// GamePlayã‚·ãƒ¼ã‚±ãƒ³ã‚¹
 /// </summary>
 class GamePlay :
     public Sequence
@@ -22,7 +22,7 @@ public:
     void addEnemy(class EnemyActor* enemy);
     void removeEnemy(class EnemyActor* enemy);
     std::vector<class EnemyActor*> const getEnemies() { return mEnemies; }
-    // “G‚â‚»‚Ì‘¼‚ªƒvƒŒƒCƒ„[î•ñ‚ğæ“¾‚·‚é‚½‚ß‚É’è‹`
+    // æ•µã‚„ãã®ä»–ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã‚’å–å¾—ã™ã‚‹ãŸã‚ã«å®šç¾©
     class PlayerActor* getPlayer() const { return mPlayer; }
 
     void addWeapon(class WeaponActor* weapon, Actor::Type type);
@@ -34,23 +34,25 @@ public:
     const int& getStageWidth() const { return mStageWidth; }
 
 private:
-    // collisionŠÖ˜A‚ÌXVˆ—‚ª‚Ü‚Æ‚Ü‚Á‚Ä‚é
+    // collisioné–¢é€£ã®æ›´æ–°å‡¦ç†ãŒã¾ã¨ã¾ã£ã¦ã‚‹
     void updateCollision();
     Sequence* mNext = nullptr;
-    // “G‚Ì”z—ñ(å‚ÉCollision—p‚Ég‚¤)
+    // æ•µã®é…åˆ—(ä¸»ã«Collisionç”¨ã«ä½¿ã†)
     std::vector<class EnemyActor*> mEnemies;
-    // •Ší‚Ì”z—ñ(Collision‚Åg‚¤)
+    // æ­¦å™¨ã®é…åˆ—(Collisionã§ä½¿ã†)
     std::vector<class WeaponActor*> mPlayerWeapons;
     std::vector<class WeaponActor*> mEnemyWeapons;
     class PlayerActor* mPlayer;
-    // Sprite‚Ì”z—ñ
+    // Spriteã®é…åˆ—
     std::vector<class SpriteComponent*> mSprites;
-    // ƒXƒe[ƒW‚©‚ç“Ç‚İ‚ñ‚¾lŠpŒ`‚Ì”z—ñ(°‚â•Ç‚Ì•`‰æ,collision‚Ég—p)
+    // ã‚¹ãƒ†ãƒ¼ã‚¸ã‹ã‚‰èª­ã¿è¾¼ã‚“ã å››è§’å½¢ã®é…åˆ—(åºŠã‚„å£ã®æç”»,collisionã«ä½¿ç”¨)
     std::vector<struct Rectangle> mStageRecs;
     int mStageWidth;
     int mStageHeight;
     Camera2D mCamera;
+    class EnemySpawner* mSpawner;
+
 };
 
-// collision‚Ìˆ—‚ÍcollisionManager‚İ‚½‚¢‚È‚Ìì‚Á‚Ä
-// ŠO‚Éo‚µ‚Ä‚à‚¢‚¢‚©‚à‚Å‚·
+// collisionã®å‡¦ç†ã¯collisionManagerã¿ãŸã„ãªã®ä½œã£ã¦
+// å¤–ã«å‡ºã—ã¦ã‚‚ã„ã„ã‹ã‚‚ã§ã™

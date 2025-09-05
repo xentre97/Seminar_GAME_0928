@@ -19,36 +19,42 @@
 #include "SpriteComponent.h"
 #include "WeaponComponent.h"
 
+#include "EnemySpawner.h"
+
 GamePlay::GamePlay()
 {
-	// TODO: ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚©‚çƒ}ƒbƒv¶¬
+	// TODO: ç¹ï¿½ãç¹§ï½¹ç¹åŒ»ãƒµç¹§ï½¡ç¹§ï½¤ç¹ï½«ç¸ºä¹ï½‰ç¹æ§­ãƒ£ç¹ç¤¼å‡½è¬Œ
 	if (!loadStage("stage0.txt")) {
-		// ƒuƒŒ[ƒNƒ|ƒCƒ“ƒg’u‚­
+		// ç¹æ‚¶Îç¹ï½¼ç¹§ï½¯ç¹æ˜´ã†ç¹ï½³ç¹è‚²ï½½ï½®ç¸º
 	}
-	// TODO:‚±‚±‚Åƒ}ƒbƒv‚Ì¶¬,Player‚Ì¶¬“™s‚¤
+	// TODO:ç¸ºè–™ï¼…ç¸ºï½§ç¹æ§­ãƒ£ç¹åŠ±ï¿½é€•æ»“ï¿½,Playerç¸ºï½®é€•æ»“ï¿½é²èŠ½ï½¡å¾Œâ‰§
 	mPlayer = new PlayerActor(this, Actor::Eplayer);
-	new EnemyActor(this, Actor::Eenemy);
-}
+	mSpawner = new EnemySpawner(this);
+
+	mSpawner->addSpawnPoint({700.0f, 100.0f});
+	mSpawner->spawn();}
 
 GamePlay::~GamePlay()
 {
-	// ˆÈ‰º‚Ìdelete‚ÍSequenceƒfƒXƒgƒ‰ƒNƒ^‚âdestroyEnemy‚Å‚â‚Á‚Ä‚é‚Ì‚Å•s•K—v
+	// è‰ï½¥è³ä¹ï¿½deleteç¸ºï½¯Sequenceç¹ï¿½ã›ç¹åŒ»Î›ç¹§ï½¯ç¹§ï½¿ç¹§ï¿½estroyEnemyç¸ºï½§ç¹§ï¿½â–²ç¸ºï½¦ç¹§ä¹ï¿½ç¸ºï½§è³æ¦Šï½¿ï¿½ï½¦
 	/*while (!mEnemies.empty()) {
 		delete mEnemies.back();
 	}
 	delete mPlayer;*/
+	delete mSpawner;
+    mSpawner = nullptr;
 }
 
 void GamePlay::input()
 {
-	// test—p
+	// testé€•ï½¨
 	if (IsKeyPressed(KEY_ENTER)) {
 		mNext = new GameClear();
 	}
 	else if (IsKeyPressed(KEY_RIGHT_SHIFT)) {
 		mNext = new GameOver();
 	}
-	// ‘SActor‚Ìinput‚ğŒÄ‚Ô
+	// èœˆï½¨Actorç¸ºï½®inputç¹§è²ä»–ç¸ºï½¶
 	mUpdatingActors = true;
 	for (Actor* actor : mActors) {
 		actor->input();
@@ -58,24 +64,24 @@ void GamePlay::input()
 
 void GamePlay::update()
 {
-	// Actor‚Ìupdate
+	// Actorç¸ºï½®update
 	mUpdatingActors = true;
 	for (Actor* actor : mActors) {
 		actor->update();
 	}
 	mUpdatingActors = false;
-	// •Û—¯’†‚ÌActor‚ğmActors‚ÖˆÚ“®
+	// è«æ™‰è•—è³ï½­ç¸ºï½®Actorç¹§çŸ¥Actorsç¸ºï½¸é˜ï½»èœ
 	for (auto pending : mPendingActors)
 	{
 		mActors.emplace_back(pending);
 	}
 	mPendingActors.clear();
 
-	// Collision‚Ìupdate
-	// ‘SƒAƒNƒ^[(‚Æ‚»‚ÌComponent)‚ÌupdateŒã‚ÉŒÄ‚Î‚ê‚Ä‚¢‚é‚±‚Æ‚É’ˆÓ
+	// Collisionç¸ºï½®update
+	// èœˆï½¨ç¹§ï½¢ç¹§ï½¯ç¹§ï½¿ç¹ï½¼(ç¸ºï½¨ç¸ºæ˜´ï¿½Component)ç¸ºï½®updateè •å¾Œâ†“èœ»ï½¼ç¸ºï½°ç¹§å¾Œâ€»ç¸ºï¿½ï½‹ç¸ºè–™â†’ç¸ºï½«è±•ï½¨è«¢
 	updateCollision();
 
-	// Deadó‘Ô‚ÌActor‚ğdelete
+	// Deadè¿¥ï½¶è«·ä¹ï¿½Actorç¹§å£‡elete
 	for (auto actor : mActors)
 	{
 		if (actor->getState() == Actor::Edead)
@@ -90,12 +96,12 @@ void GamePlay::draw()
 	BeginDrawing();
 	ClearBackground(WHITE);
 
-	// ui‚Ì•`‰æ
+	// uiç¸ºï½®è¬ å†—åˆ¤
 	DrawText("GamePlay", 100, 100, 40, BLACK);
 	DrawText("Press ENTER -> GameClear", 100, 200, 20, GRAY);
 	DrawText("Press RightShift -> GameOver", 100, 300, 20, GRAY);
 
-	// ƒJƒƒ‰‚ÉˆÚ‚·‚à‚Ì‚Ì•`‰æ(uiˆÈŠO)
+	// ç¹§ï½«ç¹ï½¡ç¹ï½©ç¸ºï½«é˜ï½»ç¸ºå¶ï½‚ç¸ºï½®ç¸ºï½®è¬ å†—åˆ¤(uiè‰ï½¥èŸ)
 	BeginMode2D(mPlayer->getCamera());
 	for (auto& rec : mStageRecs)
 	{
@@ -126,17 +132,17 @@ Sequence* GamePlay::nextSequence()
 
 bool GamePlay::loadStage(const char* filename)
 {
-	// ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚©‚çƒXƒe[ƒW‚ğ“Ç‚İ‚Ş
-	// 0 : ‰½‚à‚È‚¢êŠ
-	// 1 : °‚Æ•Ç
-	// ŠÈˆÕ“I‚È‚à‚Ì‚Å‚·
-	// 1‚Ì‰¡•ûŒü‚Ì˜A‘±‚ğˆê‚Â‚Ìrectangle‚Æ‚µ‚Ä”F¯‚³‚¹‚Ä‚¢‚é
+	// ç¹ï¿½ãç¹§ï½¹ç¹åŒ»ãƒµç¹§ï½¡ç¹§ï½¤ç¹ï½«ç¸ºä¹ï½‰ç¹§ï½¹ç¹ï¿½ï¿½ç¹§ï½¸ç¹§å®šï½ªï½­ç¸ºï½¿éœï½¼ç¹§
+	// 0 : è´è¼”ï½‚ç¸ºï½ªç¸ºï¿½ï½´è¬‡
+	// 1 : è ç¿«â†’è¢
+	// é‚ï½¡è­é‹å™ªç¸ºï½ªç¹§ã‚…ï¿½ç¸ºï½§ç¸º
+	// 1ç¸ºï½®è®“ï½ªè­ï½¹èœ·ä»£ï¿½é¨¾ï½£é‚¯å£¹ï½’è³ç¸ºï½¤ç¸ºï½®rectangleç¸ºï½¨ç¸ºåŠ±â€»éš±å´ï½­å€¥ï¼†ç¸ºå¸™â€»ç¸ºï¿½ï½‹
 
 	std::ifstream file(filename);
 	std::string line;
 	std::vector<std::vector<int>> tiles;
 	
-	// 2ŸŒ³”z—ñtiles‚Éƒf[ƒ^‚ğˆÚ‚·
+	// 2è°ºï½¡èœˆï¿½ï¿½è›»è‘‰ilesç¸ºï½«ç¹ï¿½ï¿½ç¹§ï½¿ç¹§å ¤ï½§ï½»ç¸º
 	while (std::getline(file, line))
 	{
 		std::vector<int> row;
@@ -147,7 +153,7 @@ bool GamePlay::loadStage(const char* filename)
 		}
 		tiles.push_back(row);
 	}
-	// ˆê‚Â‚Ìƒ^ƒCƒ‹‚Ìc‰¡‚Ì’·‚³
+	// è³ç¸ºï½¤ç¸ºï½®ç¹§ï½¿ç¹§ï½¤ç¹ï½«ç¸ºï½®é‚µï½¦è®“ï½ªç¸ºï½®é«Ÿï½·ç¸º
 	const int tileSize = 32;
 	mStageRecs.clear();
 	mStageWidth = (int)tiles[0].size() * tileSize;
@@ -160,14 +166,14 @@ bool GamePlay::loadStage(const char* filename)
 		{
 			if (tiles[y][x] == 1)
 			{
-				// 1‚Ì˜A‘±‚Ì¶’[‚ğ‹L˜^‚·‚é
+				// 1ç¸ºï½®é¨¾ï½£é‚¯å£¹ï¿½èŸ¾ï½¦é¶ï½¯ç¹§å®šï½¨å€¬é¹¸ç¸ºå¶ï½‹
 				if (startX == -1) startX = x;
 			}
 			else
 			{
 				if (startX != -1)
 				{
-					// ‰¡•ûŒü‚Ì1‚Ì˜A‘±‚ğ‚Ü‚Æ‚ß‚ÄRectangle‚É
+					// è®“ï½ªè­ï½¹èœ·ä»£ï¿½1ç¸ºï½®é¨¾ï½£é‚¯å£¹ï½’ç¸ºï½¾ç¸ºï½¨ç¹§âˆšâ€»Rectangleç¸ºï½«
 					Rectangle r;
 					r.x = startX * tileSize;
 					r.y = y * tileSize;
@@ -178,7 +184,7 @@ bool GamePlay::loadStage(const char* filename)
 				}
 			}
 		}
-		// s‚ÌÅŒã‚Å˜A‘±‚µ‚Ä‚¢‚½ê‡
+		// é™¦å¾Œï¿½è­›è •å¾Œã€’é¨¾ï½£é‚¯å£¹ï¼ ç¸ºï½¦ç¸ºï¿½â—†è£ï½´èœ·
 		if (startX != -1)
 		{
 			Rectangle r;
@@ -199,7 +205,7 @@ void GamePlay::addEnemy(EnemyActor* enemy)
 
 void GamePlay::removeEnemy(EnemyActor* enemy)
 {
-	// mEnemies‚©‚çíœ
+	// mEnemiesç¸ºä¹ï½‰èœ‘ä¼å‹
 	auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
 	if (iter != mEnemies.end()) {
 		std::iter_swap(iter, mEnemies.end() - 1);
@@ -235,7 +241,7 @@ void GamePlay::removeWeapon(WeaponActor* weapon)
 
 void GamePlay::addSprite(SpriteComponent* sprite)
 {
-	// ƒ\[ƒgÏ‚İ‚Ì”z—ñ‚Å‘}“ü“_‚ğŒ©‚Â‚¯‚é
+	// ç¹§ï½½ç¹ï½¼ç¹åŸŸï½¸åŒ»âˆ©ç¸ºï½®é©Ÿæ¦Šï¿½ç¸ºï½§è¬–ï½¿èœˆï½¥è½¤ï½¹ç¹§å®šï½¦ä¹â–½ç¸ºä»£ï½‹
 	int myDrawOrder = sprite->getDrawOrder();
 	auto iter = mSprites.begin();
 	for (;
@@ -247,7 +253,7 @@ void GamePlay::addSprite(SpriteComponent* sprite)
 			break;
 		}
 	}
-	// ƒCƒeƒŒ[ƒ^‚ÌˆÊ’u‚Ì‘O‚É—v‘f‚ğ‘}“ü‚·‚é
+	// ç¹§ï½¤ç¹ï¿½Îç¹ï½¼ç¹§ï½¿ç¸ºï½®è´å’²ï½½ï½®ç¸ºï½®èœ‘é˜ªâ†“éš•âˆ«ï½´ç¹§å‘ˆè«ºèœˆï½¥ç¸ºå¶ï½‹
 	mSprites.insert(iter, sprite);
 }
 
@@ -261,7 +267,7 @@ void GamePlay::updateCollision()
 {
 	Rectangle playerRec = mPlayer->getRectangle();
 
-	// PlayerWeapon‚ÆEnemy‚ÌÕ“ËŒŸ’m,ˆ—
+	// PlayerWeaponç¸ºï½¨Enemyç¸ºï½®é™¦æ™‰ï½ªâˆµï½¤æ‡ƒè¡,èœƒï½¦é€…
 	for (auto enemy : mEnemies) {
 		for (auto weapon : mPlayerWeapons)
 		{
@@ -273,67 +279,68 @@ void GamePlay::updateCollision()
 		}
 	}
 
-	// TODO:EnemyWeapon‚ÆPlayer‚ÌÕ“ËŒŸ’m,ˆ—
+	// TODO:EnemyWeaponç¸ºï½¨Playerç¸ºï½®é™¦æ™‰ï½ªâˆµï½¤æ‡ƒè¡,èœƒï½¦é€…
 	for (auto weapon : mEnemyWeapons)
 	{
 		Rectangle playerRec = mPlayer->getRectangle();
 		Rectangle weaponRec = weapon->getRectangle();
 		if (CheckCollisionRecs(playerRec, weaponRec)) {
-			// ‘¦€
+			// èœŠï½³è±ï½»
 			mNext = new GameOver();
 		}
 	}
 
-	// TODO:“G‚ÆPlayer‚ÌÕ“ËŒŸ’m,ˆ—
+	// TODO:è¬¨ï½µç¸ºï½¨Playerç¸ºï½®é™¦æ™‰ï½ªâˆµï½¤æ‡ƒè¡,èœƒï½¦é€…
 	for (auto enemy : mEnemies) {
 		if (CheckCollisionRecs(playerRec, enemy->getRectangle())) {
-			// ‘¦€
+			// èœŠï½³è±ï½»
 			mNext = new GameOver();
 		}
 	}
-	// Player‚¾‚¯‚Å‚È‚­Enemy‚à‚Ä‚éWeaponComponent“™ì‚ê‚Î—Ç‚¢‚Æv‚¤
+	// Playerç¸ºç¸ºä»£ã€’ç¸ºï½ªç¸ºæ‹¾nemyç¹§ã‚ˆæˆŸç¸ºï½¦ç¹§å¦“eaponComponenté²æˆ‘ï½½æ‡Šï½Œç¸ºï½°æ¿¶ï½¯ç¸ºï¿½â†’è«¤æ˜´â‰§
 
-	// Player‚ªƒ}ƒbƒv‚ÆÕ“Ë‚µ‚½‚Æ‚«‚Ìˆ—
+	// Playerç¸ºå¾Œï¿½ç¹ï¿½ï¿½ç¸ºï½¨é™¦æ™‰ï½ªâˆšï¼ ç¸ºæº˜â†’ç¸ºé˜ªï¿½èœƒï½¦é€…
 	for (auto& stageRec : mStageRecs) {
-		// Õ“Ë‚µ‚Ä‚¢‚é‚È‚ç
+		// é™¦æ™‰ï½ªâˆšï¼ ç¸ºï½¦ç¸ºï¿½ï½‹ç¸ºï½ªç¹§
 		if (CheckCollisionRecs(playerRec, stageRec)) {
-			// Õ“Ë•”•ª‚ÌlŠpŒ`‚ğ“¾‚é
+			// é™¦æ™‰ï½ªï¿½Îšè›»ï¿½ï¿½è—å¹„ï½§è²ï½½ï½¢ç¹§è²ï½¾åŠ±ï½‹
 			Rectangle colRec = GetCollisionRec(playerRec, stageRec);
 			Vector2 playerPos = mPlayer->getPosition();
-			// c•ûŒü‚Ìd‚È‚è‚Ì•û‚ª¬‚³‚¢ê‡‚Í,c‚Ìd‚È‚è‚¾‚¯‰ğÁ
+			// é‚µï½¦è­ï½¹èœ·ä»£ï¿½é©¥é˜ªâ†‘ç¹§ç¿«ï¿½è­ï½¹ç¸ºæ‚Ÿï½°ä¸Šï¼†ç¸ºï¿½ï½´èœ·åŒ»ï¿½,é‚µï½¦ç¸ºï½®é©¥é˜ªâ†‘ç¹§ç¿«â–¡ç¸ºé¡Œï½§ï½£è±¸
 			if (colRec.width >= colRec.height) {
-				// playerˆÊ’u‚ğã‚É‚¸‚ç‚·
+				// playerè´å’²ï½½ï½®ç¹§å‰ƒï½¸ç¿«â†“ç¸ºå£¹ï½‰ç¸º
 				if (playerRec.y < colRec.y) {
 					playerPos.y -= colRec.height;
-					//mPlayer->getPlayerMove().setJumping(false); // ƒWƒƒƒ“ƒvó‘Ô‚ğ‰ğÁ
+					//mPlayer->getPlayerMove().setJumping(false); // ã‚¸ãƒ£ãƒ³ãƒ—çŠ¶æ…‹ã‚’è§£æ¶ˆ
 					mPlayer->getPlayerMove()->fixFloorCol();
+
 				}
-				// playerˆÊ’u‚ğ‰º‚É‚¸‚ç‚·
+				// playerè´å’²ï½½ï½®ç¹§å‰ƒï½¸ä¹â†“ç¸ºå£¹ï½‰ç¸º
 				else {
 					playerPos.y += colRec.height;
 				}
 			}
-			// ‰¡•ûŒü‚Ìd‚È‚è‚Ì•û‚ª¬‚³‚¢ê‡‚Í,‰¡‚Ìd‚È‚è‚¾‚¯‰ğÁ
+			// è®“ï½ªè­ï½¹èœ·ä»£ï¿½é©¥é˜ªâ†‘ç¹§ç¿«ï¿½è­ï½¹ç¸ºæ‚Ÿï½°ä¸Šï¼†ç¸ºï¿½ï½´èœ·åŒ»ï¿½,è®“ï½ªç¸ºï½®é©¥é˜ªâ†‘ç¹§ç¿«â–¡ç¸ºé¡Œï½§ï½£è±¸
 			else {
-				// playerˆÊ’u‚ğ¶‚É‚¸‚ç‚·
+				// playerè´å’²ï½½ï½®ç¹§è²ï½·ï½¦ç¸ºï½«ç¸ºå£¹ï½‰ç¸º
 				if (playerRec.x < colRec.x) {
 					playerPos.x -= colRec.width;
 				}
-				// playerˆÊ’u‚ğ‰E‚É‚¸‚ç‚·
+				// playerè´å’²ï½½ï½®ç¹§è²æ‰¿ç¸ºï½«ç¸ºå£¹ï½‰ç¸º
 				else {
 					playerPos.x += colRec.width;
 				}
 			}
-			// ˆÊ’u‚Ì•ÏX‚ğ”½‰f
+			// è´å’²ï½½ï½®ç¸ºï½®èŸç”»å³©ç¹§è²æ¸šè­
 			mPlayer->setPosition(playerPos);
-			// Player‚ÌlŠpŒ`‚à‚¸‚ç‚·
+			// Playerç¸ºï½®è—å¹„ï½§è²ï½½ï½¢ç¹§ã‚…â˜…ç¹§å³¨â˜†
 			mPlayer->computeRectangle();
-			// playerRec‚ÌXV‚ª•K—v
+			// playerRecç¸ºï½®è­–ï½´è­ï½°ç¸ºæ‚Ÿï½¿ï¿½ï½¦
 			playerRec = mPlayer->getRectangle();
 		}
 	}
 
-	// Enemy‚ªƒ}ƒbƒv‚ÆÕ“Ë‚µ‚½‚Æ‚«‚Ìˆ—
+	// Enemyç¸ºå¾Œï¿½ç¹ï¿½ï¿½ç¸ºï½¨é™¦æ™‰ï½ªâˆšï¼ ç¸ºæº˜â†’ç¸ºé˜ªï¿½èœƒï½¦é€…
 	for (auto enemy : mEnemies) {
 		Rectangle enemyRec = enemy->getRectangle();
 		Vector2 enemyPos = enemy->getPosition();
@@ -341,12 +348,12 @@ void GamePlay::updateCollision()
 		for (auto& stageRec : mStageRecs) {
 			if (CheckCollisionRecs(enemyRec, stageRec)) {
 				Rectangle colRec = GetCollisionRec(enemyRec, stageRec);
-				//‰¡‚ÌƒWƒƒƒ“ƒvŒn“ˆ—
+				//è®“ï½ªç¸ºï½®ç¹§ï½¸ç¹ï½£ç¹ï½³ç¹ç¤¼ï½³ï½»é‚¨ï½±èœƒï½¦é€…
 				if (colRec.width < colRec.height) {
-					// ‰¡‚Ìd‚È‚è‰ğÁ
+					// è®“ï½ªç¸ºï½®é©¥é˜ªâ†‘ç¹§é¡˜ï½§ï½£è±¸
 					if (enemyRec.x < colRec.x) enemyPos.x -= colRec.width;
 					else enemyPos.x += colRec.width;
-					// ƒWƒƒƒ“ƒv’†‚È‚çˆÈ~‚Ìˆ—‚Í•s—v
+					// ç¹§ï½¸ç¹ï½£ç¹ï½³ç¹å¶ºï½¸ï½­ç¸ºï½ªç¹§æˆ‘ï½»ï½¥é«¯é˜ªï¿½èœƒï½¦é€…ï¿½ï¿½è³å´ï½¦
 					if (enemy->getEnemyState() != EnemyActor::E_jump)
 					{
 						const int tileSize = 32;	
@@ -354,10 +361,10 @@ void GamePlay::updateCollision()
 						bool isStep = false;
 						if (enemyPos.x < stageRec.x && forward > 0 ||
 							enemyPos.x > stageRec.x && forward < 0) {
-							//is•ûŒü‚Ì•Ç‚ª1ƒ}ƒX’i·‚©ƒ`ƒFƒbƒN
+							//é¨¾ï½²é™¦æ¢§å©¿èœ·ä»£ï¿½è¢âˆšâ€²1ç¹æ§­ã›è°¿ï½µèŸ¾ï½®ç¸ºä¹ãƒ¡ç¹§ï½§ç¹ï¿½ã‘
 							isStep = (stageRec.height <= tileSize * 1.5f);
 						}
-						//‚Pƒ}ƒXæA‚Pƒ}ƒXã‚ª‘¶İ‚·‚é‚©‚ÌŠm”F‚ÌlŠpŒ`’è‹`
+						//ï¿½ä»£ï¿½ç¹§ï½¹èœˆåŒ»ï¿½ï½¼ä»£ï¿½ç¹§ï½¹è³ç¿«â€²èŸ„ä¼œæƒ ç¸ºå¶ï½‹ç¸ºä¹ï¿½é’ï½ºéš±é˜ªï¿½è—å¹„ï½§è²ï½½ï½¢è³å¤‚ï½¾ï½©
 						Rectangle checkOneAbove = {
 							colRec.x,
 							stageRec.y - tileSize,
@@ -379,19 +386,19 @@ void GamePlay::updateCollision()
 						}
 					}
 				}
-				//c•ûŒü‚Ìd‚È‚è‚ª¬‚³‚¢ê‡Ac‚Ìd‚È‚è‰ğÁ
+				//é‚µï½¦è­ï½¹èœ·ä»£ï¿½é©¥é˜ªâ†‘ç¹§ç¿«â€²èŸ†ä¸Šï¼†ç¸ºï¿½ï½´èœ·åŒ»âˆ«ï½¸ï½¦ç¸ºï½®é©¥é˜ªâ†‘ç¹§é¡˜ï½§ï½£è±¸
 				else if (colRec.width >= colRec.height) {
-					//ã‚É‚¸‚ç‚·
+					//è³ç¿«â†“ç¸ºå£¹ï½‰ç¸º
 					if (enemyRec.y < colRec.y) {
 						enemyPos.y -= colRec.height;
 						enemy->getEnemyMove()->fixFloorCol();
 					}
-					//‰º‚É‚¸‚ç‚·
+					//è³ä¹â†“ç¸ºå£¹ï½‰ç¸º
 					else {
 						enemyPos.y += colRec.height;
 					}
 				}
-				//enemy‚ÌlŠpŒ`‚ğÄŒvZ
+				//enemyç¸ºï½®è—å¹„ï½§è²ï½½ï½¢ç¹§è²ï¿½éšªè‚²ï½®
 				enemy->setPosition(enemyPos);
 				enemy->computeRectangle();
 			}
