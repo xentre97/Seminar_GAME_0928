@@ -9,7 +9,9 @@ class HpComponent :
     public Component
 {
 public:
-    HpComponent(class Actor* owner, float maxHp = 1.0f);
+    HpComponent(class Actor* owner, float maxHp = 1.0f, float invincibleDuration = 1.0f);
+
+    void update() override;
 
     // bool型でtrueなら生存、falseなら死亡を判定。ダメージも内部で計算している
     bool TakeDamage(float damage);
@@ -17,6 +19,9 @@ public:
 
     // 0以下で
     bool IsKilled() const { return mCurHp <= 0.0f; }
+
+    //現在無敵時間中かどうかを返す
+    bool isInvincible() const { return mInvincibleTime > 0.0f; }
 
     // Getter,Setter
     float GetCurHp() const { return mCurHp; }
@@ -29,5 +34,7 @@ public:
 private:
     float mCurHp;   // 現在Hp
     float mMaxHp;   // 最大Hp こっちはActor内で持たせてもいいと思います(作ってみて次第)
-};
 
+    float mInvincibleTime;
+    float mInvincibleDuration;
+};

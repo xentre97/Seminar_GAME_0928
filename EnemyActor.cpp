@@ -20,7 +20,7 @@ EnemyActor::EnemyActor(Sequence* sequence, Type type)
 	};
 
 	static_cast<GamePlay*>(mSequence)->addEnemy(this);
-	
+
 	// SpriteComponent
 	mSpriteComp = new SpriteComponent(this);
 	mSpriteComp->setTexture(*tex);
@@ -41,6 +41,8 @@ EnemyActor::~EnemyActor()
 void EnemyActor::update()
 {
 	Actor::update();
+
+	//mHpComp->update();
 }
 
 void EnemyActor::computeRectangle()
