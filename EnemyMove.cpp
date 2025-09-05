@@ -7,6 +7,8 @@ EnemyMove::EnemyMove(EnemyActor* owner)
 	: MoveComponent(owner)
 	, mEnemy(owner)
 	, mAttackRange(32.0f)
+	, mAttackTime(1.0f)
+	, mAttackTimer(0.0f)
 {
 	mJumpSpeed = -600.0f;
 	// ターゲット指定(EnemyActor側から指定してもいい)
@@ -34,7 +36,7 @@ void EnemyMove::update()
 	{
 	case EnemyActor::E_walk:
 	{
-		// もし射程外なら
+		// もし射程外ならプレイヤーの方へ移動する
 		if (abs(ownerPos.x - targetPos.x) > mAttackRange ||
 			abs(ownerPos.y - targetPos.y) > mAttackRange) {
 			// 自身の位置に対するプレイヤーの位置の方向を取得(自身正なら-1、負なら1に進む)
@@ -60,13 +62,16 @@ void EnemyMove::update()
 	}
 	case EnemyActor::E_attack:
 	{
-		// 射程外になったら(攻撃が終わったらという条件でもよさそう)
-		if (abs(ownerPos.x - targetPos.x) > mAttackRange ||
+		// 一定時間たったら || 射程外になったら
+		mAttackTimer += GetFrameTime();
+		if (mAttackTime < mAttackTimer ||
+			abs(ownerPos.x - targetPos.x) > mAttackRange ||
 			abs(ownerPos.y - targetPos.y) > mAttackRange) {
 			mEnemy->changeState(EnemyActor::E_walk);
 			// 自身の位置に対するプレイヤーの位置の方向を取得(自身正なら-1、負なら1に進む)
 			int xDirection = ((ownerPos.x - targetPos.x) < 0) - ((ownerPos.x - targetPos.x) > 0);
 			mOwner->setForward(xDirection);
+			mAttackTimer = 0.0f;
 		}
 		break;
 	}

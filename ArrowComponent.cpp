@@ -14,7 +14,7 @@ void ArrowComponent::update()
     cullArrows();
 }
 
-void ArrowComponent::startAttack()
+void ArrowComponent::startAttack(AttackType type)
 {
     spawnArrow();
 }
@@ -22,7 +22,7 @@ void ArrowComponent::startAttack()
 void ArrowComponent::spawnArrow()
 {
     auto* seq = mOwner->getSequence();
-    auto* arrow = new ArrowActor(seq, Actor::Eweapon, mOwner->getType());
+    auto* arrow = new ArrowActor(seq, mOwner->getType());
 
     // 向き
     arrow->setForward(mOwner->getForward());

@@ -3,8 +3,8 @@
 
 #include "AnimSpriteComponent.h"
 
-ArrowActor::ArrowActor(Sequence* sequence, Type type, Type owner)
-    : WeaponActor(sequence, type, owner)
+ArrowActor::ArrowActor(Sequence* sequence, Type owner)
+    : WeaponActor(sequence, owner)
 {
     // 初期テクスチャと当たり
     //Texture2D tex0 = mSequence->getTexture("arrow01.png");
@@ -19,13 +19,15 @@ ArrowActor::ArrowActor(Sequence* sequence, Type type, Type owner)
 
     // 簡易アニメ（お好みでフレーム追加）
     mAnimsc = new AnimSpriteComponent(this);
+
     std::vector<Texture2D*> frames = {
         tex0,
         /*mSequence->getTexture("arrow02.png"),
         mSequence->getTexture("arrow03.png"),
         */
     };
-    mAnimsc->addAnimation("Normal", frames, 24.0f, false);
+    mAnim.frames = frames;
+    mAnim.loop = true;
 }
 
 void ArrowActor::input()
@@ -67,7 +69,7 @@ void ArrowActor::update()
 
 void ArrowActor::onStartAttack()
 {
-    mAnimsc->play("Normal"); // 矢は回転/ヒラヒラ想定でループ
+    mAnimsc->play(&mAnim); // 矢は回転/ヒラヒラ想定でループ
 }
 
 void ArrowActor::computeRectangle()

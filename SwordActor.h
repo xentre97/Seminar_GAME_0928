@@ -2,13 +2,13 @@
 #include "WeaponActor.h"
 
 /// <summary>
-/// ‹ßÚ•ŠíFŒ•
+/// ‹ßÚUŒ‚
 /// </summary>
 class SwordActor :
     public WeaponActor
 {
 public:
-    SwordActor(class Sequence* sequence, Type type, Type owner);
+    SwordActor(class Sequence* sequence, Type owner);
 
     void input() override;
     void update() override;

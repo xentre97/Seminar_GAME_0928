@@ -27,12 +27,16 @@ public:
     void addActor(Actor* actor);
     void removeActor(Actor* actor);
 
+    void pushUI(class UIScreen* screen);
+
     Texture2D* getTexture(const std::string& fileName);
 
 protected:
     // そのシーケンスに存在するアクターの配列
     std::vector<class Actor*> mActors;
     std::vector<class Actor*> mPendingActors; // mActorsへの追加待ちのActor
+    // そのシーケンスで表示するUIのスタック
+    std::vector<class UIScreen*> mUIStack;
     // そのシーケンスでロードしたテクスチャ達
     std::unordered_map<std::string, Texture2D> mTextures;
     bool mUpdatingActors = false;

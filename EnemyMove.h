@@ -17,5 +17,7 @@ private:
     class EnemyActor* mEnemy;   // mOwner‚Æ“¯‚¶(castÈ—ª—p)
     class Actor* mTarget;
     float mAttackRange;
+    float mAttackTime;
+    float mAttackTimer;
 };
 

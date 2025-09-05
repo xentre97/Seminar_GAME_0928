@@ -18,8 +18,13 @@
 #include "EnemyMove.h"
 #include "SpriteComponent.h"
 #include "WeaponComponent.h"
-
+#include "HpComponent.h"
+// system
 #include "EnemySpawner.h"
+#include "CameraSystem.h"
+#include "UIScreen.h"
+#include "HUD.h"
+#include "DamageUI.h"
 
 GamePlay::GamePlay()
 {
@@ -28,11 +33,18 @@ GamePlay::GamePlay()
         // ステージの読み込み失敗
     }
     // とりあえずプレイヤーとスポナーを生成
-    mPlayer = new PlayerActor(this, Actor::Eplayer);
+    mPlayer = new PlayerActor(this);
     mSpawner = new EnemySpawner(this);
 
     mSpawner->addSpawnPoint({ 700.0f, 100.0f });
     mSpawner->spawn();
+
+    // カメラシステムの初期化
+    mCameraSystem = new CameraSystem((float)mStageWidth);
+    mCameraSystem->setPlayer(mPlayer);
+    mCameraSystem->setMode(CameraSystem::Mode::FollowPlayer);
+    mHUD = new HUD(this);
+    mDamageUI = new DamageUI(this);
 }
 
 GamePlay::~GamePlay()
@@ -42,8 +54,15 @@ GamePlay::~GamePlay()
         delete mEnemies.back();
     }
     delete mPlayer;*/
+    delete mHUD;
+    mHUD = nullptr;
+
+    delete mCameraSystem;
+    mCameraSystem = nullptr;
+
     delete mSpawner;
     mSpawner = nullptr;
+    
 }
 
 void GamePlay::input()
@@ -65,6 +84,8 @@ void GamePlay::input()
 
 void GamePlay::update()
 {
+    mCameraSystem->update();
+
     // Actorのupdate
     mUpdatingActors = true;
     for (Actor* actor : mActors) {
@@ -91,6 +112,23 @@ void GamePlay::update()
             delete actor;
         }
     }
+
+    // ui update
+    for (auto ui : mUIStack) {
+        if (ui->GetState() == UIScreen::EActive) {
+            ui->update();
+        }
+    }
+    auto iter = mUIStack.begin();
+    while (iter != mUIStack.end()) {
+        if ((*iter)->GetState() == UIScreen::EClosing) {
+            delete* iter;
+            iter = mUIStack.erase(iter);
+        }
+        else {
+            ++iter;
+        }
+    }
 }
 
 void GamePlay::draw()
@@ -104,7 +142,7 @@ void GamePlay::draw()
     DrawText("Press RightShift -> GameOver", 100, 300, 20, GRAY);
 
     // カメラに従って描画（ゲーム画面）
-    BeginMode2D(mPlayer->getCamera());
+    BeginMode2D(mCameraSystem->getCamera());
     for (auto& rec : mStageRecs)
     {
         DrawRectangleRec(rec, GRAY);
@@ -114,6 +152,11 @@ void GamePlay::draw()
         sprite->draw();
     }
     EndMode2D();
+
+    // uiの描画
+    for (auto ui : mUIStack) {
+        ui->draw();
+    }
 
     EndDrawing();
 }
@@ -177,10 +220,10 @@ bool GamePlay::loadStage(const char* filename)
                 {
                     // 1が途切れたらRectangleに変換
                     Rectangle r;
-                    r.x = startX * tileSize;
-                    r.y = y * tileSize;
-                    r.width = (x - startX) * tileSize;
-                    r.height = tileSize;
+                    r.x = (float)startX * tileSize;
+                    r.y = (float)y * tileSize;
+                    r.width = (float)(x - startX) * tileSize;
+                    r.height = (float)tileSize;
                     mStageRecs.push_back(r);
                     startX = -1;
                 }
@@ -190,10 +233,10 @@ bool GamePlay::loadStage(const char* filename)
         if (startX != -1)
         {
             Rectangle r;
-            r.x = startX * tileSize;
-            r.y = y * tileSize;
-            r.width = (tiles[y].size() - startX) * tileSize;
-            r.height = tileSize;
+            r.x = (float)startX * tileSize;
+            r.y = (float)y * tileSize;
+            r.width = (float)(tiles[y].size() - startX) * tileSize;
+            r.height = (float)tileSize;
             mStageRecs.push_back(r);
         }
     }
@@ -213,6 +256,12 @@ void GamePlay::removeEnemy(EnemyActor* enemy)
         std::iter_swap(iter, mEnemies.end() - 1);
         mEnemies.pop_back();
     }
+}
+
+Camera2D GamePlay::getCamera() const
+{
+    if (mCameraSystem) return mCameraSystem->getCamera();
+    else return Camera2D();
 }
 
 void GamePlay::addWeapon(WeaponActor* weapon, Actor::Type type)
@@ -288,17 +337,13 @@ void GamePlay::updateCollision()
         Rectangle weaponRec = weapon->getRectangle();
         if (CheckCollisionRecs(playerRec, weaponRec)) {
             // ダメージ処理
-            mNext = new GameOver();
+            weapon->onHit(mPlayer);
+            if (mPlayer->getHpComp()->GetCurHp() <= 0.0f) {
+                mNext = new GameOver();
+            }
         }
     }
 
-    // EnemyとPlayerの当たり判定
-    for (auto enemy : mEnemies) {
-        if (CheckCollisionRecs(playerRec, enemy->getRectangle())) {
-            // ダメージ処理
-            mNext = new GameOver();
-        }
-    }
     // PlayerがEnemyを倒したときにWeaponComponentから処理を通知する予定
 
     // Playerと地形の当たり判定

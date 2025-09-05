@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include <raylib.h>
 
 /// <summary>
 /// アクターにHpを持たせる
@@ -27,7 +28,7 @@ public:
     float GetCurHp() const { return mCurHp; }
     void SetMaxHp(float maxHp) { mMaxHp = maxHp, mCurHp = maxHp; }
     // 便利系(SetterGetterでもできるけど...という奴)
-    float GetHpPercentage() const { return mCurHp / mMaxHp; }
+    float GetHpRatio() const { return mCurHp / mMaxHp; }
     // 最大Hp増やす
     void AddMaxHp(float add);
 

@@ -42,8 +42,9 @@ void PlayerMove::update()
 	mOwner->setPosition(pos);
 	mOwner->computeRectangle();
 
-	// 横方向速度を初期化,回避中なら変更しない
-	if (mPlayer->getPlayerState()->getType() != PlayerState::Type::Dodge) {
+	// 横方向速度を初期化,回避中,回避攻撃中なら変更しない
+	if (mPlayer->getPlayerState()->getType() != PlayerState::Type::Dodge &&
+		mPlayer->getPlayerState()->getType() != PlayerState::Type::DodgeAttack) {
 		mVelocityX = 0.0f;
 	}
 

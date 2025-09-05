@@ -4,17 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <raylib.h>
-
-/// <summary>
-/// アニメーション情報
-/// </summary>
-struct Animation
-{
-    std::string name;                  // アニメーション名
-    std::vector<Texture2D*> frames;    // 各フレームのテクスチャ
-    float fps;                         // 再生FPS
-    bool loop;                         // ループアニメーションかどうか
-};
+#include "Animation.h"
 
 /// <summary>
 /// アニメーション付きスプライトの描画
@@ -27,20 +17,15 @@ public:
     // 一定のフレームごとにアニメーションを更新 componentからoverride
     void update() override;
 
-    // アニメーションを追加
-    void addAnimation(const std::string& name,
-        const std::vector<Texture2D*>& frames,
-        float fps = 60.0f,
-        bool loop = true);
     // アニメーションを再生する
-    void play(std::string animName);
+    void play(const Animation* anim);
 
     bool isAnimating() const { return mIsAnimating; }
 
 private:
     // アニメーションのマップ
     std::unordered_map<std::string, Animation> mAnimations;
-    Animation* mCurrentAnim;  // 現在のアニメーション
+    const Animation* mCurrentAnim;  // 現在のアニメーション
     // 現在表示しているフレーム
     float mCurrFrame;
     bool mIsAnimating;

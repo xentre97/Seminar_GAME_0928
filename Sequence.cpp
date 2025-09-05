@@ -55,6 +55,11 @@ void Sequence::removeActor(Actor* actor)
 	}
 }
 
+void Sequence::pushUI(UIScreen* screen)
+{
+	mUIStack.emplace_back(screen);
+}
+
 Texture2D* Sequence::getTexture(const std::string& fileName)
 {
 	// テクスチャが既に連想配列に入っているかチェック

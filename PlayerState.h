@@ -1,4 +1,5 @@
 #pragma once
+#include "Animation.h"
 
 class PlayerActor;
 
@@ -21,18 +22,20 @@ public:
         ChargeAttack,
     };
     virtual ~PlayerState() {}
-    virtual void enter() {}     // 状態に入った時に呼び出す
+    virtual void enter();       // 状態に入った時に呼び出す
     virtual void exit() {}      // 状態を出る時に呼び出す
     virtual void input() {}     // 入力
     virtual void update() {}    // 更新
     virtual void init() {}      // 状態をリセットする
 
     Type getType() const { return mType; }
+    void setAnimation(Animation anim) { mAnim = anim; }
 protected:
     // コンストラクタでプレイヤーを持つ
     PlayerState(PlayerActor* player, Type type);
     PlayerActor* mPlayer;
     const Type mType;
+    Animation mAnim;
 };
 
 // Idle
@@ -57,7 +60,6 @@ public:
     Walk(PlayerActor* player);
     void input() override;
     void update() override;
-    void enter() override;
 private:
     float mWalkSpeed;
 };
@@ -104,7 +106,6 @@ public:
     Charge(PlayerActor* player);
     void input() override;
     void update() override;
-    void enter() override;
 private:
     float mChargeTimer;
     float mChargeTime;
@@ -118,6 +119,7 @@ public:
     NormalAttack(PlayerActor* player);
     void update() override;
     void enter() override;
+    void exit() override;
 private:
     float mAttackTime;
     float mAttackTimer;
@@ -130,7 +132,9 @@ public:
     DodgeAttack(PlayerActor* player);
     void update() override;
     void enter() override;
+    void exit() override;
 private:
+    float mHorizontalSpeed;
     float mAttackTime;
     float mAttackTimer;
 };
@@ -142,6 +146,7 @@ public:
     ChargeAttack(PlayerActor* player);
     void update() override;
     void enter() override;
+    void exit() override;
 private:
     float mAttackTime;
     float mAttackTimer;

@@ -13,10 +13,19 @@ void SwordComponent::update()
 	}
 }
 
-void SwordComponent::startAttack()
+void SwordComponent::startAttack(AttackType type)
 {
-	mWeapon = new SwordActor(mOwner->getSequence(), Actor::Eweapon, mOwner->getType());
+	mWeapon = new SwordActor(mOwner->getSequence(), mOwner->getType());
 	mWeapon->onStartAttack();
+	// UŒ‚‚ÌŽí—Þ‚É‚æ‚Á‚ÄUŒ‚—Í‘‰Á‚Ì”{—¦‚ðÝ’è‚·‚é
+	// Œ»ó‚ÌÝŒv‚Å‚Í,•ŠíŽí‚ÉŒÅ—L‚Æ‚È‚é
+	float multiplier = 1.0f;
+	switch (type)
+	{
+	case AttackType::Dodge: multiplier = 1.1f; break;
+	case AttackType::Charge: multiplier = 1.5f; break;
+	}
+	mWeapon->setMultiplier(multiplier);
 	updateWeaponPosition();
 	mWeapon->computeRectangle();
 }

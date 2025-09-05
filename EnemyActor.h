@@ -16,7 +16,7 @@ public:
         E_jump,
         E_attack,
     };
-    EnemyActor(class Sequence* sequence, Type type);
+    EnemyActor(class Sequence* sequence);
     ~EnemyActor();
 
     void update() override;

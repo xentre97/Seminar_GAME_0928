@@ -11,7 +11,7 @@ class SwordComponent :
 public:
     SwordComponent(class Actor* owner);
     void update() override;
-    void startAttack() override;
+    void startAttack(AttackType type = AttackType::Normal) override;
 
 private:
     void updateWeaponPosition();

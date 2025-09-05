@@ -1,5 +1,6 @@
 #pragma once
 #include "WeaponActor.h"
+#include "Animation.h"
 
 /// <summary>
 /// 遠距離武器：弓
@@ -8,7 +9,7 @@ class ArrowActor :
     public WeaponActor
 {
 public:
-    ArrowActor(class Sequence* sequence, Type type, Type owner);
+    ArrowActor(class Sequence* sequence, Type owner);
 
     void input() override;
     void update() override;
@@ -22,7 +23,7 @@ public:
 
 private:
     class AnimSpriteComponent* mAnimsc;
-
+    struct Animation mAnim;
     Vector2 mVelocity{0,0};
     float   mAge{0.0f};
     float   mLifeTime{3.0f};   // 秒

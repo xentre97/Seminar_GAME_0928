@@ -6,8 +6,8 @@
 #include "HpComponent.h"
 #include "ArrowComponent.h"
 
-EnemyActor::EnemyActor(Sequence* sequence, Type type)
-	: Actor(sequence, type)
+EnemyActor::EnemyActor(Sequence* sequence)
+	: Actor(sequence, Actor::Eenemy)
 	, mEnemyState(E_walk)
 {
 	Texture2D* tex = mSequence->getTexture("testPlayerIdle.png");
