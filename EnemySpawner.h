@@ -5,6 +5,12 @@
 class Sequence;
 class EnemyActor;
 
+struct SpawnPoint
+{
+    Vector2 pos;
+    //EnemyActor::
+};
+
 /**
  * 敵をスポーンさせる簡易スポナークラス
  * 使い方例:

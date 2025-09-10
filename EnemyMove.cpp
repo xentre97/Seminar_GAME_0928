@@ -1,9 +1,9 @@
 #include "EnemyMove.h"
 #include "GamePlay.h"
-#include "EnemyActor.h"
+#include "WeakEnemy.h"
 #include "PlayerActor.h"
 
-EnemyMove::EnemyMove(EnemyActor* owner)
+EnemyMove::EnemyMove(WeakEnemy* owner)
 	: MoveComponent(owner)
 	, mEnemy(owner)
 	, mAttackRange(32.0f)
@@ -19,8 +19,8 @@ EnemyMove::EnemyMove(EnemyActor* owner)
 void EnemyMove::update()
 {
 	// 自由落下への遷移判定を最初に行う
-	if (mVelocityY > 0.0f && mEnemy->getEnemyState() != EnemyActor::E_jump) {
-		mEnemy->changeState(EnemyActor::E_jump);
+	if (mVelocityY > 0.0f && mEnemy->getEnemyState() != WeakEnemy::E_jump) {
+		mEnemy->changeState(WeakEnemy::E_jump);
 	}
 
 	// 重力(垂直移動)
@@ -34,7 +34,7 @@ void EnemyMove::update()
 	// ステートによって処理が変わる
 	switch (mEnemy->getEnemyState())
 	{
-	case EnemyActor::E_walk:
+	case WeakEnemy::E_walk:
 	{
 		// もし射程外ならプレイヤーの方へ移動する
 		if (abs(ownerPos.x - targetPos.x) > mAttackRange ||
@@ -47,12 +47,12 @@ void EnemyMove::update()
 		}
 		// 射程内なら攻撃状態へ
 		else {
-			mEnemy->changeState(EnemyActor::E_attack);
+			mEnemy->changeState(WeakEnemy::E_attack);
 			mVelocityX = 0.0f;	// attack時に速度を0にしてみる
 		}
 		break;
 	}
-	case EnemyActor::E_jump:
+	case WeakEnemy::E_jump:
 	{
 		int xDirection = ((ownerPos.x - targetPos.x) < 0) - ((ownerPos.x - targetPos.x) > 0);
 		mOwner->setForward(xDirection);
@@ -60,14 +60,14 @@ void EnemyMove::update()
 		mVelocityX = mOwner->getForward() * mMoveSpeed;
 		break;
 	}
-	case EnemyActor::E_attack:
+	case WeakEnemy::E_attack:
 	{
 		// 一定時間たったら || 射程外になったら
 		mAttackTimer += GetFrameTime();
 		if (mAttackTime < mAttackTimer ||
 			abs(ownerPos.x - targetPos.x) > mAttackRange ||
 			abs(ownerPos.y - targetPos.y) > mAttackRange) {
-			mEnemy->changeState(EnemyActor::E_walk);
+			mEnemy->changeState(WeakEnemy::E_walk);
 			// 自身の位置に対するプレイヤーの位置の方向を取得(自身正なら-1、負なら1に進む)
 			int xDirection = ((ownerPos.x - targetPos.x) < 0) - ((ownerPos.x - targetPos.x) > 0);
 			mOwner->setForward(xDirection);
@@ -87,14 +87,14 @@ void EnemyMove::update()
 	// 以下デバッグ用
 	switch (mEnemy->getEnemyState())
 	{
-	case EnemyActor::E_walk: {
+	case WeakEnemy::E_walk: {
 		DrawText("Enemy : walk", 700, 150, 30, BLACK); break;
 	}
-	case EnemyActor::E_jump: {
+	case WeakEnemy::E_jump: {
 
 		DrawText("Enemy : jump", 700, 150, 30, BLACK); break;
 	}
-	case EnemyActor::E_attack: {
+	case WeakEnemy::E_attack: {
 		DrawText("Enemy : attack", 700, 150, 30, BLACK); break;
 	}
 	}
@@ -105,7 +105,7 @@ void EnemyMove::fixFloorCol()
 	// Y方向の速度を初期化
 	mVelocityY = 0.0f;
 	// 空中からの解消の場合はStateを変更する
-	if (mEnemy->getEnemyState() == EnemyActor::E_jump) {
-		mEnemy->changeState(EnemyActor::E_walk);
+	if (mEnemy->getEnemyState() == WeakEnemy::E_jump) {
+		mEnemy->changeState(WeakEnemy::E_walk);
 	}
 }

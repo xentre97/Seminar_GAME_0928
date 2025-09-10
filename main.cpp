@@ -3,12 +3,12 @@
 #include "Title.h"
 
 
+const int WindowWidth = 960;
+const int WindowHeight = 480;
 
 int main()
 {
 	/* Window‚Ì‰Šú‰» */
-	int WindowWidth = 960;
-	int WindowHeight = 480;	
 	InitWindow(WindowWidth, WindowHeight, "SeminarProject");
 	SetTargetFPS(60); // 60FPS
 	SetWindowState(FLAG_VSYNC_HINT); // ‚’¼“¯ŠúON

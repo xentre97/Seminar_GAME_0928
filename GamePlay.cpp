@@ -20,7 +20,7 @@
 #include "WeaponComponent.h"
 #include "HpComponent.h"
 // system
-#include "EnemySpawner.h"
+#include "Stage.h"
 #include "CameraSystem.h"
 #include "UIScreen.h"
 #include "HUD.h"
@@ -28,19 +28,15 @@
 
 GamePlay::GamePlay()
 {
+    mStage = new Stage(this);
     // ステージファイルの読み込み
-    if (!loadStage("stage0.txt")) {
-        // ステージの読み込み失敗
-    }
+    mStage->loadStage("stage0.txt");
+
     // とりあえずプレイヤーとスポナーを生成
     mPlayer = new PlayerActor(this);
-    mSpawner = new EnemySpawner(this);
-
-    mSpawner->addSpawnPoint({ 700.0f, 100.0f });
-    mSpawner->spawn();
 
     // カメラシステムの初期化
-    mCameraSystem = new CameraSystem((float)mStageWidth);
+    mCameraSystem = new CameraSystem((float)mStage->getStageWidth());
     mCameraSystem->setPlayer(mPlayer);
     mCameraSystem->setMode(CameraSystem::Mode::FollowPlayer);
     mHUD = new HUD(this);
@@ -59,10 +55,6 @@ GamePlay::~GamePlay()
 
     delete mCameraSystem;
     mCameraSystem = nullptr;
-
-    delete mSpawner;
-    mSpawner = nullptr;
-    
 }
 
 void GamePlay::input()
@@ -85,6 +77,7 @@ void GamePlay::input()
 void GamePlay::update()
 {
     mCameraSystem->update();
+    mStage->update();
 
     // Actorのupdate
     mUpdatingActors = true;
@@ -143,10 +136,9 @@ void GamePlay::draw()
 
     // カメラに従って描画（ゲーム画面）
     BeginMode2D(mCameraSystem->getCamera());
-    for (auto& rec : mStageRecs)
-    {
-        DrawRectangleRec(rec, GRAY);
-    }
+    
+    mStage->draw();
+
     for (auto sprite : mSprites)
     {
         sprite->draw();
@@ -175,74 +167,6 @@ Sequence* GamePlay::nextSequence()
     return mNext;
 }
 
-bool GamePlay::loadStage(const char* filename)
-{
-    // ステージファイルの読み込み
-    // 0 : 空白（通行可能）
-    // 1 : ブロック（壁）
-    // 今はとりあえずシンプルな実装
-
-    std::ifstream file(filename);
-    std::string line;
-    std::vector<std::vector<int>> tiles;
-
-    // 2次元配列tilesに読み込み
-    while (std::getline(file, line))
-    {
-        std::vector<int> row;
-        for (char c : line)
-        {
-            if (c == '0') row.push_back(0);
-            else if (c == '1') row.push_back(1);
-        }
-        tiles.push_back(row);
-    }
-
-    // ステージ全体の幅・高さを計算
-    const int tileSize = 32;
-    mStageRecs.clear();
-    mStageWidth = (int)tiles[0].size() * tileSize;
-    mStageHeight = (int)tiles.size() * tileSize;
-
-    for (int y = 0; y < (int)tiles.size(); ++y)
-    {
-        int startX = -1;
-        for (int x = 0; x < (int)tiles[y].size(); ++x)
-        {
-            if (tiles[y][x] == 1)
-            {
-                // 1が始まったら記録
-                if (startX == -1) startX = x;
-            }
-            else
-            {
-                if (startX != -1)
-                {
-                    // 1が途切れたらRectangleに変換
-                    Rectangle r;
-                    r.x = (float)startX * tileSize;
-                    r.y = (float)y * tileSize;
-                    r.width = (float)(x - startX) * tileSize;
-                    r.height = (float)tileSize;
-                    mStageRecs.push_back(r);
-                    startX = -1;
-                }
-            }
-        }
-        // 行末まで1が続いていた場合
-        if (startX != -1)
-        {
-            Rectangle r;
-            r.x = (float)startX * tileSize;
-            r.y = (float)y * tileSize;
-            r.width = (float)(tiles[y].size() - startX) * tileSize;
-            r.height = (float)tileSize;
-            mStageRecs.push_back(r);
-        }
-    }
-    return true;
-}
-
 void GamePlay::addEnemy(EnemyActor* enemy)
 {
     mEnemies.emplace_back(enemy);
@@ -255,6 +179,20 @@ void GamePlay::removeEnemy(EnemyActor* enemy)
     if (iter != mEnemies.end()) {
         std::iter_swap(iter, mEnemies.end() - 1);
         mEnemies.pop_back();
+    }
+}
+
+void GamePlay::addStageObj(StageObject* enemy)
+{
+    mObjects.emplace_back(enemy);
+}
+
+void GamePlay::removeStageObj(StageObject* enemy)
+{
+    auto iter = std::find(mObjects.begin(), mObjects.end(), enemy);
+    if (iter != mObjects.end()) {
+        std::iter_swap(iter, mObjects.end() - 1);
+        mObjects.pop_back();
     }
 }
 
@@ -317,19 +255,6 @@ void GamePlay::removeSprite(SpriteComponent* sprite)
 void GamePlay::updateCollision()
 {
     Rectangle playerRec = mPlayer->getRectangle();
-
-    // PlayerWeaponとEnemyの当たり判定
-    for (auto enemy : mEnemies) {
-        for (auto weapon : mPlayerWeapons)
-        {
-            Rectangle enemyRec = enemy->getRectangle();
-            Rectangle weaponRec = weapon->getRectangle();
-            if (CheckCollisionRecs(enemyRec, weaponRec)) {
-                weapon->onHit(enemy);
-            }
-        }
-    }
-
     // EnemyWeaponとPlayerの当たり判定
     for (auto weapon : mEnemyWeapons)
     {
@@ -340,113 +265,6 @@ void GamePlay::updateCollision()
             weapon->onHit(mPlayer);
             if (mPlayer->getHpComp()->GetCurHp() <= 0.0f) {
                 mNext = new GameOver();
-            }
-        }
-    }
-
-    // PlayerがEnemyを倒したときにWeaponComponentから処理を通知する予定
-
-    // Playerと地形の当たり判定
-    for (auto& stageRec : mStageRecs) {
-        // 当たり判定
-        if (CheckCollisionRecs(playerRec, stageRec)) {
-            // 衝突領域を取得
-            Rectangle colRec = GetCollisionRec(playerRec, stageRec);
-            Vector2 playerPos = mPlayer->getPosition();
-            // 縦方向の衝突
-            if (colRec.width >= colRec.height) {
-                // 上から衝突
-                if (playerRec.y < colRec.y) {
-                    playerPos.y -= colRec.height;
-                    //mPlayer->getPlayerMove().setJumping(false); // ジャンプ状態を解消
-                    mPlayer->getPlayerMove()->fixFloorCol();
-                }
-                // 下から衝突
-                else {
-                    playerPos.y += colRec.height;
-                }
-            }
-            // 横方向の衝突
-            else {
-                // 左から衝突
-                if (playerRec.x < colRec.x) {
-                    playerPos.x -= colRec.width;
-                }
-                // 右から衝突
-                else {
-                    playerPos.x += colRec.width;
-                }
-            }
-            // 位置を更新
-            mPlayer->setPosition(playerPos);
-            // 矩形を再計算
-            mPlayer->computeRectangle();
-            // playerRecを更新
-            playerRec = mPlayer->getRectangle();
-        }
-    }
-
-    // Enemyと地形の当たり判定
-    for (auto enemy : mEnemies) {
-        Rectangle enemyRec = enemy->getRectangle();
-        Vector2 enemyPos = enemy->getPosition();
-
-        for (auto& stageRec : mStageRecs) {
-            if (CheckCollisionRecs(enemyRec, stageRec)) {
-                Rectangle colRec = GetCollisionRec(enemyRec, stageRec);
-                // 横方向の衝突
-                if (colRec.width < colRec.height) {
-                    if (enemyRec.x < colRec.x) enemyPos.x -= colRec.width;
-                    else enemyPos.x += colRec.width;
-
-                    // 壁にぶつかったときの段差チェック（ジャンプさせる）
-                    if (enemy->getEnemyState() != EnemyActor::E_jump)
-                    {
-                        const int tileSize = 32;
-                        int forward = enemy->getForward();
-                        bool isStep = false;
-                        if (enemyPos.x < stageRec.x && forward > 0 ||
-                            enemyPos.x > stageRec.x && forward < 0) {
-                            // 段差が1.5タイル以内ならジャンプ
-                            isStep = (stageRec.height <= tileSize * 1.5f);
-                        }
-                        // 段差の上にスペースがあるか確認
-                        Rectangle checkOneAbove = {
-                            colRec.x,
-                            stageRec.y - tileSize,
-                            colRec.width,
-                            1.0f
-                        };
-
-                        bool isSpaceAboveClear = true;
-                        for (const auto& otherStageRec : mStageRecs) {
-                            if (CheckCollisionRecs(checkOneAbove, otherStageRec)) {
-                                isSpaceAboveClear = false;
-                                break;
-                            }
-                        }
-
-                        if (isStep && isSpaceAboveClear) {
-                            enemy->jump();
-                            break;
-                        }
-                    }
-                }
-                // 縦方向の衝突
-                else if (colRec.width >= colRec.height) {
-                    // 上から衝突
-                    if (enemyRec.y < colRec.y) {
-                        enemyPos.y -= colRec.height;
-                        enemy->getEnemyMove()->fixFloorCol();
-                    }
-                    // 下から衝突
-                    else {
-                        enemyPos.y += colRec.height;
-                    }
-                }
-                // Enemyの位置更新
-                enemy->setPosition(enemyPos);
-                enemy->computeRectangle();
             }
         }
     }

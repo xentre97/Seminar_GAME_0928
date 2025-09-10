@@ -30,6 +30,10 @@ public:
     void changeState(PlayerState::Type type);
 
 private:
+    // ステージとの当たり判定
+    void fixCollision();
+    void stageCollision(const struct Rectangle &stageRec);
+
     PlayerState* mPlayerState;
     std::unordered_map<PlayerState::Type, PlayerState*> mPlayerStates;
     class PlayerMove* mPlayerMove;
