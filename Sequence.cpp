@@ -25,7 +25,7 @@ void Sequence::draw()
 
 void Sequence::unloadData()
 {
-	for (auto tex : mTextures)
+	for (auto& tex : mTextures)
 	{
 		UnloadTexture(tex.second);
 	}

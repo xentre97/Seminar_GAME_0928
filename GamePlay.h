@@ -17,11 +17,14 @@ public:
     void unloadData() override;
     Sequence* nextSequence() override;
 
-    bool loadStage(const char* filename);
-
     void addEnemy(class EnemyActor* enemy);
     void removeEnemy(class EnemyActor* enemy);
+    void addStageObj(class StageObject* enemy);
+    void removeStageObj(class StageObject* enemy);
+
+    class Stage* getStage() const { return mStage; }
     std::vector<class EnemyActor*> const getEnemies() { return mEnemies; }
+    std::vector<class StageObject*> const getStageObjs() { return mObjects; }
     // 敵やその他がプレイヤー情報を取得するために定義
     class PlayerActor* getPlayer() const { return mPlayer; }
     struct Camera2D getCamera() const;
@@ -37,19 +40,17 @@ private:
     // collision関連の更新処理がまとまってる
     void updateCollision();
     Sequence* mNext = nullptr;
+    class Stage* mStage;
     // 敵の配列(主にCollision用に使う)
     std::vector<class EnemyActor*> mEnemies;
+    // ステージオブジェクトの配列(Collision)
+    std::vector<class StageObject*> mObjects;
     // 武器の配列(Collisionで使う)
     std::vector<class WeaponActor*> mPlayerWeapons;
     std::vector<class WeaponActor*> mEnemyWeapons;
     class PlayerActor* mPlayer;
     // Spriteの配列
     std::vector<class SpriteComponent*> mSprites;
-    // ステージから読み込んだ四角形の配列(床や壁の描画,collisionに使用)
-    std::vector<struct Rectangle> mStageRecs;
-    int mStageWidth;
-    int mStageHeight;
-    class EnemySpawner* mSpawner;
     class CameraSystem* mCameraSystem;
     class HUD* mHUD;
     class DamageUI* mDamageUI;

@@ -1,6 +1,8 @@
 #include "EnemySpawner.h"
 #include "Sequence.h"
 
+#include "WeakEnemy.h"
+
 EnemySpawner::EnemySpawner(Sequence* seq)
     : mSeq(seq)
 {
@@ -24,7 +26,13 @@ EnemyActor* EnemySpawner::spawn()
 EnemyActor* EnemySpawner::spawnAt(const Vector2& pos)
 {
     // 通常の敵を生成
-    auto* enemy = new EnemyActor(mSeq);
+    EnemyActor* enemy;
+    if (GetRandomValue(0, 1)) {
+        enemy = new MeleeEnemy(mSeq);
+    }
+    else {
+        enemy = new RangedEnemy(mSeq);
+    }
 
     // 位置設定と当たり判定更新（既存のAPI前提）
     enemy->setPosition(pos);

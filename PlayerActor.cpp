@@ -1,6 +1,7 @@
 #include "PlayerActor.h"
-//#include "GamePlay.h"
-//#include "EnemyActor.h"
+#include "EnemyActor.h"
+#include "WeaponActor.h"
+#include "StageObject.h"
 #include "PlayerMove.h"
 #include "AnimSpriteComponent.h"
 #include "SwordComponent.h"
@@ -8,6 +9,7 @@
 #include "HpComponent.h"
 
 #include "GamePlay.h"
+#include "Stage.h"
 
 PlayerActor::PlayerActor(Sequence* sequence)
 	: Actor(sequence, Actor::Eplayer)
@@ -39,6 +41,7 @@ PlayerActor::PlayerActor(Sequence* sequence)
 	
 	// 初期武器は剣
 	mWeaponComp = new SwordComponent(this);
+	// アニメーションの設定やら、各攻撃の時間とかの設定をすればいいと思う
 	//mPlayerStates[PlayerState::Type::NormalAttack]->setAnimation();
 	//mPlayerStates[PlayerState::Type::DodgeAttack]->setAnimation();
 	//mPlayerStates[PlayerState::Type::ChargeAttack]->setAnimation();
@@ -49,7 +52,7 @@ PlayerActor::PlayerActor(Sequence* sequence)
 
 PlayerActor::~PlayerActor()
 {
-	for (auto state : mPlayerStates) {
+	for (auto& state : mPlayerStates) {
 		delete state.second;
 	}
 }
@@ -66,12 +69,16 @@ void PlayerActor::update()
 	// 基底のupdate() : Componentのupdate
 	Actor::update();
 	mPlayerState->update();
+
+	fixCollision();
 }
 
 void PlayerActor::computeRectangle()
 {
 	mRectangle.x = mPosition.x - mAnimsc->getTexWidth() / 2.0f;
 	mRectangle.y = mPosition.y - mAnimsc->getTexHeight() / 2.0f;
+	mRectangle.width = mAnimsc->getTexWidth();
+	mRectangle.height = mAnimsc->getTexHeight();
 }
 
 void PlayerActor::changeState(PlayerState::Type type)
@@ -79,4 +86,62 @@ void PlayerActor::changeState(PlayerState::Type type)
 	mPlayerState->exit();
 	mPlayerState = mPlayerStates[type];
 	mPlayerState->enter();
+}
+
+void PlayerActor::fixCollision()
+{
+	// ステージとの当たり判定
+	for (auto& stageRec : static_cast<GamePlay*>(mSequence)->getStage()->getStageRecs()) {
+		stageCollision(stageRec);
+	}
+	// 破壊可能オブジェクトとの当たり判定
+	for (auto& obj: static_cast<GamePlay*>(mSequence)->getStageObjs()) {
+		
+		stageCollision(obj->getRectangle());
+	}
+
+
+	// 武器と敵の当たり判定
+	if (!mWeaponComp->getWeapon()) return;
+	for (auto enemy : static_cast<GamePlay*>(mSequence)->getEnemies()) {
+		Rectangle enemyRec = enemy->getRectangle();
+		Rectangle weaponRec = mWeaponComp->getWeapon()->getRectangle();
+		if (CheckCollisionRecs(enemyRec, weaponRec)) {
+			mWeaponComp->getWeapon()->onHit(enemy);
+		}
+	}
+}
+
+void PlayerActor::stageCollision(const Rectangle &stageRec)
+{
+	// 当たり判定
+	if (CheckCollisionRecs(mRectangle, stageRec)) {
+		// 衝突領域を取得
+		Rectangle colRec = GetCollisionRec(mRectangle, stageRec);
+		// 縦方向の衝突
+		if (colRec.width >= colRec.height) {
+			// 上から衝突
+			if (mRectangle.y < colRec.y) {
+				mPosition.y -= colRec.height;
+				mPlayerMove->fixFloorCol();
+			}
+			// 下から衝突
+			else {
+				mPosition.y += colRec.height;
+			}
+		}
+		// 横方向の衝突
+		else {
+			// 左から衝突
+			if (mRectangle.x < colRec.x) {
+				mPosition.x -= colRec.width;
+			}
+			// 右から衝突
+			else {
+				mPosition.x += colRec.width;
+			}
+		}
+		// 矩形を再計算
+		computeRectangle();
+	}
 }

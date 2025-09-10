@@ -50,6 +50,8 @@ void ArrowActor::update()
 
     computeRectangle();
 
+    // コリジョンチェック
+
     // 画面外 or 寿命で終了
     const float halfW = mAnimsc->getTexWidth()  * 0.5f;
     const float halfH = mAnimsc->getTexHeight() * 0.5f;

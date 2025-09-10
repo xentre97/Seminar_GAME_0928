@@ -251,6 +251,7 @@ DodgeAttack::DodgeAttack(PlayerActor* player)
 	: PlayerState(player, Type::DodgeAttack)
 	, mAttackTimer(0.0f)
 	, mAttackTime(0.5f)
+	, mHorizontalSpeed(0.0f)
 {
 	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerDodgeAttack.png") };
 	mAnim.frames = frames;

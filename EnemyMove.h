@@ -8,13 +8,14 @@ class EnemyMove :
     public MoveComponent
 {
 public:
-    EnemyMove(class EnemyActor* owner);
+    EnemyMove(class WeakEnemy* owner);
 
     void update()override;
     void fixFloorCol();
+    void setAttackRange(float range) { mAttackRange = range; }
 
 private:
-    class EnemyActor* mEnemy;   // mOwner‚Æ“¯‚¶(castÈ—ª—p)
+    class WeakEnemy* mEnemy;   // mOwner‚Æ“¯‚¶(castÈ—ª—p)
     class Actor* mTarget;
     float mAttackRange;
     float mAttackTime;

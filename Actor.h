@@ -13,6 +13,8 @@ public:
 		Eplayer,
 		Eenemy,
 		Eweapon,
+		EstageObject,
+		Eexplosion,
 	};
 	enum State
 	{
