@@ -18,7 +18,7 @@ ExplosionActor::ExplosionActor(GamePlay* sequence)
 	, mActiveTime(0.5f)
 {
 	mAnimsc = new AnimSpriteComponent(this);
-	mAnim.frames = { mSequence->getTexture("testBomb.png") };
+	mAnim.frames = { mSequence->getTexture("Assets/testBomb.png") };
 	mAnim.loop = false;
 	mAnimsc->play(&mAnim);
 }
