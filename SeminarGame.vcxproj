@@ -139,6 +139,7 @@
     <ClCompile Include="ArrowComponent.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="ExplosionActor.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="StageObject.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="ArrowComponent.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="ExplosionActor.h" />
+    <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="StageObject.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="Component.h" />

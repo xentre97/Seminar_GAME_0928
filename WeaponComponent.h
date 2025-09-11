@@ -17,6 +17,7 @@ class WeaponComponent :
     public Component
 {
 public:
+    virtual ~WeaponComponent();
     virtual void update() override;
     virtual void startAttack(AttackType type = AttackType::Normal) {};
     virtual void endAttack();

@@ -100,6 +100,12 @@ void PlayerActor::fixCollision()
 		stageCollision(obj->getRectangle());
 	}
 
+	// ‰æ–Ê¶’[‚Æ‚Ì“–‚½‚è”»’è
+	Vector2 screenPos = GetWorldToScreen2D(mPosition, static_cast<GamePlay*>(mSequence)->getCamera());
+	if (screenPos.x < 0.0f) {
+		mPosition.x -= screenPos.x;
+		computeRectangle();
+	}
 
 	// •Ší‚Æ“G‚Ì“–‚½‚è”»’è
 	if (!mWeaponComp->getWeapon()) return;
@@ -110,6 +116,7 @@ void PlayerActor::fixCollision()
 			mWeaponComp->getWeapon()->onHit(enemy);
 		}
 	}
+
 }
 
 void PlayerActor::stageCollision(const Rectangle &stageRec)

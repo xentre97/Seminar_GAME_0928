@@ -8,6 +8,8 @@
 // weapon
 #include "SwordComponent.h"
 #include "ArrowComponent.h"
+#include "WeaponActor.h"
+#include "PlayerActor.h"
 
 #include "ExplosionActor.h"
 
@@ -148,6 +150,15 @@ void WeakEnemy::fixCollision()
             computeRectangle();
         }
     }
+
+    // 武器とプレイヤーの当たり判定
+    if (!mWeaponComp->getWeapon()) return;
+    
+    Actor* player =static_cast<GamePlay*>(mSequence)->getPlayer();
+    Rectangle weaponRec = mWeaponComp->getWeapon()->getRectangle();
+    if (CheckCollisionRecs(player->getRectangle(), weaponRec)) {
+        mWeaponComp->getWeapon()->onHit(player);
+    }
 }
 
 std::unordered_map<WeakEnemy::EnemyState, Animation> MeleeEnemy::mAnimations = {
@@ -164,15 +175,15 @@ MeleeEnemy::MeleeEnemy(Sequence* sequence)
 	// framesにアニメーションを構成するテクスチャを入れる
     std::vector<Texture2D*> frames;
 	// Walk
-	frames = { mSequence->getTexture("testPlayerIdle.png") };
+	frames = { mSequence->getTexture("Assets/testPlayerIdle.png") };
 	mAnimations[E_walk].frames = frames;
 	mAnimations[E_walk].loop = true;
 	// attack
-	frames = { mSequence->getTexture("testPlayerIdle.png") };
+	frames = { mSequence->getTexture("Assets/testPlayerIdle.png") };
 	mAnimations[E_attack].frames = frames;
 	mAnimations[E_attack].loop = false;
 	// jump
-	frames = { mSequence->getTexture("testPlayerIdle.png") };
+	frames = { mSequence->getTexture("Assets/testPlayerIdle.png") };
 	mAnimations[E_jump].frames = frames;
 	mAnimations[E_jump].loop = false;
 
@@ -194,15 +205,15 @@ RangedEnemy::RangedEnemy(Sequence* sequence)
     std::vector<Texture2D*> frames;
 
     // Walk
-    frames = { mSequence->getTexture("testPlayerIdle.png") };
+    frames = { mSequence->getTexture("Assets/testPlayerIdle.png") };
     mAnimations[E_walk].frames = frames;
     mAnimations[E_walk].loop = true;
     // attack
-    frames = { mSequence->getTexture("testPlayerIdle.png") };
+    frames = { mSequence->getTexture("Assets/testPlayerIdle.png") };
     mAnimations[E_attack].frames = frames;
     mAnimations[E_attack].loop = false;
     // jump
-    frames = { mSequence->getTexture("testPlayerIdle.png") };
+    frames = { mSequence->getTexture("Assets/testPlayerIdle.png") };
     mAnimations[E_jump].frames = frames;
     mAnimations[E_jump].loop = false;
 

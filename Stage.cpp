@@ -26,11 +26,11 @@ Stage::~Stage()
 void Stage::loadStage(const char* filename)
 {
     // ステージファイルの読み込み
-    // 0 : 空白(通行可能)
+    // ' ' : 空白(通行可能)
     // # : ブロック(壁)
     // w : 木の板
     // E : 敵の出現位置
-    // B : ボスエリアの入口
+    // B : ボスエリアの入口 ここにプレイヤーが接触したらボスステージの読み込みを始める
     // 今はとりあえずシンプルな実装
 
     std::ifstream file(filename);
@@ -92,6 +92,14 @@ void Stage::loadStage(const char* filename)
                         (float)y * tileSize + tileSize / 2.0f });
                     bo->computeRectangle();
                 }
+                else if (tiles[y][x] == 'B')
+                {
+                    // アクターにしてもいい
+                    BossEntrance.x = (float)x * tileSize;
+                    BossEntrance.y = (float)y * tileSize;
+                    BossEntrance.width = tileSize;
+                    BossEntrance.height = tileSize;
+                }
             }
         }
         // 行末まで1が続いていた場合
@@ -125,6 +133,15 @@ void Stage::update()
         else {
             ++iter;
         }
+    }
+
+    // プレイヤーがボスエリアの入口に侵入したら
+    if (CheckCollisionRecs(player->getRectangle(), BossEntrance)) {
+        BossEntrance.width = 0.0f;
+        BossEntrance.height = 0.0f;
+        BossEntrance.x = 0.0f;
+        BossEntrance.y = 0.0f;
+        mGamePlay->onEnterBossArea();
     }
 }
 
