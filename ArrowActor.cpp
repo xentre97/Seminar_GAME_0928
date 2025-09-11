@@ -1,5 +1,5 @@
 #include "ArrowActor.h"
-#include "Sequence.h"
+#include "GamePlay.h"
 
 #include "AnimSpriteComponent.h"
 
@@ -58,12 +58,16 @@ void ArrowActor::update()
     const int   sw = GetScreenWidth();
     const int   sh = GetScreenHeight();
 
+    Vector2 screenPos 
+        = GetWorldToScreen2D(mPosition, static_cast<GamePlay*>(mSequence)->getCamera());;
+
     const bool out =
-        (mPosition.x + halfW < 0) || (mPosition.x - halfW > sw) ||
-        (mPosition.y + halfH < 0) || (mPosition.y - halfH > sh);
+        (screenPos.x + halfW < 0) || (screenPos.x - halfW > sw) ||
+        (screenPos.y + halfH < 0) || (screenPos.y - halfH > sh);
 
     if (out || mAge >= mLifeTime) {
         mDead = true;
+        setState(Edead);
         // 必要ならここで「消滅演出」や「当たり無効化」を入れる
         // （メモリ破棄はプロジェクトのActor管理方針に合わせて）
     }
