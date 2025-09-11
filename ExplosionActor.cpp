@@ -47,7 +47,9 @@ void ExplosionActor::update()
 		if (!enemy->getHpComp()->isInvincible()) {
 			targetRec = enemy->getRectangle();
 			if (CheckCollisionRecs(targetRec, mRectangle)) {
-				enemy->getHpComp()->TakeDamage(mDamageAmt);
+				if (enemy->getHpComp()->TakeDamage(mDamageAmt)) {
+					enemy->setState(Actor::Edead);
+				};
 			}
 		}
 	}

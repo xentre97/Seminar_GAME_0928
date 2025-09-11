@@ -11,12 +11,10 @@ WeaponActor::WeaponActor(Sequence* sequence, Type owner)
 	, mAttackPower(10.0f)
 	, mAttackMultiplier(1.0f)
 {
-	static_cast<GamePlay*>(mSequence)->addWeapon(this, owner);
 }
 
 WeaponActor::~WeaponActor()
 {
-	static_cast<GamePlay*>(mSequence)->removeWeapon(this);
 }
 
 void WeaponActor::onHit(Actor* target)

@@ -2,7 +2,7 @@
 #include "Actor.h"
 
 /// <summary>
-/// ステージに配置する破壊可能オブジェクト
+/// ステージを構成するオブジェクト
 /// </summary>
 class StageObject :
     public Actor
@@ -20,3 +20,9 @@ private:
     class HpComponent* mHpComp;
 };
 
+//class HardObj :
+//    public StageObject
+//{
+//public:
+//    HardObj(class Sequence* sequence)
+//};

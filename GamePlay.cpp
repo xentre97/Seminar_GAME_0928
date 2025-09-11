@@ -13,6 +13,7 @@
 #include "PlayerActor.h"
 #include "EnemyActor.h"
 #include "WeaponActor.h"
+#include "StageObject.h"
 // Component
 #include "PlayerMove.h"
 #include "EnemyMove.h"
@@ -25,12 +26,13 @@
 #include "UIScreen.h"
 #include "HUD.h"
 #include "DamageUI.h"
+#include "SoundSystem.h"
 
 GamePlay::GamePlay()
 {
     mStage = new Stage(this);
     // ステージファイルの読み込み
-    mStage->loadStage("stage0.txt");
+    mStage->loadStage("Assets/stage0.txt");
 
     // とりあえずプレイヤーとスポナーを生成
     mPlayer = new PlayerActor(this);
@@ -41,6 +43,11 @@ GamePlay::GamePlay()
     mCameraSystem->setMode(CameraSystem::Mode::FollowPlayer);
     mHUD = new HUD(this);
     mDamageUI = new DamageUI(this);
+
+    // サウンドの読み込み
+    SoundSystem &s = SoundSystem::instance();
+    s.loadBGM("stageBGM", "Assets/uchinari_138.mp3");
+    s.playBGM("stageBGM");
 }
 
 GamePlay::~GamePlay()
@@ -92,10 +99,6 @@ void GamePlay::update()
         mActors.emplace_back(pending);
     }
     mPendingActors.clear();
-
-    // 衝突判定のupdate
-    // 各Actor(およびComponent)のupdate後に行う
-    updateCollision();
 
     // Dead状態のActorをdelete
     for (auto actor : mActors)
@@ -202,32 +205,6 @@ Camera2D GamePlay::getCamera() const
     else return Camera2D();
 }
 
-void GamePlay::addWeapon(WeaponActor* weapon, Actor::Type type)
-{
-    if (type == Actor::Eplayer) {
-        mPlayerWeapons.emplace_back(weapon);
-    }
-    else if (type == Actor::Eenemy) {
-        mEnemyWeapons.emplace_back(weapon);
-    }
-}
-
-void GamePlay::removeWeapon(WeaponActor* weapon)
-{
-    auto iter = std::find(mPlayerWeapons.begin(), mPlayerWeapons.end(), weapon);
-    if (iter != mPlayerWeapons.end()) {
-        std::iter_swap(iter, mPlayerWeapons.end() - 1);
-        mPlayerWeapons.pop_back();
-    }
-    else {
-        iter = std::find(mEnemyWeapons.begin(), mEnemyWeapons.end(), weapon);
-        if (iter != mEnemyWeapons.end()) {
-            std::iter_swap(iter, mEnemyWeapons.end() - 1);
-            mEnemyWeapons.pop_back();
-        }
-    }
-}
-
 void GamePlay::addSprite(SpriteComponent* sprite)
 {
     // スプライトの描画順序を考慮して追加
@@ -252,20 +229,21 @@ void GamePlay::removeSprite(SpriteComponent* sprite)
     mSprites.erase(iter);
 }
 
-void GamePlay::updateCollision()
+void GamePlay::onEnterBossArea()
 {
-    Rectangle playerRec = mPlayer->getRectangle();
-    // EnemyWeaponとPlayerの当たり判定
-    for (auto weapon : mEnemyWeapons)
-    {
-        Rectangle playerRec = mPlayer->getRectangle();
-        Rectangle weaponRec = weapon->getRectangle();
-        if (CheckCollisionRecs(playerRec, weaponRec)) {
-            // ダメージ処理
-            weapon->onHit(mPlayer);
-            if (mPlayer->getHpComp()->GetCurHp() <= 0.0f) {
-                mNext = new GameOver();
-            }
-        }
+    // 敵全削除
+    while (!mEnemies.empty()) {
+        delete mEnemies.back();
     }
+    // ステージオブジェクト全削除
+    while (!mObjects.empty()) {
+        delete mObjects.back();
+    }
+
+    mStage->loadStage("Assets/stage0_boss.txt");
+    // ステージから位置を拾ってきてもいいかも
+    mPlayer->setPosition(Vector2{ 64.0f, 384.0f });
+    mPlayer->computeRectangle();
+    mCameraSystem->setMode(CameraSystem::Mode::Fixed);
+    //mCameraSystem->setFixedTarget(Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f });
 }

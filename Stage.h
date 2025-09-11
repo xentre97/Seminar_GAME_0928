@@ -17,11 +17,14 @@ public:
 
 private:
     class GamePlay* mGamePlay;
+    class EnemySpawner* mSpawner;
+
+    // 以下はステージ特有の情報
     // ステージから読み込んだ四角形の配列(床や壁の描画,collisionに使用)
     std::vector<struct Rectangle> mStageRecs;
     int mStageWidth;
     int mStageHeight;
+    struct Rectangle BossEntrance;  // ボスエリアへの入り口
     std::vector<Vector2> mEnemySpawnPoints;
-    class EnemySpawner* mSpawner;
 };
 

@@ -27,7 +27,7 @@ Idle::Idle(PlayerActor* player)
 	, mLastPressedTimeD(0.0)
 	, mDoubleTapWindow(0.2)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerIdle.png")};
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerIdle.png")};
 	mAnim.frames = frames;
 	mAnim.loop = true;
 }
@@ -74,7 +74,7 @@ Walk::Walk(PlayerActor* player)
 	: PlayerState(player, Type::Walk)
 	, mWalkSpeed(180.0f)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerWalk.png") };
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerWalk.png") };
 	mAnim.frames = frames;
 	mAnim.loop = true;
 }
@@ -111,7 +111,7 @@ Jump::Jump(PlayerActor* player)
 	: PlayerState(player, Type::Jump)
 	, mHorizontalSpeed(180.0f)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerJump.png") };
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerJump.png") };
 	mAnim.frames = frames;
 	mAnim.loop = true;
 }
@@ -146,7 +146,7 @@ Dodge::Dodge(PlayerActor* player)
 	, mDodgeTimer(0.0f)
 	, mDodgeSpeed(500.0f)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerDodge.png") };
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerDodge.png") };
 	mAnim.frames = frames;
 	mAnim.loop = true;
 }
@@ -179,7 +179,7 @@ Charge::Charge(PlayerActor* player)
 	, mChargeTimer(0.0f)
 	, mChargeTime(1.0f)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerCharge.png") };
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerCharge.png") };
 	mAnim.frames = frames;
 	mAnim.loop = true;
 }
@@ -213,7 +213,7 @@ NormalAttack::NormalAttack(PlayerActor* player)
 	, mAttackTimer(0.0f)
 	, mAttackTime(0.5f)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerNormalAttack.png") };
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerNormalAttack.png") };
 	mAnim.frames = frames;
 	mAnim.loop = false;
 }
@@ -253,7 +253,7 @@ DodgeAttack::DodgeAttack(PlayerActor* player)
 	, mAttackTime(0.5f)
 	, mHorizontalSpeed(0.0f)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerDodgeAttack.png") };
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerDodgeAttack.png") };
 	mAnim.frames = frames;
 	mAnim.loop = false;
 }
@@ -295,7 +295,7 @@ ChargeAttack::ChargeAttack(PlayerActor* player)
 	, mAttackTimer(0.0f)
 	, mAttackTime(0.5f)
 {
-	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("testPlayerChargeAttack.png") };
+	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerChargeAttack.png") };
 	mAnim.frames = frames;
 	mAnim.loop = false;
 }

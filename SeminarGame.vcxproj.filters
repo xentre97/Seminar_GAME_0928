@@ -80,9 +80,6 @@
     <ClCompile Include="EnemySpawner.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="StageObject.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerState.cpp">
       <Filter>Actor\Player</Filter>
     </ClCompile>
@@ -97,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="ExplosionActor.cpp">
       <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="StageObject.cpp">
+      <Filter>Actor\StageObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +144,9 @@
     </Filter>
     <Filter Include="Actor\Player">
       <UniqueIdentifier>{c2e1b60b-4eec-47de-b89d-fe27fbe5b585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\StageObj">
+      <UniqueIdentifier>{c10a1f0e-0bf1-46b4-b3ec-ce360dc407b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -223,9 +229,6 @@
     <ClInclude Include="EnemySpawner.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="StageObject.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerState.h">
       <Filter>Actor\Player</Filter>
     </ClInclude>
@@ -240,6 +243,12 @@
     </ClInclude>
     <ClInclude Include="ExplosionActor.h">
       <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="StageObject.h">
+      <Filter>Actor\StageObj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

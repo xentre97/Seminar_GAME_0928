@@ -8,7 +8,7 @@ ArrowActor::ArrowActor(Sequence* sequence, Type owner)
 {
     // 初期テクスチャと当たり
     //Texture2D tex0 = mSequence->getTexture("arrow01.png");
-    Texture2D* tex0 = mSequence->getTexture("testSword01.png");
+    Texture2D* tex0 = mSequence->getTexture("Assets/testArrow.png");
     mPosition = Vector2{ 500.0f, 300.0f };
     mRectangle = {
         mPosition.x - tex0->width / 2.0f,

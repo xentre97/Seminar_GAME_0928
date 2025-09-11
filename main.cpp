@@ -1,7 +1,7 @@
 #include <raylib.h>
 #include "Sequence.h"
 #include "Title.h"
-
+#include "SoundSystem.h"
 
 const int WindowWidth = 960;
 const int WindowHeight = 480;
@@ -12,6 +12,9 @@ int main()
 	InitWindow(WindowWidth, WindowHeight, "SeminarProject");
 	SetTargetFPS(60); // 60FPS
 	SetWindowState(FLAG_VSYNC_HINT); // 垂直同期ON
+
+	// サウンドシステム初期化
+	SoundSystem::init();
 
 	// シーケンスを準備
 	Sequence* currentSequence = new Title();
@@ -24,6 +27,9 @@ int main()
 		
 		/* 更新 */
 		currentSequence->update();
+
+		/* サウンド更新 */
+		SoundSystem::instance().update();
 
 		/* 描画 */
 		currentSequence->draw();
@@ -41,6 +47,8 @@ int main()
 	currentSequence->unloadData();
 	delete currentSequence;
 	currentSequence = 0;
+
+	SoundSystem::shutdown();
 
 	CloseWindow();
 	return 0;

@@ -30,24 +30,18 @@ public:
     struct Camera2D getCamera() const;
     class DamageUI* getDamageUI() const { return mDamageUI; }
 
-    void addWeapon(class WeaponActor* weapon, Actor::Type type);
-    void removeWeapon(class WeaponActor* weapon);
-
     void addSprite(class SpriteComponent* sprite);
     void removeSprite(class SpriteComponent* sprite);
 
+    void onEnterBossArea();
+
 private:
-    // collision関連の更新処理がまとまってる
-    void updateCollision();
     Sequence* mNext = nullptr;
     class Stage* mStage;
     // 敵の配列(主にCollision用に使う)
     std::vector<class EnemyActor*> mEnemies;
     // ステージオブジェクトの配列(Collision)
     std::vector<class StageObject*> mObjects;
-    // 武器の配列(Collisionで使う)
-    std::vector<class WeaponActor*> mPlayerWeapons;
-    std::vector<class WeaponActor*> mEnemyWeapons;
     class PlayerActor* mPlayer;
     // Spriteの配列
     std::vector<class SpriteComponent*> mSprites;

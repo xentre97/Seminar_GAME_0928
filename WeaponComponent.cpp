@@ -8,7 +8,13 @@
 
 WeaponComponent::WeaponComponent(Actor* owner)
 	: Component(owner)
+	, mWeapon(nullptr)
 {
+}
+
+WeaponComponent::~WeaponComponent()
+{
+	endAttack();
 }
 
 void WeaponComponent::update()
