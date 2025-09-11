@@ -6,6 +6,8 @@
 const int WindowWidth = 960;
 const int WindowHeight = 480;
 
+void LoadSounds();
+
 int main()
 {
 	/* Windowの初期化 */
@@ -15,6 +17,8 @@ int main()
 
 	// サウンドシステム初期化
 	SoundSystem::init();
+	// サウンドアセットを一括ロード
+	LoadSounds();
 
 	// シーケンスを準備
 	Sequence* currentSequence = new Title();
@@ -52,4 +56,13 @@ int main()
 
 	CloseWindow();
 	return 0;
+}
+
+// SoundSystem
+void LoadSounds()
+{
+	SoundSystem& s = SoundSystem::instance();
+	s.loadBGM("stageBGM", "Assets/uchinari_138.mp3");
+
+
 }

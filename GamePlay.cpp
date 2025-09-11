@@ -43,11 +43,9 @@ GamePlay::GamePlay()
     mCameraSystem->setMode(CameraSystem::Mode::FollowPlayer);
     mHUD = new HUD(this);
     mDamageUI = new DamageUI(this);
-
-    // サウンドの読み込み
-    SoundSystem &s = SoundSystem::instance();
-    s.loadBGM("stageBGM", "Assets/uchinari_138.mp3");
-    s.playBGM("stageBGM");
+    
+    // BGMを鳴らす
+    SoundSystem::instance().playBGM("stageBGM");
 }
 
 GamePlay::~GamePlay()
