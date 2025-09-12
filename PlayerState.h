@@ -1,5 +1,6 @@
 #pragma once
 #include "Animation.h"
+#include "AttackInfo.h"
 
 class PlayerActor;
 
@@ -36,6 +37,7 @@ protected:
     PlayerActor* mPlayer;
     const Type mType;
     Animation mAnim;
+    void computeAttackRect(Rectangle &rec);
 };
 
 // Idle
@@ -123,6 +125,7 @@ public:
 private:
     float mAttackTime;
     float mAttackTimer;
+    AttackInfo mAttackInfo;
 };
 
 class DodgeAttack

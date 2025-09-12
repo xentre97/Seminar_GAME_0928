@@ -101,6 +101,7 @@
     <ClCompile Include="StageObject.cpp">
       <Filter>Actor\StageObj</Filter>
     </ClCompile>
+    <ClCompile Include="AttackComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sequence">
@@ -250,5 +251,7 @@
     <ClInclude Include="StageObject.h">
       <Filter>Actor\StageObj</Filter>
     </ClInclude>
+    <ClInclude Include="AttackInfo.h" />
+    <ClInclude Include="AttackComponent.h" />
   </ItemGroup>
 </Project>

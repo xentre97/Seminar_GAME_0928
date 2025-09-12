@@ -5,6 +5,7 @@
 #include "EnemyMove.h"
 #include "AnimSpriteComponent.h"
 #include "HpComponent.h"
+#include "AttackComponent.h"
 // weapon
 #include "SwordComponent.h"
 #include "ArrowComponent.h"
@@ -29,10 +30,8 @@ void WeakEnemy::update()
 
     fixCollision();
 
-    if (mHpComp->IsKilled()) {
-        Actor* a = new ExplosionActor(static_cast<GamePlay*>(mSequence));
-        a->setPosition(mPosition);
-        a->computeRectangle();
+    if (mEnemyState == E_attack) {
+        computeAttackRect(getAttackInfo().colRect);
     }
 }
 
@@ -66,7 +65,8 @@ void WeakEnemy::onEnterState(EnemyState nextState)
     case E_attack:
         mAnimsc->play(&getAnimation(E_attack));
         // UŒ‚ŠJŽn
-        mWeaponComp->startAttack();
+        //mWeaponComp->startAttack();
+        if(mAttackComp) mAttackComp->startAttack(getAttackInfo());
         break;
     }
 }
@@ -80,7 +80,7 @@ void WeakEnemy::onExitState(EnemyState nextState)
     case E_jump:
         break;
     case E_attack:
-        mWeaponComp->endAttack();
+        //mWeaponComp->endAttack();
         break;
     }
 }
@@ -91,6 +91,13 @@ void WeakEnemy::jump()
         changeState(E_jump);
         mEnemyMove->setVelocityY(mEnemyMove->getJumpSpeed());
     }
+}
+
+void WeakEnemy::computeAttackRect(Rectangle& rec)
+{
+    if (mForward > 0) rec.x = mRectangle.x + mRectangle.width;
+    else rec.x = mRectangle.x - rec.width;
+    rec.y = mRectangle.y;
 }
 
 void WeakEnemy::fixCollision()
@@ -189,6 +196,17 @@ MeleeEnemy::MeleeEnemy(Sequence* sequence)
 
     // UŒ‚‚Í‹ßÚ
 	mWeaponComp = new SwordComponent(this);
+    mAttackComp = new AttackComponent(this);
+    // UŒ‚î•ñ‚ÌÝ’è
+    mAttackInfo.damage = 10.0f;
+    mAttackInfo.duration = 1.0f;
+    mAttackInfo.colRect.width = 16.0f;
+    mAttackInfo.colRect.height = 16.0f;
+    computeAttackRect(mAttackInfo.colRect);
+    mAttackInfo.knockBack = 0.0f;
+    mAttackInfo.forward = mForward;
+    mAttackInfo.targetType = Actor::Type::Eplayer;
+
     mEnemyMove->setAttackRange(32.0f);
 }
 

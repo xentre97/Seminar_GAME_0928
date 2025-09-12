@@ -7,6 +7,7 @@
 #include "SwordComponent.h"
 #include "ArrowComponent.h"
 #include "HpComponent.h"
+#include "AttackComponent.h"
 
 #include "GamePlay.h"
 #include "Stage.h"
@@ -45,6 +46,7 @@ PlayerActor::PlayerActor(Sequence* sequence)
 	//mPlayerStates[PlayerState::Type::NormalAttack]->setAnimation();
 	//mPlayerStates[PlayerState::Type::DodgeAttack]->setAnimation();
 	//mPlayerStates[PlayerState::Type::ChargeAttack]->setAnimation();
+	mAttackComp = new AttackComponent(this);
 
 	// Œ»İ‚Ìó‘Ô‚ğİ’è
 	mPlayerState = mPlayerStates[PlayerState::Type::Idle];

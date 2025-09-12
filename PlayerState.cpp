@@ -6,6 +6,7 @@
 #include "PlayerMove.h"
 #include "WeaponComponent.h"
 #include "AnimSpriteComponent.h"
+#include "AttackComponent.h"
 
 
 // アニメーションの再生を行う
@@ -18,6 +19,15 @@ PlayerState::PlayerState(PlayerActor* player, Type type)
 	: mPlayer(player)
 	, mType(type)
 {
+}
+
+void PlayerState::computeAttackRect(Rectangle& rec)
+{
+	// とりあえず、プレイヤーの真正面にAttackRectを調整している
+	// 拡張したければ引数を増やしてください
+	if(mPlayer->getForward()>0) rec.x = mPlayer->getRectangle().x + mPlayer->getRectangle().width;
+	else rec.x = mPlayer->getRectangle().x - rec.width;
+	rec.y = mPlayer->getRectangle().y;
 }
 
 
@@ -216,10 +226,23 @@ NormalAttack::NormalAttack(PlayerActor* player)
 	std::vector<Texture2D*> frames = { mPlayer->getSequence()->getTexture("Assets/testPlayerNormalAttack.png") };
 	mAnim.frames = frames;
 	mAnim.loop = false;
+	
+	// 攻撃情報の設定
+	mAttackInfo.damage = 10.0f;
+	mAttackInfo.duration = mAttackTime;
+	mAttackInfo.colRect.width = 16.0f;
+	mAttackInfo.colRect.height = 16.0f;
+	computeAttackRect(mAttackInfo.colRect);
+	mAttackInfo.knockBack = 200.0f;
+	mAttackInfo.forward = mPlayer->getForward();
+	mAttackInfo.targetType = Actor::Type::Eenemy;
 }
 
 void NormalAttack::update()
 {
+	// 攻撃範囲の位置を更新する
+	computeAttackRect(mAttackInfo.colRect);
+
 	mAttackTimer += GetFrameTime();
 	// 攻撃時間を過ぎたら
 	if (mAttackTimer >= mAttackTime) {
@@ -238,13 +261,15 @@ void NormalAttack::update()
 void NormalAttack::enter()
 {
 	PlayerState::enter();
-	mPlayer->getWeapon()->startAttack(AttackType::Normal);
+	//mPlayer->getWeapon()->startAttack(AttackType::Normal);
+	computeAttackRect(mAttackInfo.colRect);
+	mPlayer->getAttackComp()->startAttack(mAttackInfo);
 }
 
 void NormalAttack::exit()
 {
 	// なくしたい
-	mPlayer->getWeapon()->endAttack();
+	//mPlayer->getWeapon()->endAttack();
 }
 
 DodgeAttack::DodgeAttack(PlayerActor* player)

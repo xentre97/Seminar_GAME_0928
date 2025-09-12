@@ -137,6 +137,7 @@
     <ClCompile Include="AnimSpriteComponent.cpp" />
     <ClCompile Include="ArrowActor.cpp" />
     <ClCompile Include="ArrowComponent.cpp" />
+    <ClCompile Include="AttackComponent.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="ExplosionActor.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
@@ -174,6 +175,8 @@
     <ClInclude Include="AnimSpriteComponent.h" />
     <ClInclude Include="ArrowActor.h" />
     <ClInclude Include="ArrowComponent.h" />
+    <ClInclude Include="AttackComponent.h" />
+    <ClInclude Include="AttackInfo.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="ExplosionActor.h" />
     <ClInclude Include="SoundSystem.h" />
