@@ -1,6 +1,7 @@
 #pragma once
 #include "WeaponActor.h"
 #include "Animation.h"
+#include "AttackInfo.h"
 
 /// <summary>
 /// 遠距離武器：弓
@@ -23,7 +24,9 @@ public:
 
 private:
     class AnimSpriteComponent* mAnimsc;
-    struct Animation mAnim;
+    class AttackComponent* mAttackComp;
+    Animation mAnim;
+    AttackInfo mAttackInfo;
     Vector2 mVelocity{0,0};
     float   mAge{0.0f};
     float   mLifeTime{3.0f};   // 秒

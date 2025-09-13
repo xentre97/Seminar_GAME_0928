@@ -4,6 +4,7 @@ CameraSystem::CameraSystem(float stageWidth)
     : mStageWidth(stageWidth)
     , mMode(Mode::FollowPlayer)
     , mPlayer(nullptr)
+    , mMaxReachedX(0.0f)
 {
     mCamera.zoom = 1.0f;
     mCamera.rotation = 0.0f;
@@ -23,24 +24,15 @@ void CameraSystem::update() {
 }
 
 void CameraSystem::followPlayer() {
-    /*float centerX = GetScreenWidth() / 2.0f;
-    float targetX = mPlayer->getPosition().x;
-
-    if (targetX < centerX) targetX = centerX;
-    if (targetX > mStageWidth - centerX) targetX = mStageWidth - centerX;
-
-    mCamera.target = { targetX, GetScreenHeight() / 2.0f };*/
-
-    static float maxReachedX = 0.0f;
 
     float centerX = GetScreenWidth() / 2.0f;
     float playerX = mPlayer->getPosition().x;
 
     // 右に進んだら更新
-    if (playerX > maxReachedX) maxReachedX = playerX;
+    if (playerX > mMaxReachedX) mMaxReachedX = playerX;
 
     // 左には maxReachedX までしか戻れない
-    float cameraX = maxReachedX;
+    float cameraX = mMaxReachedX;
     if (cameraX < centerX) cameraX = centerX;
     if (cameraX > mStageWidth - centerX) cameraX = mStageWidth - centerX;
 

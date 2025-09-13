@@ -137,6 +137,7 @@
     <ClCompile Include="AnimSpriteComponent.cpp" />
     <ClCompile Include="ArrowActor.cpp" />
     <ClCompile Include="ArrowComponent.cpp" />
+    <ClCompile Include="AttackComponent.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="ExplosionActor.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
@@ -160,8 +161,6 @@
     <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="SwordActor.cpp" />
-    <ClCompile Include="SwordComponent.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="UIScreen.cpp" />
     <ClCompile Include="WeakEnemy.cpp" />
@@ -174,6 +173,8 @@
     <ClInclude Include="AnimSpriteComponent.h" />
     <ClInclude Include="ArrowActor.h" />
     <ClInclude Include="ArrowComponent.h" />
+    <ClInclude Include="AttackComponent.h" />
+    <ClInclude Include="AttackInfo.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="ExplosionActor.h" />
     <ClInclude Include="SoundSystem.h" />
@@ -196,8 +197,6 @@
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Stage.h" />
-    <ClInclude Include="SwordActor.h" />
-    <ClInclude Include="SwordComponent.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="UIScreen.h" />
     <ClInclude Include="WeakEnemy.h" />

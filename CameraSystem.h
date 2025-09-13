@@ -26,4 +26,5 @@ private:
     Actor* mPlayer;
     Vector2 mFixedTarget;
     float mStageWidth;
+    float mMaxReachedX;
 };

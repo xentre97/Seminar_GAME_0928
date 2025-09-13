@@ -5,35 +5,19 @@
 #include "EnemyMove.h"
 #include "AnimSpriteComponent.h"
 #include "HpComponent.h"
+#include "AttackComponent.h"
 // weapon
-#include "SwordComponent.h"
-#include "ArrowComponent.h"
 #include "WeaponActor.h"
 #include "PlayerActor.h"
-
-#include "ExplosionActor.h"
+#include "ArrowActor.h"
 
 WeakEnemy::WeakEnemy(Sequence* sequence)
 	: EnemyActor(sequence)
     , mEnemyState(E_walk)
-    , mWeaponComp(nullptr)
 {
     mEnemyMove = new EnemyMove(this);
     mEnemyMove->setMoveSpped(32.0f);
 	mAnimsc = new AnimSpriteComponent(this);
-}
-
-void WeakEnemy::update()
-{
-    Actor::update();
-
-    fixCollision();
-
-    if (mHpComp->IsKilled()) {
-        Actor* a = new ExplosionActor(static_cast<GamePlay*>(mSequence));
-        a->setPosition(mPosition);
-        a->computeRectangle();
-    }
 }
 
 void WeakEnemy::changeState(EnemyState nextState)
@@ -65,8 +49,7 @@ void WeakEnemy::onEnterState(EnemyState nextState)
         break;
     case E_attack:
         mAnimsc->play(&getAnimation(E_attack));
-        // UŒ‚ŠJŽn
-        mWeaponComp->startAttack();
+        attack();
         break;
     }
 }
@@ -80,7 +63,7 @@ void WeakEnemy::onExitState(EnemyState nextState)
     case E_jump:
         break;
     case E_attack:
-        mWeaponComp->endAttack();
+        //mWeaponComp->endAttack();
         break;
     }
 }
@@ -91,6 +74,13 @@ void WeakEnemy::jump()
         changeState(E_jump);
         mEnemyMove->setVelocityY(mEnemyMove->getJumpSpeed());
     }
+}
+
+void WeakEnemy::computeAttackRectPos(Rectangle& rec)
+{
+    if (mForward > 0) rec.x = mRectangle.x + mRectangle.width;
+    else rec.x = mRectangle.x - rec.width;
+    rec.y = mRectangle.y;
 }
 
 void WeakEnemy::fixCollision()
@@ -150,15 +140,6 @@ void WeakEnemy::fixCollision()
             computeRectangle();
         }
     }
-
-    // •Ší‚ÆƒvƒŒƒCƒ„[‚Ì“–‚½‚è”»’è
-    if (!mWeaponComp->getWeapon()) return;
-    
-    Actor* player =static_cast<GamePlay*>(mSequence)->getPlayer();
-    Rectangle weaponRec = mWeaponComp->getWeapon()->getRectangle();
-    if (CheckCollisionRecs(player->getRectangle(), weaponRec)) {
-        mWeaponComp->getWeapon()->onHit(player);
-    }
 }
 
 std::unordered_map<WeakEnemy::EnemyState, Animation> MeleeEnemy::mAnimations = {
@@ -188,8 +169,29 @@ MeleeEnemy::MeleeEnemy(Sequence* sequence)
 	mAnimations[E_jump].loop = false;
 
     // UŒ‚‚Í‹ßÚ
-	mWeaponComp = new SwordComponent(this);
+    mAttackComp = new AttackComponent(this);
+    // UŒ‚î•ñ‚ÌÝ’è
+    mAttackInfo.damage = 10.0f;
+    mAttackInfo.duration = 1.0f;
+    mAttackInfo.colRect.width = 16.0f;
+    mAttackInfo.colRect.height = 16.0f;
+    computeAttackRectPos(mAttackInfo.colRect);
+    mAttackInfo.knockBack = 0.0f;
+    mAttackInfo.targetType = Actor::Type::Eplayer;
+
     mEnemyMove->setAttackRange(32.0f);
+}
+
+void MeleeEnemy::update()
+{
+    Actor::update();
+    fixCollision();
+    computeAttackRectPos(mAttackInfo.colRect);
+}
+
+void MeleeEnemy::attack()
+{
+    mAttackComp->startAttack(&mAttackInfo);
 }
 
 std::unordered_map<WeakEnemy::EnemyState, Animation> RangedEnemy::mAnimations = {
@@ -217,7 +219,24 @@ RangedEnemy::RangedEnemy(Sequence* sequence)
     mAnimations[E_jump].frames = frames;
     mAnimations[E_jump].loop = false;
 
-    // UŒ‚‚Í‰“‹——£
-    mWeaponComp = new ArrowComponent(this);
     mEnemyMove->setAttackRange(400.0f);
+}
+
+void RangedEnemy::update()
+{
+    Actor::update();
+    fixCollision();
+}
+
+void RangedEnemy::onEnterState(EnemyState nextState)
+{
+    WeakEnemy::onEnterState(nextState);
+
+    if (nextState == E_attack) {
+         ArrowActor* a = new ArrowActor(mSequence, Actor::Eenemy);
+         a->setPosition(mPosition);
+         a->computeRectangle();
+         a->setForward(mForward);
+         a->setVelocity(Vector2{ 700.0f * mForward, 0.0f });
+    }
 }

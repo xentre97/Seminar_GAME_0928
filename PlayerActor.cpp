@@ -1,12 +1,10 @@
 #include "PlayerActor.h"
 #include "EnemyActor.h"
-#include "WeaponActor.h"
 #include "StageObject.h"
 #include "PlayerMove.h"
 #include "AnimSpriteComponent.h"
-#include "SwordComponent.h"
-#include "ArrowComponent.h"
 #include "HpComponent.h"
+#include "AttackComponent.h"
 
 #include "GamePlay.h"
 #include "Stage.h"
@@ -39,12 +37,7 @@ PlayerActor::PlayerActor(Sequence* sequence)
 	mPlayerStates[PlayerState::Type::DodgeAttack] = new DodgeAttack(this);
 	mPlayerStates[PlayerState::Type::ChargeAttack] = new ChargeAttack(this);
 	
-	// 初期武器は剣
-	mWeaponComp = new SwordComponent(this);
-	// アニメーションの設定やら、各攻撃の時間とかの設定をすればいいと思う
-	//mPlayerStates[PlayerState::Type::NormalAttack]->setAnimation();
-	//mPlayerStates[PlayerState::Type::DodgeAttack]->setAnimation();
-	//mPlayerStates[PlayerState::Type::ChargeAttack]->setAnimation();
+	mAttackComp = new AttackComponent(this);
 
 	// 現在の状態を設定
 	mPlayerState = mPlayerStates[PlayerState::Type::Idle];
@@ -106,17 +99,6 @@ void PlayerActor::fixCollision()
 		mPosition.x -= screenPos.x;
 		computeRectangle();
 	}
-
-	// 武器と敵の当たり判定
-	if (!mWeaponComp->getWeapon()) return;
-	for (auto enemy : static_cast<GamePlay*>(mSequence)->getEnemies()) {
-		Rectangle enemyRec = enemy->getRectangle();
-		Rectangle weaponRec = mWeaponComp->getWeapon()->getRectangle();
-		if (CheckCollisionRecs(enemyRec, weaponRec)) {
-			mWeaponComp->getWeapon()->onHit(enemy);
-		}
-	}
-
 }
 
 void PlayerActor::stageCollision(const Rectangle &stageRec)
