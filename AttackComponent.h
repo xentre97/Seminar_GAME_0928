@@ -3,7 +3,7 @@
 #include "AttackInfo.h"
 
 /// <summary>
-/// 攻撃を行う機能を付与するcomponent
+/// 攻撃を行う(HPを減らす,ノックバック付与,効果音鳴らす)機能を付与するcomponent
 /// 外部からAttackInfoを受け取り、それに基づいた処理をする
 /// </summary>
 class AttackComponent :
@@ -14,7 +14,7 @@ public:
 
     void update() override;
     // 攻撃する際に呼び出す,攻撃中にも呼べる
-    void startAttack(AttackInfo& info);
+    void startAttack(AttackInfo* info);
 
 private:
     void processAttackEnemy();

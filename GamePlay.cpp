@@ -18,7 +18,6 @@
 #include "PlayerMove.h"
 #include "EnemyMove.h"
 #include "SpriteComponent.h"
-#include "WeaponComponent.h"
 #include "HpComponent.h"
 // system
 #include "Stage.h"

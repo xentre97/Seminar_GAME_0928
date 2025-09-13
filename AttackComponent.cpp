@@ -37,11 +37,11 @@ void AttackComponent::update()
 	}
 }
 
-void AttackComponent::startAttack(AttackInfo& info)
+void AttackComponent::startAttack(AttackInfo* info)
 {
 	mActive = true;
 	mTimer = 0.0f;
-	mCurInfo = &info; // Œ»İ‚ÌUŒ‚‚ğİ’è
+	mCurInfo = info; // Œ»İ‚ÌUŒ‚‚ğİ’è
 }
 
 void AttackComponent::processAttackEnemy()

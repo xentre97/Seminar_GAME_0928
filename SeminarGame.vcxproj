@@ -161,8 +161,6 @@
     <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="SwordActor.cpp" />
-    <ClCompile Include="SwordComponent.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="UIScreen.cpp" />
     <ClCompile Include="WeakEnemy.cpp" />
@@ -199,8 +197,6 @@
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Stage.h" />
-    <ClInclude Include="SwordActor.h" />
-    <ClInclude Include="SwordComponent.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="UIScreen.h" />
     <ClInclude Include="WeakEnemy.h" />

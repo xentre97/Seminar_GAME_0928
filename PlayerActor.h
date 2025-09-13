@@ -21,7 +21,6 @@ public:
     void update() override;
 
     class PlayerMove* getPlayerMove() const { return mPlayerMove; }
-    class WeaponComponent* getWeapon() const { return mWeaponComp; }
     class AttackComponent* getAttackComp() const { return mAttackComp; }
     PlayerState* getPlayerState() const { return mPlayerState; }
     class AnimSpriteComponent* getAnimSpriteComp() const { return mAnimsc; }
@@ -39,7 +38,6 @@ private:
     std::unordered_map<PlayerState::Type, PlayerState*> mPlayerStates;
     class PlayerMove* mPlayerMove;
     class AnimSpriteComponent* mAnimsc;
-    class WeaponComponent* mWeaponComp;
     class AttackComponent* mAttackComp;
     class HpComponent* mHpComp;
 };

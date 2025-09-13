@@ -23,8 +23,6 @@ public:
         E_attack,
     };
 
-    void update() override;
-
     void changeState(EnemyState nextState);
     class EnemyMove* getEnemyMove() { return mEnemyMove; }
     EnemyState getEnemyState() const { return mEnemyState; }
@@ -32,18 +30,17 @@ public:
 protected:
     WeakEnemy(class Sequence* sequence);
     void computeRectangle() override;
-    void onEnterState(EnemyState nextState);
-    void onExitState(EnemyState nextState);
+    virtual void onEnterState(EnemyState nextState);
+    virtual void onExitState(EnemyState nextState);
     // ステージとの当たり判定
     void fixCollision();
     void jump();
+    // AttackComponentのstartAttackを呼ぶor武器(矢とか)を出現させる等の役割
+    virtual void attack() {};
     virtual Animation& getAnimation(EnemyState state) = 0;
-    virtual AttackInfo& getAttackInfo() = 0;
-    void computeAttackRect(Rectangle& rec);
+    void computeAttackRectPos(Rectangle& rec);
 
     EnemyState mEnemyState;
-    class WeaponComponent* mWeaponComp;
-    class AttackComponent* mAttackComp;
     class EnemyMove* mEnemyMove;
 };
 
@@ -52,12 +49,14 @@ class MeleeEnemy :
 {
 public:
     MeleeEnemy(class Sequence* sequence);
+    void update() override;
 
 private:
+    void attack() override;
     static std::unordered_map<EnemyState, Animation> mAnimations;
     Animation& getAnimation(EnemyState state) override { return mAnimations[state]; }
+    class AttackComponent* mAttackComp;
     AttackInfo mAttackInfo;
-    AttackInfo& getAttackInfo() override { return mAttackInfo; }
 };
 
 class RangedEnemy :
@@ -65,10 +64,12 @@ class RangedEnemy :
 {
 public:
     RangedEnemy(class Sequence* sequence);
+    void update() override;
 
 private:
+    void onEnterState(EnemyState nextState) override;
     static std::unordered_map<EnemyState, Animation> mAnimations;
     Animation& getAnimation(EnemyState state) override { return mAnimations[state]; }
-    AttackInfo mAttackInfo;
-    AttackInfo& getAttackInfo() override { return mAttackInfo; }
+
+    std::vector<class ArrowActor*> mArrows;
 };

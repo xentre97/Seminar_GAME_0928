@@ -44,14 +44,8 @@
     <ClCompile Include="WeaponComponent.cpp">
       <Filter>Component\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="SwordComponent.cpp">
-      <Filter>Component\Weapon</Filter>
-    </ClCompile>
     <ClCompile Include="ArrowComponent.cpp">
       <Filter>Component\Weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="SwordActor.cpp">
-      <Filter>Actor\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="EnemyMove.cpp">
       <Filter>Component\move</Filter>
@@ -193,14 +187,8 @@
     <ClInclude Include="WeaponComponent.h">
       <Filter>Component\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="SwordComponent.h">
-      <Filter>Component\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="ArrowComponent.h">
       <Filter>Component\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="SwordActor.h">
-      <Filter>Actor\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="EnemyMove.h">
       <Filter>Component\move</Filter>

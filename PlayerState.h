@@ -37,7 +37,8 @@ protected:
     PlayerActor* mPlayer;
     const Type mType;
     Animation mAnim;
-    void computeAttackRect(Rectangle &rec);
+    // UŒ‚ó‘Ô‚Ì‚İ‚Åg‚¤,UŒ‚”ÍˆÍ‚ÌˆÊ’u‚ğŒvZ‚·‚é
+    void computeAttackRectPos(Rectangle &rec);
 };
 
 // Idle
@@ -121,7 +122,6 @@ public:
     NormalAttack(PlayerActor* player);
     void update() override;
     void enter() override;
-    void exit() override;
 private:
     float mAttackTime;
     float mAttackTimer;
@@ -140,6 +140,7 @@ private:
     float mHorizontalSpeed;
     float mAttackTime;
     float mAttackTimer;
+    AttackInfo mAttackInfo;
 };
 
 class ChargeAttack
@@ -149,10 +150,10 @@ public:
     ChargeAttack(PlayerActor* player);
     void update() override;
     void enter() override;
-    void exit() override;
 private:
     float mAttackTime;
     float mAttackTimer;
+    AttackInfo mAttackInfo;
 };
 
 

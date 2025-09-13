@@ -2,6 +2,7 @@
 #include "GamePlay.h"
 
 #include "AnimSpriteComponent.h"
+#include "AttackComponent.h"
 
 ArrowActor::ArrowActor(Sequence* sequence, Type owner)
     : WeaponActor(sequence, owner)
@@ -28,6 +29,18 @@ ArrowActor::ArrowActor(Sequence* sequence, Type owner)
     };
     mAnim.frames = frames;
     mAnim.loop = true;
+
+    // 攻撃
+    mAttackComp = new AttackComponent(this);
+    
+    mAttackInfo.damage = 15.0f;
+    mAttackInfo.duration = 1.0f;
+    mAttackInfo.colRect = mRectangle;
+    mAttackInfo.knockBack = 0.0f;
+    mAttackInfo.targetType = Actor::Type::Eplayer;
+    
+    mAttackComp->startAttack(&mAttackInfo);
+    mAnimsc->play(&mAnim); // 矢は回転/ヒラヒラ想定でループ
 }
 
 void ArrowActor::input()
@@ -82,4 +95,6 @@ void ArrowActor::computeRectangle()
 {
     mRectangle.x = mPosition.x - mAnimsc->getTexWidth()  / 2.0f;
     mRectangle.y = mPosition.y - mAnimsc->getTexHeight() / 2.0f;
+    // colRectはmRectangleそのもの
+    mAttackInfo.colRect = mRectangle;
 }
