@@ -43,7 +43,7 @@ private:
     float mInterval  = 0.0f;  // 0 なら無効
     float mTimer     = 0.0f;
     int   mMaxActive = 9999;
-
+    
     // 配置
     std::vector<Vector2> mSpawnPoints;
     bool      mUseArea = false;

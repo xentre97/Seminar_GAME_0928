@@ -34,6 +34,7 @@ private:
     Music* mCurrentBGM;
     std::unordered_map<std::string, Music> mBGM;
     std::unordered_map<std::string, Sound> mSE;
+    float mBGMVolume;
 };
 
 /* Žg‚¢•û—á:

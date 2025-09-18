@@ -140,6 +140,7 @@
     <ClCompile Include="AttackComponent.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="ExplosionActor.cpp" />
+    <ClCompile Include="ItemActor.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="StageObject.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="AttackInfo.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="ExplosionActor.h" />
+    <ClInclude Include="ItemActor.h" />
     <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="StageObject.h" />
     <ClInclude Include="CameraSystem.h" />

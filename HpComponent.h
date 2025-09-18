@@ -16,6 +16,7 @@ public:
 
     // bool型でtrueなら生存、falseなら死亡を判定。ダメージも内部で計算している
     bool TakeDamage(float damage);
+    // 回復
     void Recover(float recover);
 
     // 0以下で

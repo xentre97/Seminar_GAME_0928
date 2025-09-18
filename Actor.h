@@ -15,6 +15,7 @@ public:
 		Eweapon,
 		EstageObject,
 		Eexplosion,
+		Eitem,
 	};
 	enum State
 	{
