@@ -4,6 +4,7 @@ SoundSystem* SoundSystem::sInstance = nullptr;
 
 SoundSystem::SoundSystem()
     : mCurrentBGM(nullptr)
+    , mBGMVolume(0.5f)
 {
     InitAudioDevice();
 }
@@ -49,6 +50,17 @@ void SoundSystem::stopBGM()
 void SoundSystem::update()
 {
     if (mCurrentBGM) {
+        //âπó í≤êﬂ
+        if (IsKeyDown(KEY_UP)) {
+            mBGMVolume += 0.01f;
+        }
+        if (IsKeyDown(KEY_DOWN)) {
+            mBGMVolume -= 0.01f;
+        }
+        mBGMVolume = std::max(0.0f, std::min(mBGMVolume, 1.0f));
+        //ïœçXÇµÇΩâπó ÇBGMÇ…ìKópÇ∑ÇÈ
+        SetMusicVolume(*mCurrentBGM, mBGMVolume);
+
         UpdateMusicStream(*mCurrentBGM);
     }
 }

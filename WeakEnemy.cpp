@@ -10,6 +10,7 @@
 #include "WeaponActor.h"
 #include "PlayerActor.h"
 #include "ArrowActor.h"
+#include "ItemActor.h"
 
 WeakEnemy::WeakEnemy(Sequence* sequence)
 	: EnemyActor(sequence)
@@ -187,6 +188,14 @@ void MeleeEnemy::update()
     Actor::update();
     fixCollision();
     computeAttackRectPos(mAttackInfo.colRect);
+
+    if (mHpComp->IsKilled()) {
+        if(GetRandomValue(1, 100) > 50) {
+            Actor* item = new HealingItem(mSequence);
+            item->setPosition(mPosition);
+            item->computeRectangle();
+        }
+    }
 }
 
 void MeleeEnemy::attack()
@@ -226,6 +235,13 @@ void RangedEnemy::update()
 {
     Actor::update();
     fixCollision();
+    if (mHpComp->IsKilled()) {
+        if (GetRandomValue(1, 100) > 50) {
+            Actor* item = new HealingItem(mSequence);
+            item->setPosition(mPosition);
+            item->computeRectangle();
+        }
+    }
 }
 
 void RangedEnemy::onEnterState(EnemyState nextState)
