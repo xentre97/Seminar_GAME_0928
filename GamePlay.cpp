@@ -246,6 +246,6 @@ void GamePlay::onEnterBossArea()
     //mCameraSystem->setFixedTarget(Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f });
     // ★ ボス出現：ボス部屋ロード後に生成する（ロードで敵を全消しするため）
     auto* boss = new BossActor(this, Vector2{ (float)mStage->getStageWidth() - 160.0f, 384.0f });
-auto* bossSprite = new SpriteComponent(boss);
-bossSprite->setTexture(*getTexture("Assets/testWoodenBoard.png"));
+    auto* bossSprite = new SpriteComponent(boss);
+    bossSprite->setTexture(*getTexture("Assets/testWoodenBoard.png"));
 }

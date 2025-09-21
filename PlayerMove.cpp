@@ -63,6 +63,12 @@ void PlayerMove::fixFloorCol()
 	}
 }
 
+// ìVà‰Ç∆ÇÃè’ìÀ
+void PlayerMove::fixCeilingCol()
+{
+	mVelocityY = 0.0f;
+}
+
 void PlayerMove::jump()
 {
 	mVelocityY = mJumpSpeed;

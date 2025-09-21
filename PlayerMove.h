@@ -13,6 +13,7 @@ public:
     void input()override;
     void update()override;
     void fixFloorCol();
+    void fixCeilingCol();
 
     // ƒWƒƒƒ“ƒv‚·‚éuŠÔ‚ÉŒÄ‚Ô
     void jump();
