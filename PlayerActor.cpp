@@ -117,6 +117,7 @@ void PlayerActor::stageCollision(const Rectangle &stageRec)
 			// ‰º‚©‚çÕ“Ë
 			else {
 				mPosition.y += colRec.height;
+				mPlayerMove->fixCeilingCol();
 			}
 		}
 		// ‰¡•ûŒü‚ÌÕ“Ë
