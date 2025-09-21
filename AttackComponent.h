@@ -2,6 +2,13 @@
 #include "Component.h"
 #include "AttackInfo.h"
 
+struct KnockbackInfo
+{
+    class Actor* target;
+    Vector2 velocity;
+    float timer;
+};
+
 /// <summary>
 /// 攻撃を行う(HPを減らす,ノックバック付与,効果音鳴らす)機能を付与するcomponent
 /// 外部からAttackInfoを受け取り、それに基づいた処理をする
@@ -24,5 +31,8 @@ private:
     // 現在の攻撃情報
     AttackInfo* mCurInfo;
     bool mActive;
+
+    std::vector<KnockbackInfo> mKnockbackTargets;
+    std::vector<Actor*> mHitActors;
 };
 

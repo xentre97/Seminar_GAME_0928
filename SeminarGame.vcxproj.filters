@@ -95,7 +95,12 @@
     <ClCompile Include="StageObject.cpp">
       <Filter>Actor\StageObj</Filter>
     </ClCompile>
-    <ClCompile Include="AttackComponent.cpp" />
+    <ClCompile Include="ItemActor.cpp">
+      <Filter>Actor\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sequence">
@@ -142,6 +147,9 @@
     </Filter>
     <Filter Include="Actor\StageObj">
       <UniqueIdentifier>{c10a1f0e-0bf1-46b4-b3ec-ce360dc407b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Item">
+      <UniqueIdentifier>{11320727-28b8-4a63-a1d9-998a65f21778}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +248,11 @@
       <Filter>Actor\StageObj</Filter>
     </ClInclude>
     <ClInclude Include="AttackInfo.h" />
-    <ClInclude Include="AttackComponent.h" />
+    <ClInclude Include="ItemActor.h">
+      <Filter>Actor\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
