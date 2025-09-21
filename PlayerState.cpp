@@ -7,7 +7,7 @@
 #include "AnimSpriteComponent.h"
 #include "AttackComponent.h"
 
-// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶‚ðs‚¤
+// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÌÄï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
 void PlayerState::enter()
 {
 	mPlayer->getAnimSpriteComp()->play(&mAnim);
@@ -21,8 +21,8 @@ PlayerState::PlayerState(PlayerActor* player, Type type)
 
 void PlayerState::computeAttackRectPos(Rectangle& rec)
 {
-	// ‚Æ‚è‚ ‚¦‚¸AƒvƒŒƒCƒ„[‚Ì^³–Ê‚ÉAttackRect‚ð’²®‚µ‚Ä‚¢‚é
-	// Šg’£‚µ‚½‚¯‚ê‚Îˆø”‚ð‘‚â‚µ‚Ä‚­‚¾‚³‚¢
+	// ï¿½Æ‚è‚ ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì^ï¿½ï¿½ï¿½Ê‚ï¿½AttackRectï¿½ð’²ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
+	// ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îˆï¿½ï¿½ï¿½ï¿½ð‘‚â‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if(mPlayer->getForward()>0) rec.x = mPlayer->getRectangle().x + mPlayer->getRectangle().width;
 	else rec.x = mPlayer->getRectangle().x - rec.width;
 	rec.y = mPlayer->getRectangle().y;
@@ -42,32 +42,32 @@ Idle::Idle(PlayerActor* player)
 
 void Idle::input()
 {
-	// ƒWƒƒƒ“ƒv
+	// ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½v
 	if (IsKeyPressed(KEY_SPACE)) {
 		mPlayer->changeState(Type::Jump);
 	}
-	// ˆÚ“®
+	// ï¿½Ú“ï¿½
 	else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
-		// ‚à‚µ“ñ‰ñ“ü—Í‚È‚ç‰ñ”ð‚Ö
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (IsKeyDown(KEY_A) && GetTime() - mLastPressedTimeA < mDoubleTapWindow ||
 			IsKeyDown(KEY_D) && GetTime() - mLastPressedTimeD < mDoubleTapWindow) {
 			mPlayer->changeState(Type::Dodge);
 		}
-		// ‚»‚¤‚Å‚È‚¢‚È‚ç•à‚«‚Ö
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		else {
 			mPlayer->changeState(Type::Walk);
 		}
 	}
-	// ’ÊíUŒ‚
+	// ï¿½Êï¿½Uï¿½ï¿½
 	else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 		mPlayer->changeState(Type::NormalAttack);
 	}
-	// ƒK[ƒh
+	// ï¿½Kï¿½[ï¿½h
 	else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 		mPlayer->changeState(Type::Guard);
 	}
 
-	// ó‘Ô‘JˆÚ”»’èŒã,ÅŒã‚ÉA,D‚ð‰Ÿ‚µ‚½ŽžŠÔ‚ð‹L˜^
+	// ï¿½ï¿½Ô‘Jï¿½Ú”ï¿½ï¿½ï¿½ï¿½,ï¿½ÅŒï¿½ï¿½A,Dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½Lï¿½^
 	if (IsKeyPressed(KEY_A)) mLastPressedTimeA = GetTime();
 	if (IsKeyPressed(KEY_D)) mLastPressedTimeD = GetTime();
 }
@@ -89,7 +89,7 @@ Walk::Walk(PlayerActor* player)
 
 void Walk::input()
 {
-	// ƒWƒƒƒ“ƒv
+	// ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½v
 	if (IsKeyPressed(KEY_SPACE)) {
 		mPlayer->changeState(Type::Jump);
 	}
@@ -97,11 +97,11 @@ void Walk::input()
 	else if (!(IsKeyDown(KEY_D) || IsKeyDown(KEY_A))) {
 		mPlayer->changeState(Type::Idle);
 	}
-	// ƒK[ƒh
+	// ï¿½Kï¿½[ï¿½h
 	else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 		mPlayer->changeState(Type::Guard);
 	}
-	// ’ÊíUŒ‚
+	// ï¿½Êï¿½Uï¿½ï¿½
 	else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 		mPlayer->changeState(Type::NormalAttack);
 	}
@@ -109,7 +109,7 @@ void Walk::input()
 
 void Walk::update()
 {
-	// ‰¡•ûŒü‘¬“x‚ðÝ’è‚µ‘±‚¯‚é
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½Ý’è‚µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
 		mPlayer->getPlayerMove()->setVelocityX(mWalkSpeed);
 	}
@@ -127,8 +127,8 @@ Jump::Jump(PlayerActor* player)
 void Jump::enter()
 {
 	PlayerState::enter();
-	// ƒXƒy[ƒX‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚È‚çƒWƒƒƒ“ƒv
-	// ‚»‚¤‚Å‚È‚¢‚È‚çŽ©—R—Ž‰º
+	// ï¿½Xï¿½yï¿½[ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½È‚ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½v
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½È‚çŽ©ï¿½Rï¿½ï¿½ï¿½ï¿½
 	if (IsKeyPressed(KEY_SPACE)) {
 		mPlayer->getPlayerMove()->jump();
 	}
@@ -136,7 +136,7 @@ void Jump::enter()
 
 void Jump::update()
 {
-	// ‰¡•ûŒü‘¬“x‚ðÝ’è‚µ‘±‚¯‚é
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½Ý’è‚µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (IsKeyDown(KEY_D) || IsKeyDown(KEY_A)) {
 		mPlayer->getPlayerMove()->setVelocityX(mHorizontalSpeed);
 	}
@@ -169,14 +169,14 @@ void Dodge::enter()
 void Dodge::update()
 {
 	mDodgeTimer += GetFrameTime();
-	mDodgeSpeed /= 1.1f;	// ‘¬“xŒ¸Š
+	mDodgeSpeed /= 1.1f;	// ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½
 	mPlayer->getPlayerMove()->setVelocityX(mDodgeSpeed);
-	// idle‚Ö
+	// idleï¿½ï¿½
 	if (mDodgeTimer >= mDodgeTime) {
 		mPlayer->changeState(Type::Idle);
 		mDodgeTimer = 0.0f;
 	}
-	// DodgeAttack‚Ö
+	// DodgeAttackï¿½ï¿½
 	else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 		mPlayer->changeState(Type::DodgeAttack);
 	}
@@ -195,13 +195,13 @@ Charge::Charge(PlayerActor* player)
 void Charge::input()
 {
 	mChargeTimer += GetFrameTime();
-	// ƒ{ƒ^ƒ“‚ð—£‚µ‚½Žž
+	// ï¿½{ï¿½^ï¿½ï¿½ï¿½ð—£‚ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-		// ‚½‚ßUŒ‚‚Ö
+		// ï¿½ï¿½ï¿½ßUï¿½ï¿½ï¿½ï¿½
 		if (mChargeTimer > mChargeTime) {
 			mPlayer->changeState(Type::ChargeAttack);
 		}
-		// Idle‚Ö
+		// Idleï¿½ï¿½
 		else {
 			mPlayer->changeState(Type::Idle);
 		}
@@ -211,7 +211,7 @@ void Charge::input()
 
 void Charge::update()
 {
-	// ‚¿‚å‚Á‚ÆˆÚ“®‚ð’x‚­‚µ‚Ä‚Ý‚é
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆˆÚ“ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ý‚ï¿½
 	float velX = mPlayer->getPlayerMove()->getVelocityX();
 	mPlayer->getPlayerMove()->setVelocityX(velX / 2);
 }
@@ -232,22 +232,23 @@ NormalAttack::NormalAttack(PlayerActor* player)
 	computeAttackRectPos(mAttackInfo.colRect);
 	mAttackInfo.knockBack = 200.0f;
 	mAttackInfo.targetType = Actor::Type::Eenemy;
+	mAttackInfo.tag = DamageTag::MeleeLight;   // â˜… è¿½åŠ ï¼šè»½æ”»æ’ƒ
 }
 
 void NormalAttack::update()
 {
-	// UŒ‚”ÍˆÍ‚ÌˆÊ’u‚ðXV‚·‚é
+	// ï¿½Uï¿½ï¿½ï¿½ÍˆÍ‚ÌˆÊ’uï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
 	computeAttackRectPos(mAttackInfo.colRect);
 
 	mAttackTimer += GetFrameTime();
-	// UŒ‚ŽžŠÔ‚ð‰ß‚¬‚½‚ç
+	// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (mAttackTimer >= mAttackTime) {
 		mAttackTimer = 0.0f;
-		// ‚½‚ß‚Ö
+		// ï¿½ï¿½ï¿½ß‚ï¿½
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 			mPlayer->changeState(Type::Charge);
 		}
-		// Idle‚Ö
+		// Idleï¿½ï¿½
 		else {
 			mPlayer->changeState(Type::Idle);
 		}
@@ -282,22 +283,22 @@ DodgeAttack::DodgeAttack(PlayerActor* player)
 
 void DodgeAttack::update()
 {
-	// UŒ‚”ÍˆÍ‚ÌˆÊ’u‚ðXV‚·‚é
+	// ï¿½Uï¿½ï¿½ï¿½ÍˆÍ‚ÌˆÊ’uï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
 	computeAttackRectPos(mAttackInfo.colRect);
 
-	// ƒvƒŒƒCƒ„[‘¬“xŒ¸Š
+	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½
 	mHorizontalSpeed /= 1.1f;
 	mPlayer->getPlayerMove()->setVelocityX(mHorizontalSpeed);
 	
 	mAttackTimer += GetFrameTime();
-	// UŒ‚ŽžŠÔ‚ð‰ß‚¬‚½‚ç
+	// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (mAttackTimer >= mAttackTime) {
 		mAttackTimer = 0.0f;
-		// ‚½‚ß‚Ö
+		// ï¿½ï¿½ï¿½ß‚ï¿½
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 			mPlayer->changeState(Type::Charge);
 		}
-		// Idle‚Ö
+		// Idleï¿½ï¿½
 		else {
 			mPlayer->changeState(Type::Idle);
 		}
@@ -332,18 +333,19 @@ ChargeAttack::ChargeAttack(PlayerActor* player)
 	computeAttackRectPos(mAttackInfo.colRect);
 	mAttackInfo.knockBack = 200.0f;
 	mAttackInfo.targetType = Actor::Type::Eenemy;
+	mAttackInfo.tag = DamageTag::MeleeHeavy;   // â˜… è¿½åŠ ï¼šé‡æ”»æ’ƒ
 }
 
 void ChargeAttack::update()
 {
-	// UŒ‚”ÍˆÍ‚ÌˆÊ’u‚ðXV‚·‚é
+	// ï¿½Uï¿½ï¿½ï¿½ÍˆÍ‚ÌˆÊ’uï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
 	computeAttackRectPos(mAttackInfo.colRect);
 
 	mAttackTimer += GetFrameTime();
-	// UŒ‚ŽžŠÔ‚ð‰ß‚¬‚½‚ç
+	// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (mAttackTimer >= mAttackTime) {
 		mAttackTimer = 0.0f;
-		// Idle‚Ö
+		// Idleï¿½ï¿½
 		mPlayer->changeState(Type::Idle);
 	}
 }

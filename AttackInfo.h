@@ -2,13 +2,15 @@
 #include <raylib.h>
 #include <vector>
 #include "Actor.h"
+#include "DamageTags.h"
 
 struct AttackInfo
 {
-	float damage;		// ƒ_ƒ[ƒW—Ê
-	float duration;		// UŒ‚‘±ŠÔ ƒAƒjƒ[ƒVƒ‡ƒ“‚Æ‚Í“Æ—§‚µ‚ÄŠÇ—‚·‚é
-	Rectangle colRect;	// UŒ‚”ÍˆÍ “–‚½‚è”»’è—p‚Ì‹éŒ`
-	float knockBack;	// ƒmƒbƒNƒoƒbƒN—Í
+	float damage;		// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½
+	float duration;		// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Æ‚Í“Æ—ï¿½ï¿½ï¿½ï¿½ÄŠÇ—ï¿½ï¿½ï¿½ï¿½ï¿½
+	Rectangle colRect;	// ï¿½Uï¿½ï¿½ï¿½Íˆï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½pï¿½Ì‹ï¿½`
+	float knockBack;	// ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½
 
-	Actor::Type targetType;   // UŒ‚‘ÎÛ‚Ìí—Ş
+	Actor::Type targetType;   // ï¿½Uï¿½ï¿½ï¿½ÎÛ‚Ìï¿½ï¿½
+	DamageTag tag = DamageTag::Normal; 
 };
