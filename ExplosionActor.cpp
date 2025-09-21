@@ -7,6 +7,7 @@
 #include "EnemyActor.h"
 #include "StageObject.h"
 #include "HpComponent.h"
+#include "Boss.h"
 
 Animation ExplosionActor::mAnim = Animation{ {}, 24.0f, true };
 
@@ -33,7 +34,7 @@ void ExplosionActor::update()
 		return;
 	}
 
-	/* “G‚âƒvƒŒƒCƒ„[‚Æ‚ÌƒRƒŠƒWƒ‡ƒ“ƒ`ƒFƒbƒN */
+	/* ï¿½Gï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‚ÌƒRï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N */
 	PlayerActor* player = mGamePlay->getPlayer();
 	Rectangle targetRec = player->getRectangle();
 	if (!player->getHpComp()->isInvincible()) {
@@ -47,10 +48,16 @@ void ExplosionActor::update()
 		if (!enemy->getHpComp()->isInvincible()) {
 			targetRec = enemy->getRectangle();
 			if (CheckCollisionRecs(targetRec, mRectangle)) {
-				if (enemy->getHpComp()->TakeDamage(mDamageAmt)) {
-					enemy->setState(Actor::Edead);
-				};
+				if (auto boss = dynamic_cast<Boss*>(enemy)) {
+					// â˜… çˆ†ç™ºã¯ã‚¬ãƒ¼ãƒ‰ã«é€šã‚Šã‚„ã™ã„
+					boss->ApplyDamage(mDamageAmt, DamageTag::Explosion);
+				} else {
+					if (enemy->getHpComp()->TakeDamage(mDamageAmt)) {
+						enemy->setState(Actor::Edead);
+					}
+				}
 			}
+
 		}
 	}
 

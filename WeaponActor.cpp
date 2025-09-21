@@ -5,6 +5,7 @@
 #include "EnemyActor.h"
 #include "PlayerActor.h"
 #include "HpComponent.h"
+#include "BossActor.h"
 
 WeaponActor::WeaponActor(Sequence* sequence, Type owner)
 	: Actor(sequence, Type::Eweapon)
@@ -19,15 +20,21 @@ WeaponActor::~WeaponActor()
 
 void WeaponActor::onHit(Actor* target)
 {
-	// UŒ‚—Í‚ðŒvŽZ ƒ‰ƒ“ƒ_ƒ€—v‘f‚ª‚ ‚Á‚Ä‚à‚æ‚³‚»‚¤
+	// ï¿½Uï¿½ï¿½ï¿½Í‚ï¿½ï¿½vï¿½Z ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½vï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½æ‚³ï¿½ï¿½ï¿½ï¿½
 	float damageAmount = mAttackPower * mAttackMultiplier;
-	//‚±‚±‚Å“®“I‚Èƒ_ƒ[ƒWŒvŽZ‚ðs‚¤B
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Å“ï¿½ï¿½Iï¿½Èƒ_ï¿½ï¿½ï¿½[ï¿½Wï¿½vï¿½Zï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B
 	if (target->getType() == Actor::Eenemy) {
-		if (static_cast<EnemyActor*>(target)->getHpComp()->TakeDamage(damageAmount)) {
-			target->setState(Actor::Edead);
-		}
-	}
-	else if (target->getType() == Actor::Eplayer) {
+        if (auto* enemy = dynamic_cast<EnemyActor*>(target)) {
+            if (enemy->getHpComp()->TakeDamage(damageAmount)) {
+                target->setState(Actor::Edead);
+            }
+        } else if (auto* boss = dynamic_cast<BossActor*>(target)) {
+            boss->takeDamage(damageAmount);
+            // BossActor å´ã§HPå°½ããŸã‚‰Edeadã«é·ç§»ã—ã¾ã™
+        }
+    }
+    else if (target->getType() == Actor::Eplayer) {
+
 		static_cast<PlayerActor*>(target)->getHpComp()->TakeDamage(damageAmount);
 	}
 }

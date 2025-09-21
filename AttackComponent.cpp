@@ -3,6 +3,7 @@
 #include "GamePlay.h"
 #include "EnemyActor.h"
 #include "PlayerActor.h"
+#include "Boss.h"
 
 #include "HpComponent.h"
 
@@ -17,16 +18,16 @@ AttackComponent::AttackComponent(Actor* owner)
 void AttackComponent::update()
 {
 	if (mActive) {
-		/* UŒ‚I—¹”»’è */
+		/* ï¿½Uï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 		mTimer += GetFrameTime();
-		// UŒ‚ŠÔ‚ğ‰ß‚¬‚½‚ç”ñactive‚É
+		// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½activeï¿½ï¿½
 		if (mTimer > mCurInfo->duration) {
 			mActive = false;
 		}
 	
 		switch (mCurInfo->targetType)
 		{
-		// “G‚Ö‚ÌUŒ‚‚Ìê‡
+		// ï¿½Gï¿½Ö‚ÌUï¿½ï¿½ï¿½Ìê‡
 		case Actor::Type::Eenemy:
 			processAttackEnemy();
 			break;
@@ -41,46 +42,51 @@ void AttackComponent::startAttack(AttackInfo* info)
 {
 	mActive = true;
 	mTimer = 0.0f;
-	mCurInfo = info; // Œ»İ‚ÌUŒ‚‚ğİ’è
+	mCurInfo = info; // ï¿½ï¿½ï¿½İ‚ÌUï¿½ï¿½ï¿½ï¿½İ’ï¿½
 }
 
 void AttackComponent::processAttackEnemy()
 {
-	// Šæ’£‚Á‚Ä“G‚ğ‚Á‚Ä‚­‚éB–{“–‚ÍActorManager‚©‚ç‚Á‚Ä‚­‚é‚İ‚½‚¢‚Èd‘g‚İ‚É‚µ‚½‚¢@
+	// ï¿½æ’£ï¿½ï¿½ï¿½Ä“Gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Bï¿½{ï¿½ï¿½ï¿½ï¿½ActorManagerï¿½ï¿½ï¿½çï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½İ‚ï¿½ï¿½ï¿½ï¿½Èdï¿½gï¿½İ‚É‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@
 	std::vector<EnemyActor*> enemies = 
 		static_cast<GamePlay*>(mOwner->getSequence())->getEnemies();
 	for (auto enemy : enemies) {
-		// ˆ— FXŒó•â‚ª‚ ‚é
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Fï¿½Xï¿½ï¿½â‚ªï¿½ï¿½ï¿½ï¿½
 		//
-		// 1.ƒmƒbƒNƒoƒbƒNó‘Ô‚¶‚á‚È‚¢“G‚É‚Í“–‚Ä‚È‚¢
-		//  ŠÈ’P‚¾‚ª,ƒmƒbƒNƒoƒbƒNŠÔ‚ª’Z‚¢‚±‚Æ‚ª‘O’ñB‚í‚è‚ ‚¢‚»‚ê‚ç‚µ‚­‚È‚é‹C‚ª‚·‚é
-		// 2.ƒqƒbƒgƒŠƒXƒg
-		//  ˆê”Ô—‘z‚Å‚Í‚ ‚éB“G‚ª‘½‚­oŒ»‚³‚¹‚é‚È‚çO(n^2)‚ª‹C‚É‚È‚é‚©‚à(‘¼‚à‘å‚µ‚Ä•Ï‚í‚ç‚È‚¢à‚Í‚ ‚é)
-		//  ’Ç‹LFƒqƒbƒgƒŠƒXƒg“à‚Ì“G‚ªdelete‚³‚ê‚½‚Ìˆ—‚ª•K—v
-		// 3.UŒ‚ƒtƒŒ[ƒ€’†‚É’N‚©‚É“–‚½‚Á‚½‚ç,mActive = false‚É‚·‚é
-		//  ˆê‰“¯‚É•¡”‚É“–‚Ä‚ç‚ê‚é‚Ì‚ª©–,ƒmƒbƒNƒoƒbƒN’†‚Ì“G‚É‚à“–‚Ä‚ç‚ê‚é
-		//  c‚è“I‚ÈUŒ‚”»’è‚ª‚È‚¢‚Ì‚ÅAƒ_ƒbƒVƒ…UŒ‚‚Ì‹““®‚ÍS”z
+		// 1.ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½Ô‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½Gï¿½É‚Í“ï¿½ï¿½Ä‚È‚ï¿½
+		//  ï¿½È’Pï¿½ï¿½ï¿½ï¿½,ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Ô‚ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Oï¿½ï¿½Bï¿½ï¿½è‚ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‚µï¿½ï¿½ï¿½È‚ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// 2.ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½Xï¿½g
+		//  ï¿½ï¿½Ô—ï¿½ï¿½zï¿½Å‚Í‚ï¿½ï¿½ï¿½Bï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½O(n^2)ï¿½ï¿½ï¿½Cï¿½É‚È‚é‚©ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½å‚µï¿½Ä•Ï‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½)
+		//  ï¿½Ç‹Lï¿½Fï¿½qï¿½bï¿½gï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Ì“Gï¿½ï¿½deleteï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Kï¿½v
+		// 3.ï¿½Uï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½É’Nï¿½ï¿½ï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,mActive = falseï¿½É‚ï¿½ï¿½ï¿½
+		//  ï¿½ê‰ï¿½ï¿½ï¿½ï¿½ï¿½É•ï¿½ï¿½ï¿½ï¿½É“ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Ì“Gï¿½É‚ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
+		//  ï¿½cï¿½èï¿½Iï¿½ÈUï¿½ï¿½ï¿½ï¿½ï¿½è‚ªï¿½È‚ï¿½ï¿½Ì‚ÅAï¿½_ï¿½bï¿½Vï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½ï¿½ÍSï¿½z
 
-		// ƒmƒbƒNƒoƒbƒNó‘Ô‚ª‚Ü‚¾‚È‚¢‚Ì‚Å,‚Æ‚è‚ ‚¦‚¸3‚ğÌ—p‚µ‚Ü‚µ‚½
 		if (CheckCollisionRecs(enemy->getRectangle(), mCurInfo->colRect)) {
-			if (enemy->getHpComp()->TakeDamage(mCurInfo->damage)) {
-				enemy->setState(Actor::Edead);
-				mActive = false;
+			if (auto boss = dynamic_cast<Boss*>(enemy)) {
+				// â˜… Boss ã ã‘ã¯ã‚¬ãƒ¼ãƒ‰ã‚’è€ƒæ…®ã—ãŸãƒ€ãƒ¡ãƒ¼ã‚¸é©ç”¨
+				boss->ApplyDamage(mCurInfo->damage, mCurInfo->tag);
+				// ï¼ˆå€’ã‚Œåˆ¤å®šã¯Bosså´/HPå´ã§å‡¦ç†ã€‚ã“ã“ã§setStateã¯ä¸è¦ï¼‰
+			} else {
+				if (enemy->getHpComp()->TakeDamage(mCurInfo->damage)) {
+					enemy->setState(Actor::Edead);
+					mActive = false;
+				}
 			}
 		}
 
-		// ‚È‚¨A“G‚ª“G‚ÉUŒ‚‚·‚é–‚à‰Â”\‚È‚Í‚¸
-		// ©•ª©g‚ğUŒ‚‚µ‚½‚­‚È‚¢‚È‚ç,component‚Ìowner‚Æ‚Í“–‚½‚ç‚È‚¢‚æ‚¤‚É‚±‚±‚É‘‚¯‚Î‚¢‚¢
-		// ƒmƒbƒNƒoƒbƒNenter‚É“G‚ªstartAttack()‚ğŒÄ‚×‚Î,“G‚Æ“G‚ÌƒmƒbƒNƒoƒbƒNˆ—‚à‰Â”\‚¾‚ë‚¤
+		// ï¿½È‚ï¿½ï¿½Aï¿½Gï¿½ï¿½ï¿½Gï¿½ÉUï¿½ï¿½ï¿½ï¿½ï¿½é–ï¿½ï¿½ï¿½Â”\ï¿½È‚Í‚ï¿½
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½È‚ï¿½,componentï¿½ï¿½ownerï¿½Æ‚Í“ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½ï¿½
+		// ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nenterï¿½ï¿½ï¿½É“Gï¿½ï¿½startAttack()ï¿½ï¿½ï¿½Ä‚×‚ï¿½,ï¿½Gï¿½Æ“Gï¿½Ìƒmï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â”\ï¿½ï¿½ï¿½ë‚¤
 	}
 }
 
 void AttackComponent::processAttackPlayer()
 {
-	// ŠŠŒm‚Èplayer‚Ìæ“¾
+	// ï¿½ï¿½ï¿½mï¿½ï¿½playerï¿½Ìæ“¾
 	PlayerActor* player = static_cast<GamePlay*>(mOwner->getSequence())->getPlayer();
 
-	// ƒ_ƒ[ƒW—^‚¦‚é
+	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½^ï¿½ï¿½ï¿½ï¿½
 	if (CheckCollisionRecs(player->getRectangle(), mCurInfo->colRect)) {
 		player->getHpComp()->TakeDamage(mCurInfo->damage);
 	}
