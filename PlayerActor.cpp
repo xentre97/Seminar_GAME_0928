@@ -68,10 +68,18 @@ void PlayerActor::update()
 
 void PlayerActor::computeRectangle()
 {
-	mRectangle.x = mPosition.x - mAnimsc->getTexWidth() / 2.0f;
-	mRectangle.y = mPosition.y - mAnimsc->getTexHeight() / 2.0f;
-	mRectangle.width = mAnimsc->getTexWidth();
-	mRectangle.height = mAnimsc->getTexHeight();
+	//mRectangle.x = mPosition.x - mAnimsc->getTexWidth() / 2.0f;
+	//mRectangle.y = mPosition.y - mAnimsc->getTexHeight() / 2.0f;
+	//mRectangle.width = mAnimsc->getTexWidth();
+	//mRectangle.height = mAnimsc->getTexHeight();
+
+	//ハードコーディングしてみた（図形を解析して恐らくこの程度という目視によるハイパーパラメータ）
+	mRectangle.width = 21.0f;
+	mRectangle.height = 35.0f;
+	mRectangle.x = mPosition.x - mRectangle.width / 2.0f;
+	mRectangle.y = mPosition.y - mRectangle.height / 2.0f;
+
+
 }
 
 void PlayerActor::changeState(PlayerState::Type type)

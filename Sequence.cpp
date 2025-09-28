@@ -2,6 +2,7 @@
 #include "Title.h"
 #include <vector>
 #include <algorithm>
+#include <string>
 
 Sequence::~Sequence()
 {
@@ -73,4 +74,16 @@ Texture2D* Sequence::getTexture(const std::string& fileName)
 		auto result = mTextures.emplace(fileName.c_str(), LoadTexture(fileName.c_str()));
 		return &result.first->second;
 	}
+}
+
+std::vector<Texture2D*> Sequence::getAnimationFrames(const std::string& baseName, const std::string& ext, int frameCount)
+{
+	std::vector<Texture2D*> frames;
+	for (int i = 0; i < frameCount; ++i)
+	{
+		// baseName_i.ext のようなファイル名を生成 (例: idle_0.png)
+		std::string fileName = baseName + "_" + std::to_string(i) + "." + ext;
+		frames.push_back(getTexture("Assets/player/" + fileName)); // パスもここで結合すると便利
+	}
+	return frames;
 }
